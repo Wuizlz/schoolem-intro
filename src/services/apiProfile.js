@@ -40,3 +40,51 @@ export async function signUpWithEmail({ email, password, displayName }) {
     profileError,
   };
 }
+
+/** Create-if-missing (or lightly update) the current user's profile. */
+export async function ensureProfile({ displayName } = {}) {
+  const { data: auth, error: authErr } = await supabase.auth.getUser();
+  if (authErr) throw authErr;
+  const user = auth?.user;
+  if (!user) throw new Error("Not signed in");
+
+  // Only send safe fields; your trigger fills id/email/uni_id.
+  const payload = {
+    id: user.id,
+    // Prefer the explicit displayName arg; otherwise take from user_metadata on first run
+    ...(displayName
+      ? { display_name: displayName }
+      : user.user_metadata?.display_name
+        ? { display_name: user.user_metadata.display_name }
+        : {}),
+  };
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(payload, { onConflict: "id" })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+/** Optional: global listener you can start once in App.jsx */
+export function startAuthListenerEnsureProfile() {
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === "SIGNED_IN" && session?.user) {
+      try {
+        await ensureProfile(); // idempotent
+      } catch (err) {
+        // Nice UX for blocked domains from your trigger
+        if (String(err.message).includes("Unsupported school domain")) {
+          // e.g. show a toast and sign out
+          // await supabase.auth.signOut();
+        }
+      }
+    }
+  });
+  return () => subscription.unsubscribe();
+}
