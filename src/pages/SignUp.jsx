@@ -67,8 +67,8 @@ export default function SignUp() {
               required: "Your name is required",
               minLength: { value: 3, message: "Min 3 characters" },
             })}
-            error={errors.username}
-            autoComplete="username"
+            error={errors.fullname}
+            autoComplete="Name"
           />
 
           <Input
