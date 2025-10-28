@@ -63,12 +63,12 @@ export default function SignIn() {
           <div className="flex flex-col items-center gap-3">
             {/* Submit button in a form */}
             <Button type="primary" buttonType="submit" className="self-center">
-              Sign Up
+              Sign In
             </Button>
             <p>Or</p>
             {/* Link-style button */}
             <Button type="primary" to="/signup" className="self-center">
-              Sign In
+              Sign Up
             </Button>
           </div>
         </form>
