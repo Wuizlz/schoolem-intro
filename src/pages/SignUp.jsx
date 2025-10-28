@@ -2,6 +2,8 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
 import { useCreateProfile } from "../../hooks/useCreateProfile";
+import { redirect } from "react-router-dom";
+import { data } from "@remix-run/router";
 
 export default function SignUp() {
   const {
@@ -12,17 +14,19 @@ export default function SignUp() {
     formState: { errors, isSubmitting },
   } = useForm();
 
+ 
+
   const { isCreating, createProfile } = useCreateProfile();
 
   function onSubmit(data) {
     console.log(data);
-    createProfile(
+    createProfile( 
       {
         ...data,
       },
       {
         onSuccess: () => {
-          console.log("success");
+          
         },
       }
     );
