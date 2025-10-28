@@ -25,7 +25,7 @@ After that go ahead and run to install all needed dependancies.
 "npm i"
 
 Jump onto your OWN branch 
-"git checkout -b branch_Name 
+"git checkout -b "branch_Name"
 
 Ensure you have all recent changes
 "git fetch main" - checks upstream changes and commits before merging into local
