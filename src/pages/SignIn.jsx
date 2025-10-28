@@ -9,17 +9,16 @@ export default function SignIn() {
     getValues,
     formState: { errors, isSubmitting },
   } = useForm();
-  
-  function onSubmit(data)
-  {
-    console.log(data)
+
+  function onSubmit(data) {
+    console.log(data);
   }
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black  text-zinc-100">
       <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
         {/* Row 1: logo + title */}
-         <div className="relative flex items-center justify-center w-full h-16">
+        <div className="relative flex items-center justify-center w-full h-16">
           <img
             src="/favicon.ico"
             alt="SchoolEm"
@@ -33,7 +32,7 @@ export default function SignIn() {
 
         {/* Row 2: form */}
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-           <Input
+          <Input
             id="email"
             type="email"
             placeholder="Email"
@@ -65,7 +64,17 @@ export default function SignIn() {
             <Button type="primary" buttonType="submit" className="self-center">
               Sign In
             </Button>
-            <p>Or</p>
+            <div className="w-full flex items-center gap-4">
+              <span
+                aria-hidden="true"
+                className="h-0.5 flex-1 bg-zinc-600 rounded-full"
+              ></span>
+              <span className="text-sm font-semibold text-zinc-200">or</span>
+              <span
+                aria-hidden="true"
+                className="h-0.5 flex-1 bg-zinc-600"
+              ></span>
+            </div>
             {/* Link-style button */}
             <Button type="primary" to="/signup" className="self-center">
               Sign Up
@@ -76,3 +85,5 @@ export default function SignIn() {
     </main>
   );
 }
+
+//
