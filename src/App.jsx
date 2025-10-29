@@ -8,6 +8,9 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Uni from "./pages/Uni";
 import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import { startAuthListenerEnsureProfile } from "./services/apiProfile";
+import AuthCallback from "./pages/AuthCallBack";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,16 +22,25 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  useEffect(() => {
+    const cleanup = startAuthListenerEnsureProfile();
+    return () => {
+      cleanup?.();
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
+      <GlobalStyles />
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          {/* Default  -> /signin */}
+          {/* Default  -> /signup */}
           <Route path="/" element={<Navigate to="signup" replace />} />
           {/* Auth routes */}
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="auth/callback" element={<AuthCallback />} />
           {/* Example app route */}
           <Route path="uni" element={<Uni />} />
           {/* Catch-all -> /signin */}

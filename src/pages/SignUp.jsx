@@ -1,7 +1,10 @@
-import Input from "../ui/Input";
-import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
 import { useCreateProfile } from "../../hooks/useCreateProfile";
+
+import Input from "./../ui/Input";
+import Button from "../ui/Button";
+import Spinner from "../ui/Spinner";
+import toast from "react-hot-toast";
 
 export default function SignUp() {
   const {
@@ -16,15 +19,19 @@ export default function SignUp() {
 
   function onSubmit(data) {
     console.log(data);
+    const { confirmPassword, email, firstName, lastName, password, username } =
+      data;
+
     createProfile(
       {
-        ...data,
+        confirmPassword,
+        email,
+        firstName,
+        lastName,
+        password,
+        username,
       },
-      {
-        onSuccess: () => {
-          console.log("success");
-        },
-      }
+      
     );
   }
 
@@ -134,9 +141,16 @@ export default function SignUp() {
 
           <div className="flex flex-col items-center gap-3">
             {/* Submit button in a form */}
-            <Button type="primary" buttonType="submit" className="self-center">
+
+            <Button
+              type="primary"
+              buttonType="submit"
+              className="self-center"
+              disabled={isCreating}
+            >
               Sign Up
             </Button>
+
             <div className="w-full flex items-center gap-4">
               <span
                 aria-hidden="true"
