@@ -24,30 +24,68 @@ To begin clone the repository into a native repo folder or into your desired IDE
 After that go ahead and run to install all needed dependancies.
 "npm i"
 
-Jump onto your OWN branch 
-"git checkout -b "branch_Name"
+0) Start on main and get the latest code
+    git switch main 
+    → move to the local main branch.
 
-Ensure you have all recent changes
-"git fetch main" - checks upstream changes and commits before merging into local
-"git pull"  - pulls and merges all recent repository commits to local branch
+    git fetch origin 
+    → download the latest branch pointers from GitHub (no file changes yet).
 
-Start changing stuff and ensure to communicate with the team
+    git pull --ff-only origin main 
+    → update local main to match GitHub using a fast-forward only update (prevents accidental merge commits on main).
 
-Push your changes 
-"git add (THE FILES YOU WISH TO PUSH)" (**NEVER PUSH ENV OR SENSITIVE VARIABLES**)
+1) Create and switch to your feature branch
+    git switch -c krish/<short-topic>
+    → -c creates a new branch and switches to it.
+    → Use a clear name, e.g. krish/login-divider or krish/signup-first-last.
 
-you can run "git status" to check the status of your staged changes
+2) Make your code changes
+    git status
+    → see what changed and what’s staged.
 
-to write a commit message and push your changes to github 
-"git commit -m "(The message you wish to put)"
-"git push origin branch-name"
+    git add -A
+    → stage all changes (new/modified/deleted).
 
-Finally go to github and confirm your PR and merge your changes 
- *It is always good practice to show your changes to one of the team members*
+    git commit -m "feat(signin): bold divider; feat(signup): split full name"
+    → save a snapshot locally.
+
+3) Push the branch to GitHub (first time)
+    git push -u origin HEAD
+    → Pushes the current branch to origin and remembers it (so future pushes can be just git push).
+    → HEAD is a shortcut for “the branch I’m on.”
+ 
+4) Open a Pull Request (PR) to main
+    On GitHub UI, click “Compare & pull request.”
+
+5) Address review feedback (if any)
+    git add -A
+    → stage all changes
+
+    git commit -m "fix: adjust divider thickness"
+    → record a snapshot of staged changes.
+
+    git push
+
+6) Merge the PR
+    → On GitHub, click “Squash and merge” (recommended).
+    → Produces a single clean commit on main with a helpful message.
+    → Alternatives: “Merge commit” (keeps all commits) or “Rebase & merge” (linear, preserves commits).
+
+7) Go back to main locally and update it
+    git switch main
+    git pull --ff-only origin main
 
 
-If you need to go ahead and jump back onto main and run the merge command 
-"git merge branch-name"
-"git push"
+8) Clean up the merged branch (remote + local)
+    git push origin --delete krish/<short-topic>
+    → delete the branch on GitHub.
 
+    git branch -d krish/<short-topic>
+    → delete a local branch that’s already merged.
+
+    git fetch --prune
+    → remove local refs to remote branches that no longer exist.
+
+9) Repeat for the next change/feature
+    git switch -c krish/<next-topic>
 
