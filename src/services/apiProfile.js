@@ -1,103 +1,130 @@
+// src/services/apiProfile.js
 import supabase from "./supabase";
+import { ensureProfile } from "../lib/ensureProfile";
 
 /**
- * Sign up with email/password.
- * If email confirmation is OFF and we get a session, we immediately insert the profile row.
- * If confirmation is ON (no session yet), we skip insert — call ensureProfile() after the user verifies & logs in.
+ * Map common Supabase auth errors to friendlier messages.
  */
+function friendlyAuthError(err) {
+  const m = (err?.message || "").toLowerCase();
 
-export async function signUpWithEmail({ email, password, username }) {
+  if (m.includes("user already registered")) return "That email is already registered. Try signing in.";
+  if (m.includes("invalid login credentials")) return "Wrong email or password.";
+  if (m.includes("email not confirmed")) return "Your email isn’t verified yet. Check your inbox.";
+  if (m.includes("token has expired")) return "That link has expired. Request a new one.";
+  if (m.includes("refresh token")) return "Your session expired. Please sign in again.";
+
+  return err?.message || "Something went wrong.";
+}
+
+/**
+ * Sign up a user with email/password.
+ * - If email confirmations are enabled (recommended), Supabase returns no session and sends a link.
+ *   => we return { emailConfirmation: true }
+ * - If confirmations are disabled, Supabase returns a session immediately.
+ *   => we call ensureProfile() and return the result.
+ *
+ * @param {{ email: string, password: string, firstName?: string, lastName?: string, username?: string }} payload
+ * @returns {Promise<{ emailConfirmation: boolean, created?: boolean, profileError?: Error }>}
+ */
+export async function signUpWithEmail(payload) {
+  const { email, password, firstName, lastName, username } = payload;
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      //Where supabase redirects after email verification
-      
       emailRedirectTo: `${window.location.origin}/auth/callback`,
-      // attach to user_metadata
-      data: { display_name: username ?? null },
+      data: {
+        display_name: `${firstName ?? ""} ${lastName ?? ""}`.trim(),
+        first_name: firstName ?? null,
+        last_name: lastName ?? null,
+        username: username ?? null,
+      },
     },
   });
-  if (error) throw error;
+  if (error) throw new Error(friendlyAuthError(error));
 
-  const { user, session } = data;
-  let profileInserted = false;
-  let profileError = null;
-
-  if (session) {
-    const { error: insertError } = await supabase.from("profiles").insert({
-      // Your BEFORE INSERT trigger sets : id := auth.uid(), email, uni_id
-      display_name: username ?? null,
-    });
-    if (insertError) profileError = insertError;
-    else profileInserted = true;
+  // Email confirmation enabled → no session yet
+  if (!data.session) {
+    return { emailConfirmation: true };
   }
 
-  return {
-    user,
-    hasSession: !!session,
-    emailConfirmation: !session, // true when confirmation required
-    profileInserted,
-    profileError,
-    username
-  };
+  // Confirmation disabled → already signed in; bootstrap profile now
+  try {
+    const ep = await ensureProfile();
+    return { emailConfirmation: false, created: ep.created };
+  } catch (profileError) {
+    // Don't throw so the caller can show a friendly toast via result.profileError
+    return { emailConfirmation: false, profileError };
+  }
 }
 
-/** Create-if-missing (or lightly update) the current user's profile. */
-export async function ensureProfile() {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-  console.log('healthy')
+/**
+ * Sign in with email/password, then ensure the profile row exists.
+ * @param {{ email: string, password: string }} params
+ */
+export async function signInWithEmail({ email, password }) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw new Error(friendlyAuthError(error));
+  return ensureProfile();
+}
 
-  if (userError) throw userError;
-  if (!user) throw new Error("Not signed in");
-
-  const { data: existingProfile, error: fetchError } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (fetchError) throw fetchError;
-
-  if (existingProfile) {
-    return { created: false, user };
-  }
-
-  const displayName = user.user_metadata?.display_name ?? null;
-
-  const { error: insertError } = await supabase.from("profiles").insert({
-    display_name: displayName,
+/**
+ * Resend a confirmation email (useful when user tries to sign in before confirming).
+ * @param {string} email
+ */
+export async function resendConfirmation(email) {
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
   });
-
-  if (insertError) throw insertError;
-
-  return { created: true, user };
+  if (error) throw new Error(friendlyAuthError(error));
+  return true;
 }
 
-let authListenerCleanup = null;
-
+/**
+ * Optional: global auth listener that ensures profile after any sign-in.
+ * Call this ONCE at app root if you want this behavior.
+ * @returns {() => void} unsubscribe function
+ */
 export function startAuthListenerEnsureProfile() {
-  if (authListenerCleanup) return authListenerCleanup;
-
   const {
     data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (event) => {
-    if (event === "SIGNED_IN") {
+  } = supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === "SIGNED_IN" && session?.user) {
       try {
         await ensureProfile();
-      } catch (error) {
-        console.error("Failed to ensure profile after sign-in", error);
+      } catch (e) {
+        // non-fatal; just log
+        console.error("Failed to ensure profile after sign-in", e);
       }
     }
   });
-
-  authListenerCleanup = () => {
-    subscription.unsubscribe();
-    authListenerCleanup = null;
+  return () => {
+    try {
+      subscription.unsubscribe();
+    } catch {}
   };
+}
 
-  return authListenerCleanup;
+/**
+ * Optional helpers
+ */
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(friendlyAuthError(error));
+}
+
+export async function getSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw new Error(friendlyAuthError(error));
+  return data.session ?? null;
+}
+
+export async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw new Error(friendlyAuthError(error));
+  return data.user ?? null;
 }
