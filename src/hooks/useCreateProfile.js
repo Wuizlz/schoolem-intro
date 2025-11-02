@@ -4,12 +4,7 @@ import toast from "react-hot-toast";
 import { signUpWithEmail } from "../services/apiProfile";
 
 export function useCreateProfile() {
-  const {
-    mutate,
-    mutateAsync,
-    isLoading,
-    isPending,
-  } = useMutation({
+  const { mutate, mutateAsync, isLoading, isPending } = useMutation({
     mutationFn: signUpWithEmail,
     onSuccess: (result) => {
       if (result?.profileError) {
@@ -23,7 +18,9 @@ export function useCreateProfile() {
       toast.success("Profile created!");
     },
     onError: (err) => {
-      toast.error(err?.message || "Failed to create profile");
+      // NEW: let SignUp.jsx handle the banner for duplicate emails
+      if (err?.code === "E_EMAIL_IN_USE") return;
+      toast.error(err?.userMessage || err?.message || "Failed to create profile");
     },
   });
 
