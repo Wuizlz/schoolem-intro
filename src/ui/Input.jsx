@@ -20,8 +20,7 @@ const Input = forwardRef(
           ref={ref}
           type={type}
           placeholder={placeholder}
-          className={`w-full rounded-full border bg-black/30 px-4 py-4 text-lg  
-            placeholder:text-zinc-400 focus:outline-none focus:ring-2 ${border} ${className}`}
+          className={`w-full rounded-full border px-4 py-4 text-lg  placeholder:text-zinc-400 focus:outline-none focus:ring-2 ${border} ${className}`}
           {...props}
         />
 

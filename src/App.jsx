@@ -10,7 +10,7 @@ import Uni from "./pages/Uni";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { startAuthListenerEnsureProfile } from "./services/apiProfile";
-import AuthCallback from "./pages/AuthCallBack";
+import AuthCallback from "./pages/AuthCallBack"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,8 +64,8 @@ function App() {
             fontSize: "16px",
             maxWidth: "500px",
             padding: "16px 24px",
-            backgroundColor: "var(--color-white-0)",
-            color: "var(--color-white-700)",
+            backgroundColor: "--color-white-0",
+            color: "--color-white-700",
           },
         }}
       />

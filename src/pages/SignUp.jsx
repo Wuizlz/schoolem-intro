@@ -1,54 +1,73 @@
 import { useForm } from "react-hook-form";
-import { useCreateProfile } from "../../hooks/useCreateProfile";
 
 import Input from "./../ui/Input";
 import Button from "../ui/Button";
-import Spinner from "../ui/Spinner";
+
+import DateAndGenderFrom from "../ui/DateAndGenderForm";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 export default function SignUp() {
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [signupData, setSignupData] = useState(null);
+
   const {
     register,
     handleSubmit,
     getValues,
+    reset,
 
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const { isCreating, createProfile } = useCreateProfile();
-
   function onSubmit(data) {
-    console.log(data);
-    const { confirmPassword, email, firstName, lastName, password, username } =
-      data;
-
-    createProfile(
-      {
-        confirmPassword,
-        email,
-        firstName,
-        lastName,
-        password,
-        username,
-      },
-      
-    );
+    setSignupData(data);
+    setShowDetailsModal(true);
   }
+
+  function handleAdditionalInfoSuccess(result) {
+    if (result?.profileError) {
+      toast.error(result.profileError.message);
+      return;
+    }
+
+    if (result?.emailConfirmation) {
+      toast.success("Check your inbox to verify your account.");
+    } else {
+      toast.success("Account created! You're all set.");
+    }
+
+    reset();
+    setSignupData(null);
+    setShowDetailsModal(false);
+  }
+
+  function handleAdditionalInfoBack() {
+    if (signupData) reset(signupData);
+    setShowDetailsModal(false);
+  }
+
+  if (showDetailsModal && signupData)
+    return (
+      <main className="min-h-dvh flex items-center justify-center bg-black  text-zinc-100">
+        <DateAndGenderFrom
+          initialData={signupData}
+          onSuccess={handleAdditionalInfoSuccess}
+          onBack={handleAdditionalInfoBack}
+        />
+      </main>
+    );
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black  text-zinc-100">
       <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
         {/* Row 1: logo + title */}
-        <div className=" relative flex items-center justify-center w-full h-16">
-          <img
-            src="/favicon.ico"
-            alt="SchoolEm"
-            className="h-16 w-16 absolute left-0"
-          />
+        <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
+          <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16" />
 
-          <h1 className="text-3xl sm:text-4xl font-semibold text-center">
+          <h3 className="text-2xl font-semibold sm:text-4xl">
             Welcome to SchoolEm!
-          </h1>
+          </h3>
         </div>
 
         {/* Row 2: form */}
@@ -146,7 +165,7 @@ export default function SignUp() {
               type="primary"
               buttonType="submit"
               className="self-center"
-              disabled={isCreating}
+              disabled={isSubmitting}
             >
               Sign Up
             </Button>

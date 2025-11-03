@@ -32,15 +32,20 @@ export default function AuthCallback() {
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
       const code = searchParams.get("code");
+      
 
       try {
         if (accessToken && refreshToken) {
           setStatus("Restoring your session…");
-          const { error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
-          if (error) throw error;
+         
+          const result = await supabase.auth
+            .setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            })
+           
+
+          
         } else if (code) {
           setStatus("Exchanging verification code…");
           const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -48,11 +53,10 @@ export default function AuthCallback() {
         }
 
         setStatus("Preparing your account…");
-        console.log("here 1")
-        await ensureProfile();
+      
 
         toast.success("Signed in successfully!");
-       
+
         navigate("/uni", { replace: true });
       } catch (error) {
         console.error("Failed to complete auth callback", error);
