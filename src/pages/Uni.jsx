@@ -180,7 +180,7 @@ export default function Uni() {
               />
               <div className="leading-tight">
                 <div className="font-semibold">SchoolEm</div>
-                <div className="text-xs text-zinc-400 truncate max-w-[9rem]">
+                <div className="text-xs text-zinc-400 truncate max-w-36">
                   {uniQ.data?.name || "University"}
                 </div>
               </div>
@@ -263,7 +263,7 @@ function Story({ name, avatarSeed, active }) {
   return (
     <div className="flex flex-col items-center w-16 shrink-0">
       {/* Gradient ring wrapper */}
-      <div className="p-[2px] rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300">
+      <div className="p-0.5 rounded-full bg-linear-to-tr from-amber-500 to-yellow-300">
         {/* Inner circle with initial (avatarSeed) */}
         <div
           className={
@@ -304,7 +304,7 @@ function PostCard({ post }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={post.image} alt="post" className="w-full h-auto object-cover" />
           ) : (
-            <div className="aspect-[4/5] w-full bg-zinc-900" />
+            <div className="aspect-4/5 w-full bg-zinc-900" />
           )}
         </div>
       </div>
