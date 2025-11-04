@@ -40,7 +40,7 @@ function Window({ children, name, widthClass = "max-w-xl" }) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[1000] grid place-items-center
+      className="fixed inset-0 z-1000 grid place-items-center
                  bg-black/60 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
