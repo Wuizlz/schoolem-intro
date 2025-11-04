@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../services/supabase";
 
+import Modal from "../ui/Modal";
+import CreatePostModal from "../ui/createPostModal";
+
 /**
  * Uni.jsx (annotated)
  * -------------------------------------------------------------
@@ -190,8 +193,21 @@ export default function Uni() {
             <nav className="space-y-1">
               <NavItem label="Uni" active icon={<IconHome />} />
               <NavItem label="Alerts" icon={<IconBell />} onClick={() => {}} />
+              <NavItem
+                label="Create"
+                icon={<IconPlusCircle />}
+                onClick={() => {}}
+              />
               <NavItem label="Profile" icon={<IconUser />} onClick={() => {}} />
-              <NavItem label="Create" icon={<IconPlusCircle />} onClick={() => {}} />
+              {/* NEW: Create nav item opens modal*/}
+              <Modal>
+                <Modal.Open opens="create-post">
+                  <NavItem label="Create" icon={<IconPlusCircle />} />
+                </Modal.Open>
+                <Modal.Window name="create-post" widthClass="max-w-2xl">
+                  <CreatePostModal />
+                </Modal.Window>
+              </Modal>
               <div className="pt-2 mt-2 border-t border-zinc-800" />
               <NavItem label="More" icon={<IconMenu />} onClick={() => {}} />
             </nav>
@@ -215,7 +231,9 @@ export default function Uni() {
                 Welcome{displayName ? `, ${displayName}` : ""}
               </h1>
               <p className="text-sm text-zinc-400">
-                {isLoading ? "Loading your campus…" : uniQ.data?.name || "Your campus"}
+                {isLoading
+                  ? "Loading your campus…"
+                  : uniQ.data?.name || "Your campus"}
               </p>
             </div>
 
@@ -223,7 +241,12 @@ export default function Uni() {
             <section className="mb-6">
               <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2">
                 {Quickies.map((s) => (
-                  <Story key={s.id} name={s.name} avatarSeed={s.avatarSeed} active={s.active} />
+                  <Story
+                    key={s.id}
+                    name={s.name}
+                    avatarSeed={s.avatarSeed}
+                    active={s.active}
+                  />
                 ))}
               </div>
             </section>
@@ -248,7 +271,9 @@ function NavItem({ label, icon, active = false, onClick }) {
       onClick={onClick}
       className={[
         "w-full flex items-center gap-3 px-3 py-2 rounded-2xl text-sm",
-        active ? "bg-zinc-900 border border-zinc-800" : "hover:bg-zinc-900/60 border border-transparent",
+        active
+          ? "bg-zinc-900 border border-zinc-800"
+          : "hover:bg-zinc-900/60 border border-transparent",
       ].join(" ")}
     >
       <span className="h-8 w-8 grid place-items-center rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300">
@@ -275,7 +300,9 @@ function Story({ name, avatarSeed, active }) {
           {avatarSeed}
         </div>
       </div>
-      <div className="mt-1.5 text-[11px] text-zinc-400 truncate w-full text-center">{name}</div>
+      <div className="mt-1.5 text-[11px] text-zinc-400 truncate w-full text-center">
+        {name}
+      </div>
     </div>
   );
 }
@@ -286,7 +313,9 @@ function PostCard({ post }) {
       {/* Header with author badge + timestamp + more menu */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-zinc-900 grid place-items-center text-xs border border-zinc-800">{post.author.initials}</div>
+          <div className="h-9 w-9 rounded-full bg-zinc-900 grid place-items-center text-xs border border-zinc-800">
+            {post.author.initials}
+          </div>
           <div>
             <div className="text-sm font-medium">{post.author.name}</div>
             <div className="text-[11px] text-zinc-400">{post.timeAgo}</div>
@@ -302,7 +331,11 @@ function PostCard({ post }) {
         <div className="overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800">
           {post.image ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={post.image} alt="post" className="w-full h-auto object-cover" />
+            <img
+              src={post.image}
+              alt="post"
+              className="w-full h-auto object-cover"
+            />
           ) : (
             <div className="aspect-4/5 w-full bg-zinc-900" />
           )}
@@ -327,7 +360,9 @@ function PostCard({ post }) {
           <span className="font-medium mr-1">{post.author.name}</span>
           {post.caption}
         </div>
-        <button className="mt-1 text-xs text-zinc-400 hover:text-zinc-300">View all {post.comments} comments</button>
+        <button className="mt-1 text-xs text-zinc-400 hover:text-zinc-300">
+          View all {post.comments} comments
+        </button>
         <div className="mt-2">
           <input
             className="w-full bg-transparent border-t border-zinc-900 focus:outline-none text-sm placeholder-zinc-500 pt-2"
@@ -342,7 +377,16 @@ function PostCard({ post }) {
 // -------------------------- Icons (no deps) --------------------------------
 function IconHome() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M3 10.5 12 3l9 7.5" />
       <path d="M5 10v10h14V10" />
     </svg>
@@ -350,7 +394,16 @@ function IconHome() {
 }
 function IconBell() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9" />
       <path d="M10 21h4" />
     </svg>
@@ -358,7 +411,16 @@ function IconBell() {
 }
 function IconUser() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20 21a8 8 0 0 0-16 0" />
       <circle cx="12" cy="7" r="4" />
     </svg>
@@ -366,7 +428,16 @@ function IconUser() {
 }
 function IconPlusCircle() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="10" />
       <path d="M12 8v8M8 12h8" />
     </svg>
@@ -374,14 +445,32 @@ function IconPlusCircle() {
 }
 function IconMenu() {
   return (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   );
 }
 function IconMore() {
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="5" cy="12" r="1" />
       <circle cx="12" cy="12" r="1" />
       <circle cx="19" cy="12" r="1" />
@@ -390,21 +479,48 @@ function IconMore() {
 }
 function IconHeart() {
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
     </svg>
   );
 }
 function IconMessage() {
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
     </svg>
   );
 }
 function IconSend() {
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="m22 2-7 20-4-9-9-4Z" />
       <path d="M22 2 11 13" />
     </svg>
@@ -431,7 +547,10 @@ function mockFeed(displayName) {
       author: {
         name: displayName || "Wuzi",
         initials: (
-          displayName?.split(" ").map((s) => s[0]).join("") || "WZ"
+          displayName
+            ?.split(" ")
+            .map((s) => s[0])
+            .join("") || "WZ"
         ).toUpperCase(),
       },
       timeAgo: "25m",
