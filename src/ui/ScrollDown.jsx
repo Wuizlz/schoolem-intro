@@ -18,7 +18,7 @@ export default function ScrollDown({
     <div className="w-full">
       <Listbox value={value} onChange={onChange} disabled={disabled}>
         <div className="relative">
-          <ListboxButton
+          <Listbox.Button
             id={id}
             className={`w-full rounded-full border px-4 py-4 text-left text-lg
                         border-zinc-600/70 bg-zinc-900 text-zinc-100
@@ -36,7 +36,7 @@ export default function ScrollDown({
                 <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" />
               </svg>
             </span>
-          </ListboxButton>
+          </Listbox.Button>
 
           <Transition
             as={Fragment}
@@ -44,13 +44,13 @@ export default function ScrollDown({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <ListboxOptions
+            <Listbox.Options
               className="absolute z-50 mt-2 w-full overflow-hidden
                          rounded-3xl border border-zinc-700 bg-zinc-900
                          shadow-xl focus:outline-none"
             >
               {options.map((opt) => (
-                <ListboxOption
+                <Listbox.Option
                   key={opt.value}
                   value={opt.value}
                   className={({ active }) =>
@@ -70,9 +70,9 @@ export default function ScrollDown({
                       )}
                     </div>
                   )}
-                </ListboxOption>
+                </Listbox.Option>
               ))}
-            </ListboxOptions>
+            </Listbox.Options>
           </Transition>
         </div>
       </Listbox>
