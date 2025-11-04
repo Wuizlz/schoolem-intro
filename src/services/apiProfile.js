@@ -1,132 +1,195 @@
-// src/services/apiProfile.js
 import supabase from "./supabase";
-import { ensureProfile } from "../lib/ensureProfile";
-
-/** Detects the classic duplicate-email error from Supabase */
-function isEmailInUseError(err) {
-  const msg = String(err?.message || "").toLowerCase();
-  return (
-    (err?.status === 400 || err?.status === 422) &&
-    (msg.includes("already") || msg.includes("registered") || msg.includes("exists"))
-  );
-}
-
-/** Friendly messages for other auth errors */
-function friendlyAuthError(err) {
-  const m = (err?.message || "").toLowerCase();
-  if (m.includes("user already registered")) return "That email is already registered. Try signing in.";
-  if (m.includes("invalid login credentials")) return "Wrong email or password.";
-  if (m.includes("email not confirmed")) return "Your email isn't verified yet. Check your inbox.";
-  if (m.includes("token has expired")) return "That link has expired. Request a new one.";
-  if (m.includes("refresh token")) return "Your session expired. Please sign in again.";
-  return err?.message || "Something went wrong.";
-}
 
 /**
- * Sign up a user with email/password.
- * Returns { emailConfirmation: boolean, created?: boolean, profileError?: Error }
+ * Sign up with email/password.
+ * If email confirmation is OFF and we get a session, we immediately insert the profile row.
+ * If confirmation is ON (no session yet), we skip insert — call ensureProfile() after the user verifies & logs in.
  */
-export async function signUpWithEmail(payload) {
-  const { email, password, firstName, lastName, username } = payload;
+
+export async function signUpWithEmail({
+  email,
+  password,
+  username,
+  firstName,
+  lastName,
+  birthdate,
+  gender,
+  genderLabel,
+}) {
+  const { data: uniId, error: uniError } = await supabase.rpc(
+    "email_domain",
+    { p_email: email }
+  );
+  if (uniError) throw uniError; // unexpected server issue
+  if (!uniId) {
+    throw new Error("University not yet supported.");
+  }
+
+  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim() || null;
+  const displayName = username ?? null;
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      //Where supabase redirects after email verification
+
       emailRedirectTo: `${window.location.origin}/auth/callback`,
+      // attach to user_metadata
       data: {
-        display_name: `${firstName ?? ""} ${lastName ?? ""}`.trim(),
+        display_name: displayName,
+        username: username ?? null,
         first_name: firstName ?? null,
         last_name: lastName ?? null,
-        username: username ?? null,
+        birthdate: birthdate ?? null,
+        gender: gender ?? null,
+        gender_label: genderLabel ?? null,
+        full_name: fullName,
       },
     },
   });
 
-  // Case A: Supabase returned an error (e.g., confirmed account already exists)
+  console.log(data)
   if (error) {
-    if (isEmailInUseError(error)) {
-      const e = new Error("An account with that email already exists. Please sign in.");
-      e.code = "E_EMAIL_IN_USE";
-      e.userMessage = "An account with that email already exists. Please sign in.";
-      throw e;
+    if (error.message?.toLowerCase().includes("user already registered")) {
+      throw new Error("Account already created, sign in instead!");
     }
-    throw new Error(friendlyAuthError(error));
+    throw error;
   }
 
-  // Case B: No error, but Supabase signals existing user via identities=[]
-  // (common when the email exists but isn't confirmed yet, or re-signup edge cases)
-  // If identities is an empty array, treat it as "email in use" to keep UX consistent.
-  const identities = data?.user?.identities;
-  if (Array.isArray(identities) && identities.length === 0) {
-    const e = new Error("An account with that email already exists. Please sign in.");
-    e.code = "E_EMAIL_IN_USE";
-    e.userMessage = "An account with that email already exists. Please sign in.";
-    throw e;
+  const { user, session } = data;
+
+  const alreadyRegistered =
+    user &&
+    Array.isArray(user.identities) &&
+    user.identities.length === 0 &&
+    !session;
+
+  if (alreadyRegistered) {
+    throw new Error("Account already created, sign in instead!");
   }
 
-  // When confirmations are enabled -> no session yet (email sent)
-  if (!data?.session) {
-    return { emailConfirmation: true };
+  let profileInserted = false;
+  let profileError = null;
+
+  if (session) {
+    const { error: insertError } = await supabase.from("profiles").insert({
+      // Your BEFORE INSERT trigger sets : id := auth.uid(), email, uni_id
+      display_name: displayName,
+      full_name: fullName,
+      b_date: birthdate ?? null,
+      gender: gender ?? null,
+    });
+    if (insertError) profileError = insertError;
+    else profileInserted = true;
   }
 
-  // When confirmations are disabled -> we have a session; ensure profile now
-  try {
-    const ep = await ensureProfile();
-    return { emailConfirmation: false, created: ep.created };
-  } catch (profileError) {
-    return { emailConfirmation: false, profileError };
-  }
-}
-
-export async function signInWithEmail({ email, password }) {
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(friendlyAuthError(error));
-  return ensureProfile();
-}
-
-export async function resendConfirmation(email) {
-  const { error } = await supabase.auth.resend({
-    type: "signup",
-    email,
-    options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-  });
-  if (error) throw new Error(friendlyAuthError(error));
-  return true;
-}
-
-export function startAuthListenerEnsureProfile() {
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event === "SIGNED_IN" && session?.user) {
-      try {
-        await ensureProfile();
-      } catch (e) {
-        console.error("Failed to ensure profile after sign-in", e);
-      }
-    }
-  });
-  return () => {
-    try {
-      subscription.unsubscribe();
-    } catch {}
+  return {
+    user,
+    hasSession: !!session,
+    emailConfirmation: !session, // true when confirmation required
+    profileInserted,
+    profileError,
+    username,
   };
 }
 
-export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(friendlyAuthError(error));
+export async function ensureProfile(opts = {}) {
+  const { enforceDomain = false } = opts;
+
+  // 1) Get session + user
+  const { data: { session }, error: sessErr } = await supabase.auth.getSession();
+  if (sessErr) throw sessErr;
+  const user = session?.user;
+  if (!user) throw new Error("Not signed in");
+
+  // 2) Derive display name from metadata
+  const meta = user.user_metadata || {};
+  const fromMeta = meta.display_name && String(meta.display_name).trim();
+  const fromNames = [meta.first_name, meta.last_name].filter(Boolean).join(" ").trim();
+  const display_name = fromMeta ?? (fromNames || null);
+
+  // 3) Ask DB which university matches the email domain (may be null if not allowed/unknown)
+  let uniId = null;
+  try {
+    const { data: uniLookup, error: uniErr } = await supabase.rpc(
+      "university_id_for_email",
+      { p_email: user.email }
+    );
+    if (uniErr) {
+      // non-fatal; just log and continue
+      console.warn("university_id_for_email failed:", uniErr);
+    } else {
+      uniId = uniLookup ?? null;
+    }
+  } catch (e) {
+    console.warn("university_id_for_email threw:", e);
+  }
+
+  // 4) (Optional) Hard-enforce the domain AFTER login
+  if (enforceDomain && !uniId) {
+    return { created: false, user, allowed: false, uniId: null };
+  }
+
+  // 5) See if profile exists; if it does, we might still patch missing fields
+  const { data: existing, error: selErr } = await supabase
+    .from("profiles")
+    .select("id, email, display_name, uni_id")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (selErr) throw selErr;
+
+  // Build the row we want to persist (only set uni_id if we actually found one)
+  const row = {
+    id: user.id,
+    email: user.email ?? null,
+    display_name,
+    ...(uniId ? { uni_id: uniId } : {}),
+  };
+
+  // If profile exists but has all desired values already, skip the write
+  const needsUpsert =
+    !existing ||
+    existing.email !== row.email ||
+    (display_name && existing.display_name !== display_name) ||
+    (uniId && existing.uni_id !== uniId);
+
+  if (needsUpsert) {
+    const { error: upsertErr } = await supabase
+      .from("profiles")
+      .upsert(row, { onConflict: "id" });
+    if (upsertErr) throw upsertErr;
+  }
+
+  return { created: !existing, user, allowed: true, uniId };
 }
 
-export async function getSession() {
-  const { data, error } = await supabase.auth.getSession();
-  if (error) throw new Error(friendlyAuthError(error));
-  return data.session ?? null;
-}
+let authListenerCleanup = null;
+let lastEnsuredUserId = null;
 
-export async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) throw new Error(friendlyAuthError(error));
-  return data.user ?? null;
+export function startAuthListenerEnsureProfile() {
+  if (authListenerCleanup) return authListenerCleanup;
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") {
+      lastEnsuredUserId = null;
+      return;
+    }
+
+    const userId = session?.user?.id ?? null;
+    if (event === "SIGNED_IN" && userId && userId !== lastEnsuredUserId) {
+      ensureProfile().catch((error) => {
+        console.error("Failed to ensure profile after sign-in", error);
+      });
+      lastEnsuredUserId = userId;
+    }
+  });
+
+  authListenerCleanup = () => {
+    subscription.unsubscribe();
+    authListenerCleanup = null;
+  };
+  return authListenerCleanup;
 }
