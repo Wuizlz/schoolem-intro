@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../services/supabase";
 import Modal from "../ui/Modal";
-import CreatePostModal from "../ui/createPostModal";
 import AppLayout from "../ui/AppLayout";
 import App from "../App";
 import ProfileQuery from "../ui/ProfileQueryHandler";
