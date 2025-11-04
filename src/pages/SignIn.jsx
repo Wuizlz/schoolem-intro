@@ -2,49 +2,20 @@
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
 import Input from "../ui/Input";
-import supabase from "../services/supabase";
+import useSignIn from "../hooks/useSignIn";
 import { ensureProfile } from "../services/apiProfile";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 
 export default function SignIn() {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({ defaultValues: { email: "", password: "" } });
 
-  async function onSubmit({ email, password }) {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-
-      // If sign-in succeeds (and the email is already confirmed), we have a session.
-      await ensureProfile();
-      navigate("/uni");
-    } catch (e) {
-      const msg = e?.message || "Sign in failed";
-      // Common case: account exists but email isn't confirmed yet.
-      if (/confirm/i.test(msg) && /email/i.test(msg)) {
-        try {
-          await supabase.auth.resend({
-            type: "signup",
-            email: getValues("email"),
-            options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-          });
-          toast.success("Your email isn’t verified yet. I’ve sent a new confirmation link.");
-          return;
-        } catch (resendErr) {
-          toast.error(resendErr?.message || "Couldn’t resend the confirmation email.");
-          return;
-        }
-      }
-      toast.error(msg);
-      console.error(e);
-    }
-  }
+  const { signIn, isLoading } = useSignIn({
+    ensureProfileFn: ensureProfile,
+    redirectTo: "/uni",
+  });
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
@@ -56,34 +27,39 @@ export default function SignIn() {
           </h1>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <form className="space-y-6" onSubmit={handleSubmit(signIn)} noValidate>
           <Input
             id="email"
             type="email"
             placeholder="Email"
+            autoComplete="email"
             {...register("email", {
               required: "Email is required",
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Enter a valid email" },
             })}
             error={errors.email}
-            autoComplete="email"
           />
 
           <Input
             id="password"
             type="password"
             placeholder="Password"
+            autoComplete="current-password"
             {...register("password", {
               required: "Password is required",
               minLength: { value: 8, message: "Min 8 characters" },
             })}
             error={errors.password}
-            autoComplete="current-password"
           />
 
           <div className="flex flex-col items-center gap-3">
-            <Button type="primary" buttonType="submit" className="self-center" disabled={isSubmitting}>
-              {isSubmitting ? "Signing In…" : "Sign In"}
+            <Button
+              type="primary"
+              buttonType="submit"
+              className="self-center"
+              disabled={isSubmitting || isLoading}
+            >
+              {isSubmitting || isLoading ? "Signing In…" : "Sign In"}
             </Button>
 
             <div className="w-full flex items-center gap-4">
