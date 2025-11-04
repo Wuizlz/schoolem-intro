@@ -25,8 +25,7 @@ export function useCreateProfile() {
   });
 
   return {
-    isCreating: Boolean(isLoading || isPending),
-    createProfile: mutate,
-    createProfileAsync: mutateAsync,
+    isCreating,
+    createProfile
   };
 }
