@@ -1,10 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../services/supabase";
-
 import Modal from "../ui/Modal";
 import CreatePostModal from "../ui/createPostModal";
+import AppLayout from "../ui/AppLayout";
+import App from "../App";
+import ProfileQuery from "../ui/ProfileQueryHandler";
+import UniversityQuery from "../ui/UniversityQueryHandler";
+
+
+// import Alerts from "./Alerts";
 
 /**
  * Uni.jsx (annotated)
@@ -36,6 +42,8 @@ export default function Uni() {
   const [user, setUser] = useState(null); // The signed-in Supabase user (from Auth)
   const [checking, setChecking] = useState(true); // True until we know if there is a session
 
+  const profileQ = ProfileQuery(user?.id);
+  const uniQ = UniversityQuery(profileQ.data?.uni_id);
   // ------------------------- Auth guard -------------------------------------
   // Check if there is a session. If no session, go to /signin.
   // Also subscribe to auth changes so if the user signs out in another tab,
@@ -62,43 +70,11 @@ export default function Uni() {
     return () => {
       try {
         unsub?.();
-      } catch {}
+      } catch { }
     };
   }, [navigate]);
 
-  // ------------------------- Profile query ----------------------------------
-  // Reads your own profile row. This relies on RLS allowing the current user
-  // to select their own row only. We fetch display_name and uni_id for UI.
-  const profileQ = useQuery({
-    queryKey: ["profile", user?.id],
-    enabled: !!user, // don't run until we know user exists
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, email, display_name, uni_id")
-        .eq("id", user.id)
-        .single();
-      if (error) throw error; // react-query will track & show if needed
-      return data;
-    },
-  });
-
-  // ------------------------- University query -------------------------------
-  // If profile has a uni_id, we look up the university for its name/domains.
-  const uniQ = useQuery({
-    queryKey: ["university", profileQ.data?.uni_id],
-    enabled: Boolean(profileQ.data?.uni_id),
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("universities")
-        .select("id, name, domains")
-        .eq("id", profileQ.data?.uni_id)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-  });
-
+ 
   // ------------------------- Derived display name ---------------------------
   // We prefer display_name stored in the profile, then fall back to metadata
   // on the auth user, and finally the email if nothing else exists.
@@ -173,56 +149,7 @@ export default function Uni() {
       <div className="mx-auto max-w-[1200px] px-3 sm:px-6 lg:px-8">
         <div className="flex gap-6">
           {/* ----------------------- Sidebar ----------------------- */}
-          <aside className="hidden md:block w-60 py-6 sticky top-0 self-start min-h-dvh">
-            {/* Brand + campus name */}
-            <div className="flex items-center gap-3 mb-8">
-              <img
-                src="/favicon.ico"
-                alt="SchoolEm"
-                className="h-9 w-9 rounded-2xl border border-zinc-800"
-              />
-              <div className="leading-tight">
-                <div className="font-semibold">SchoolEm</div>
-                <div className="text-xs text-zinc-400 truncate max-w-36">
-                  {uniQ.data?.name || "University"}
-                </div>
-              </div>
-            </div>
-
-            {/* Local nav; hook these to routes when ready */}
-            <nav className="space-y-1">
-              <NavItem label="Uni" active icon={<IconHome />} />
-              <NavItem label="Alerts" icon={<IconBell />} onClick={() => {}} />
-              <NavItem
-                label="Create"
-                icon={<IconPlusCircle />}
-                onClick={() => {}}
-              />
-              <NavItem label="Profile" icon={<IconUser />} onClick={() => {}} />
-              {/* NEW: Create nav item opens modal*/}
-              <Modal>
-                <Modal.Open opens="create-post">
-                  <NavItem label="Create" icon={<IconPlusCircle />} />
-                </Modal.Open>
-                <Modal.Window name="create-post" widthClass="max-w-2xl">
-                  <CreatePostModal />
-                </Modal.Window>
-              </Modal>
-              <div className="pt-2 mt-2 border-t border-zinc-800" />
-              <NavItem label="More" icon={<IconMenu />} onClick={() => {}} />
-            </nav>
-
-            {/* Sign out */}
-            <div className="mt-8">
-              <button
-                onClick={handleSignOut}
-                className="w-full rounded-2xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 px-3 py-2 text-sm"
-              >
-                Sign out
-              </button>
-            </div>
-          </aside>
-
+          
           {/* ----------------------- Main column ------------------- */}
           <main className="flex-1 py-6 mx-auto max-w-[720px] w-full">
             {/* Greeting / header shows name + campus */}
@@ -231,9 +158,7 @@ export default function Uni() {
                 Welcome{displayName ? `, ${displayName}` : ""}
               </h1>
               <p className="text-sm text-zinc-400">
-                {isLoading
-                  ? "Loading your campus…"
-                  : uniQ.data?.name || "Your campus"}
+                {isLoading ? "Loading your campus…" : uniQ.data?.name || "Your campus"}
               </p>
             </div>
 
@@ -300,22 +225,48 @@ function Story({ name, avatarSeed, active }) {
           {avatarSeed}
         </div>
       </div>
-      <div className="mt-1.5 text-[11px] text-zinc-400 truncate w-full text-center">
-        {name}
-      </div>
+      <div className="mt-1.5 text-[11px] text-zinc-400 truncate w-full text-center">{name}</div>
     </div>
   );
 }
 
 function PostCard({ post }) {
+  const isThread = !post.image; //handles the display mode based on presence of image
+  const [liked, setLiked] = useState(Boolean(post.initialLiked));
+  const [showComments, setShowComments] = useState(false);
+  const [showComposer, setShowComposer] = useState(false);
+  const commentInputRef = useRef(null);
+
+  const comments = post.commentList ?? [];
+  const commentCount = comments.length || post.comments || 0;
+
+  const handleToggleLike = () => {
+    setLiked((prev) => !prev);
+    //ADD SUPABASE MUTATION HERE :::::::::::::::::::::::::::::::::::::::::::::
+  };
+
+  const handleCommentToggle = () => {
+    setShowComments((prev) => !prev);
+    //ADD SUPABASE MUTATION HERE ::::::::::::::::::::::::::::::::::::::::::::::
+  };
+
+  const handleComposerToggle = () => { // By composer I really mean comment composer //
+    setShowComposer((prev) => {
+      const next = !prev;
+      if (!prev) {
+        requestAnimationFrame(() => commentInputRef.current?.focus());
+      }
+      return next;
+    });
+  };
+
+
   return (
     <article className="rounded-2xl border border-zinc-800 bg-zinc-950">
       {/* Header with author badge + timestamp + more menu */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-zinc-900 grid place-items-center text-xs border border-zinc-800">
-            {post.author.initials}
-          </div>
+          <div className="h-9 w-9 rounded-full bg-zinc-900 grid place-items-center text-xs border border-zinc-800">{post.author.initials}</div>
           <div>
             <div className="text-sm font-medium">{post.author.name}</div>
             <div className="text-[11px] text-zinc-400">{post.timeAgo}</div>
@@ -326,28 +277,45 @@ function PostCard({ post }) {
         </button>
       </div>
 
-      {/* Media: show image if provided; otherwise a placeholder box */}
-      <div className="px-3">
-        <div className="overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800">
-          {post.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={post.image}
-              alt="post"
-              className="w-full h-auto object-cover"
-            />
-          ) : (
-            <div className="aspect-4/5 w-full bg-zinc-900" />
-          )}
+      {/* Media: show image if provided; otherwise it becomes a thread */}
+      {isThread ? (
+        <div className="px-4 pt-3 pb-2">
+          <p className="text-xl sm:text-1xl leading-tight text-zinc-100 break-words whitespace-pre-wrap w-full">
+            {post.caption}
+          </p>
         </div>
-      </div>
+      ) : (
+        <div className="px-3">
+          <div className="overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800">
+            <img src={post.image} alt="post" className="w-full h-auto object-cover" />
+          </div>
+        </div>
+      )}
 
       {/* Actions: icons + tiny meta text */}
       <div className="px-2">
         <div className="flex items-center justify-between px-2 py-2">
           <div className="flex items-center gap-3 text-zinc-300">
-            <IconHeart />
-            <IconMessage />
+            <button
+              type="button"
+              onClick={handleToggleLike}
+              aria-pressed={liked}
+              aria-label={liked ? "Unlike post" : "Like post"}
+              className={`h-9 w-9 grid place-items-center rounded-md transition-colors ${liked ? "text-rose-500" : "text-zinc-300 hover:text-zinc-100"
+                }`}
+            >
+              <IconHeart filled={liked} />
+            </button>
+            <button
+              type="button"
+              onClick={handleComposerToggle}
+              aria-expanded={showComposer}
+              aria-label="Toggle comments"
+              className="h-9 w-9 grid place-items-center rounded-md text-zinc-300 hover:text-zinc-100 transition-colors"
+            >
+              <IconMessage />
+            </button>
+
             <IconSend />
           </div>
           <div className="text-[11px] text-zinc-400">{post.meta}</div>
@@ -357,170 +325,76 @@ function PostCard({ post }) {
       {/* Caption + comment input */}
       <div className="px-4 pb-3">
         <div className="text-sm">
-          <span className="font-medium mr-1">{post.author.name}</span>
-          {post.caption}
+          {!isThread && <span className="font-medium mr-1">{post.author.name}</span>}
+          {!isThread && <span className="break-words whitespace-pre-wrap">{post.caption}</span>}
         </div>
-        <button className="mt-1 text-xs text-zinc-400 hover:text-zinc-300">
-          View all {post.comments} comments
+
+        <button
+          type="button"
+          onClick={handleCommentToggle}
+          className="mt-2 text-xs text-zinc-400 hover:text-zinc-300">
+          {showComments ? "Hide comments" : `View all ${commentCount} comments`}
         </button>
-        <div className="mt-2">
-          <input
-            className="w-full bg-transparent border-t border-zinc-900 focus:outline-none text-sm placeholder-zinc-500 pt-2"
-            placeholder="Say something…"
-          />
-        </div>
+
+        {showComments && (
+          <div className="mt-3 space-y-2 text-sm text-zinc-300">
+            {comments.length > 0
+              ? (comments.map((comments) => (
+                <div key={comments.id} className="rounded-lg bg-zinc-900/60 px-3 py-2">
+                  <span className="text-xs font-medium text-zinc-200">{comments.author}</span>
+                  <p className="text-sm break-words whitespace-pre-wrap text-zinc-300">
+                    {comments.text}
+                  </p>
+                </div>
+              ))
+              ) : (
+                <p className="text-xs text-zinc-500">Be the first to comment.</p>
+              )}
+                </div>
+              )}
+
+        {showComposer && (
+          <div className="mt-2">
+            <input
+              ref={commentInputRef}
+              className="w-full bg-transparent border-t border-zinc-900 focus:outline-none text-sm placeholder-zinc-500 pt-2 whitespace-pre-wrap break-words"
+              placeholder="Say something..."
+            />
+          </div>
+        )}
       </div>
     </article>
   );
 }
 
 // -------------------------- Icons (no deps) --------------------------------
-function IconHome() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 10.5 12 3l9 7.5" />
-      <path d="M5 10v10h14V10" />
-    </svg>
-  );
-}
-function IconBell() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9" />
-      <path d="M10 21h4" />
-    </svg>
-  );
-}
-function IconUser() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 21a8 8 0 0 0-16 0" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-function IconPlusCircle() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 8v8M8 12h8" />
-    </svg>
-  );
-}
-function IconMenu() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  );
-}
+
 function IconMore() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="5" cy="12" r="1" />
       <circle cx="12" cy="12" r="1" />
       <circle cx="19" cy="12" r="1" />
     </svg>
   );
 }
-function IconHeart() {
+function IconHeart({ filled = false }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
     </svg>
   );
 }
 function IconMessage() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
     </svg>
   );
 }
 function IconSend() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m22 2-7 20-4-9-9-4Z" />
       <path d="M22 2 11 13" />
     </svg>
@@ -540,24 +414,54 @@ function mockQuickies(displayName) {
   }));
 }
 
+// :::::::::::::::::: CHANGE THIS SHIT BRUH ::::::::::::::::::::: //
 function mockFeed(displayName) {
   return [
     {
       id: "p1",
       author: {
-        name: displayName || "Wuzi",
+        name: "Wuzi",
         initials: (
-          displayName
-            ?.split(" ")
-            .map((s) => s[0])
-            .join("") || "WZ"
+          "WZ"
         ).toUpperCase(),
       },
       timeAgo: "25m",
       image: "", // set a URL to test images
-      caption: "Me and the crew!",
-      comments: 4,
+      caption: "Me and the crew! ______________________________________________________\n \n TEST 1 \n__________________________________________________________________",
+      comments: 0,
       meta: "7 clubs",
     },
+    {
+      id: "p2",
+      author: {
+        name: "Dimitri",
+        initials: (
+          "DM"
+        ).toUpperCase(),
+      },
+      timeAgo: "1h",
+      image: "",
+      caption: "Loving the new campus vibes! IM TESTINNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNG \n I HATE EVERYONE \n ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      comments: 2,
+      commentList: [
+        { id: "c1", author: "Alice", text: "Great photo!" },
+        { id: "c2", author: "Bob", text: "Nice shot!" }
+      ],
+      meta: "3 clubs",
+    },
+    {
+      id: "p3",
+      author: {
+        name: "Roland",
+        initials: (
+          "R"
+        ).toUpperCase(),
+      },
+      timeAgo: "2h",
+      caption: "Just finished my last exam! Time to party.",
+      comments: 0,
+      meta: "5 clubs",
+    }
   ];
 }
+
