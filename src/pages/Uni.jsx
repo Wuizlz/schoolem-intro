@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../services/supabase";
+import Modal from "../ui/Modal";
+import CreatePostModal from "../ui/createPostModal";
 import AppLayout from "../ui/AppLayout";
 import App from "../App";
 import ProfileQuery from "../ui/ProfileQueryHandler";
@@ -108,8 +110,6 @@ export default function Uni() {
   // Quickies & Feed are hard-coded for now. Replace with real queries later.
   const Quickies = mockQuickies(displayName);
   const feed = mockFeed(displayName);
-  // const [alertsOpen, setAlertsOpen] = useState(false);
-  // const alertsData = mockAlerts();
 
   // Example: how to load posts from DB (when ready)
   // 1) Create a table `public.posts` with columns like:
@@ -166,7 +166,12 @@ export default function Uni() {
             <section className="mb-6">
               <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2">
                 {Quickies.map((s) => (
-                  <Story key={s.id} name={s.name} avatarSeed={s.avatarSeed} active={s.active} />
+                  <Story
+                    key={s.id}
+                    name={s.name}
+                    avatarSeed={s.avatarSeed}
+                    active={s.active}
+                  />
                 ))}
               </div>
             </section>
@@ -180,11 +185,6 @@ export default function Uni() {
           </main>
         </div>
       </div>
-      {/* <Alerts
-        open={alertsOpen}
-        onClose={() => setAlertsOpen(false)}
-        uniAlerts={alertsData}
-      /> */}
     </div>
   );
 }
@@ -196,7 +196,9 @@ function NavItem({ label, icon, active = false, onClick }) {
       onClick={onClick}
       className={[
         "w-full flex items-center gap-3 px-3 py-2 rounded-2xl text-sm",
-        active ? "bg-zinc-900 border border-zinc-800" : "hover:bg-zinc-900/60 border border-transparent",
+        active
+          ? "bg-zinc-900 border border-zinc-800"
+          : "hover:bg-zinc-900/60 border border-transparent",
       ].join(" ")}
     >
       <span className="h-8 w-8 grid place-items-center rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300">
