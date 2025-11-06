@@ -7,6 +7,7 @@ import GlobalStyles from "./styles/GlobalStyles";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Uni from "./pages/Uni";
+import Settings from "./pages/Settings";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { startAuthListenerEnsureProfile } from "./services/apiProfile";
@@ -41,8 +42,9 @@ function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="auth/callback" element={<AuthCallback />} />
-          {/* Example app route */}
+          {/* App routes */}
           <Route path="uni" element={<Uni />} />
+          <Route path="settings" element={<Settings />} />
           {/* Catch-all -> /signin */}
           <Route path="*" element={<Navigate to="signin" replace />} />
         </Routes>

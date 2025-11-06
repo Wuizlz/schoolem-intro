@@ -131,7 +131,7 @@ export default function DateAndGenderFrom({ initialData, onSuccess, onBack }) {
             </label>
             <select
               id="gender"
-              className="w-full rounded-full border px-4 py-4 text-lg placeholder:text-zinc-400 focus:outline-none focus:ring-2 border-zinc-600/70 focus:ring-white/30"
+              className="w-full rounded-full border px-4 py-4 text-lg bg-zinc-900 text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-2 border-zinc-600/70 focus:ring-white/30 [color-scheme:dark]"
               aria-invalid={!!errors.gender}
               aria-describedby={errors.gender ? "gender-error" : undefined}
               {...register("gender", {
