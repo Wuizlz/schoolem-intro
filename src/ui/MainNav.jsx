@@ -1,11 +1,17 @@
 import { IoIosAddCircleOutline, IoIosNotifications } from "react-icons/io";
 import { LiaUniversitySolid } from "react-icons/lia";
+import { MdAddToPhotos } from "react-icons/md";
+import { FaRegFileLines } from "react-icons/fa6";
 
 import { NavLink } from "react-router-dom";
-import styled from "styled-components";
-import Button from "./Button";
-import CreatePostModal from "./CreatePostModal";
+import styled, { css } from "styled-components";
+
 import Modal from "./Modal";
+import Menus from "./Menus";
+
+import CreatePostModa from "../ui/CreatePostModal";
+import { Menu } from "@headlessui/react";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const ProfileIcon = styled.span`
   width: 2.4rem;
@@ -24,29 +30,25 @@ const ProfileIcon = styled.span`
   -webkit-mask-size: contain;
   transition: background-color 0.3s ease, color 0.3s ease;
 `;
-const StyledNavLink = styled(NavLink)`
-  &:link,
-  &:visited {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    padding: 0.8rem 1.6rem;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    transition: background-color 0.3s ease, border-color 0.3s ease,
-      color 0.3s ease;
 
-    /* color: var(--color-grey-50);
-    font-size: 1.6rem;
-
-    transition: all 0.3s;
-    font-weight: bold; */
-  }
+const navItemStyles = css`
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
 
   &:hover,
   &:focus-visible {
     border-color: var(--color-yellow-500);
     background-color: hsla(0, 0%, 100%, 0.06);
+    outline: none;
   }
 
   &.active {
@@ -65,7 +67,7 @@ const StyledNavLink = styled(NavLink)`
 
   &:active ${ProfileIcon}, &.active svg,
   &.active ${ProfileIcon} {
-    color: var(--color-yellow-500);
+    color: var(--color-amber-200);
   }
 
   span {
@@ -75,6 +77,19 @@ const StyledNavLink = styled(NavLink)`
   &:active span,
   &.active span {
     font-weight: bolder;
+  }
+`;
+
+const StyledNavLink = styled(NavLink)`
+  ${navItemStyles};
+`;
+
+const AddNavButton = styled(Menus.Toggle)`
+  ${navItemStyles};
+  cursor: pointer;
+
+  &:active svg {
+    color: var(--color-amber-200);
   }
 `;
 
@@ -103,23 +118,62 @@ export default function MainNav() {
         </li>
         <li>
           <Modal>
-            <Modal.Open opens="create-post">
-              <Button type="modalButton" className="text-grey-50">
-                <IoIosAddCircleOutline color="white"
+            <Menus>
+              <AddNavButton id="add-ops">
+                <IoIosAddCircleOutline
                   aria-hidden="true"
                   className="h-[2.4rem] w-[2.4rem] shrink-0 text-grey-50 transition-colors duration-300"
                 />
                 <span className="font-extralight text-amber-50 transition-colors duration-300">
                   Add
                 </span>
-              </Button>
-            </Modal.Open>
-            <Modal.Window name="create-post">
-              <CreatePostModal />
-            </Modal.Window>
+              </AddNavButton>
+              <Menus.List id="add-ops">
+                <Modal.Open opens="post">
+                  <Menus.MButton
+                    icon={
+                      <MdAddToPhotos
+                        color="white"
+                        className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      />
+                    }
+                  >
+                    <span className="text-amber-50">Post</span>
+                  </Menus.MButton>
+                </Modal.Open>
+                <Modal.Open opens="thread">
+                  <Menus.MButton
+                    icon={
+                      <FaRegFileLines
+                        color="white"
+                        className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      />
+                    }
+                  >
+                    <span className="text-amber-50">Thread</span>
+                  </Menus.MButton>
+                </Modal.Open>
+                <Modal.Open opens="quickie">
+                  <Menus.MButton
+                    icon={
+                      <FaRegUserCircle
+                        color="white"
+                        className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      />
+                    }
+                  >
+                    <span className="text-amber-50">Quickie</span>
+                  </Menus.MButton>
+                </Modal.Open>
+              </Menus.List>
+              <Modal.Window name="post">
+                <CreatePostModa></CreatePostModa>
+              </Modal.Window>
+            </Menus>
           </Modal>
         </li>
       </ul>
+      
     </nav>
   );
 }

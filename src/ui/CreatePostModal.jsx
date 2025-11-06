@@ -265,24 +265,9 @@ export default function CreatePostModal({ onCloseModal }) {
             </div>
           )}
 
-          <div className="relative w-full">
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
-              <span className="block h-px w-full bg-zinc-700" />
-            </div>
-            <span className="relative mx-auto block w-fit bg-zinc-900 px-3 text-sm text-zinc-300">
-              or
-            </span>
-          </div>
+         
 
-          <button
-            type="button"
-            onClick={() => {
-              onCloseModal?.();
-            }}
-            className="text-base font-medium text-zinc-200 underline underline-offset-4 hover:text-zinc-100"
-          >
-            Post a thread
-          </button>
+          
         </>
       )}
 
