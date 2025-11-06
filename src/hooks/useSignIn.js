@@ -12,7 +12,10 @@ import supabase from "../services/supabase";
  *
  * @param {{ ensureProfileFn?: () => Promise<any>, redirectTo?: string }} opts
  */
-export default function useSignIn({ ensureProfileFn, redirectTo = "/uni" } = {}) {
+export default function useSignIn({
+  ensureProfileFn,
+  redirectTo = "/uni",
+} = {}) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [lastError, setLastError] = useState(null);
@@ -23,7 +26,13 @@ export default function useSignIn({ ensureProfileFn, redirectTo = "/uni" } = {})
       setLastError(null);
 
       try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        console.log("[signIn] start", email);
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
         if (error) throw error;
 
         if (typeof ensureProfileFn === "function") {
@@ -41,12 +50,18 @@ export default function useSignIn({ ensureProfileFn, redirectTo = "/uni" } = {})
             await supabase.auth.resend({
               type: "signup",
               email,
-              options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+              options: {
+                emailRedirectTo: `${window.location.origin}/auth/callback`,
+              },
             });
-            toast.success("Your email isn't verified yet. I sent a new confirmation link.");
+            toast.success(
+              "Your email isn't verified yet. I sent a new confirmation link."
+            );
             return;
           } catch (resendErr) {
-            toast.error(resendErr?.message || "Couldn't resend the confirmation email.");
+            toast.error(
+              resendErr?.message || "Couldn't resend the confirmation email."
+            );
             return;
           }
         }
@@ -54,6 +69,7 @@ export default function useSignIn({ ensureProfileFn, redirectTo = "/uni" } = {})
         toast.error(msg);
         console.error(e);
       } finally {
+        console.log("[signIn] finally");
         setIsLoading(false);
       }
     },

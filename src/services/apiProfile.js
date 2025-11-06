@@ -16,16 +16,18 @@ export async function signUpWithEmail({
   gender,
   genderLabel,
 }) {
-  const { data: uniId, error: uniError } = await supabase.rpc(
-    "email_domain",
-    { p_email: email }
-  );
+  console.log("SignUpwithEmail was hit");
+  const { data: uniId, error: uniError } = await supabase.rpc("email_domain", {
+    p_email: email,
+  });
   if (uniError) throw uniError; // unexpected server issue
   if (!uniId) {
     throw new Error("University not yet supported.");
   }
+  console.log("Uni not supp");
 
-  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim() || null;
+  const fullName =
+    [firstName, lastName].filter(Boolean).join(" ").trim() || null;
   const displayName = username ?? null;
 
   const { data, error } = await supabase.auth.signUp({
@@ -49,7 +51,7 @@ export async function signUpWithEmail({
     },
   });
 
-  console.log(data)
+  console.log(data);
   if (error) {
     if (error.message?.toLowerCase().includes("user already registered")) {
       throw new Error("Account already created, sign in instead!");
@@ -98,24 +100,32 @@ export async function ensureProfile(opts = {}) {
   const { enforceDomain = false } = opts;
 
   // 1) Get session + user
-  const { data: { session }, error: sessErr } = await supabase.auth.getSession();
+  const {
+    data: { session },
+    error: sessErr,
+  } = await supabase.auth.getSession();
   if (sessErr) throw sessErr;
   const user = session?.user;
   if (!user) throw new Error("Not signed in");
+  console.log("[ensureProfile] session ok", user.id);
 
   // 2) Derive display name from metadata
   const meta = user.user_metadata || {};
   const fromMeta = meta.display_name && String(meta.display_name).trim();
-  const fromNames = [meta.first_name, meta.last_name].filter(Boolean).join(" ").trim();
+  const fromNames = [meta.first_name, meta.last_name]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
   const display_name = fromMeta ?? (fromNames || null);
 
-  // 3) Ask DB which university matches the email domain (may be null if not allowed/unknown)
+  // 3) Ask DB which university matches the email domain
   let uniId = null;
   try {
     const { data: uniLookup, error: uniErr } = await supabase.rpc(
       "university_id_for_email",
       { p_email: user.email }
     );
+    console.log("[ensureProfile] rpc result", { uniLookup, uniErr });
     if (uniErr) {
       // non-fatal; just log and continue
       console.warn("university_id_for_email failed:", uniErr);
@@ -137,6 +147,7 @@ export async function ensureProfile(opts = {}) {
     .select("id, email, display_name, uni_id")
     .eq("id", user.id)
     .maybeSingle();
+  console.log("[ensureProfile] profile select", { existing, selErr });
   if (selErr) throw selErr;
 
   // Build the row we want to persist (only set uni_id if we actually found one)
@@ -153,15 +164,19 @@ export async function ensureProfile(opts = {}) {
     existing.email !== row.email ||
     (display_name && existing.display_name !== display_name) ||
     (uniId && existing.uni_id !== uniId);
+  console.log("[ensureProfile] needsUpsert", needsUpsert, { row });
 
   if (needsUpsert) {
     const { error: upsertErr } = await supabase
       .from("profiles")
       .upsert(row, { onConflict: "id" });
+    console.log("[ensureProfile] upsert result", upsertErr);
     if (upsertErr) throw upsertErr;
   }
 
-  return { created: !existing, user, allowed: true, uniId };
+  const result = { created: !existing, user, allowed: true, uniId };
+  console.log("[ensureProfile] returning", result);
+  return result;
 }
 
 let authListenerCleanup = null;
