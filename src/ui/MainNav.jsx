@@ -12,6 +12,10 @@ import Menus from "./Menus";
 import CreatePostModa from "../ui/CreatePostModal";
 import { Menu } from "@headlessui/react";
 import { FaRegUserCircle } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoSettingsOutline } from "react-icons/io5";
+import { BiSolidDoorOpen } from "react-icons/bi";
+import useLogout from "../hooks/useLogout";
 
 const ProfileIcon = styled.span`
   width: 2.4rem;
@@ -94,6 +98,7 @@ const AddNavButton = styled(Menus.Toggle)`
 `;
 
 export default function MainNav() {
+  const { logout, isLoggingOut } = useLogout();
   return (
     <nav>
       <ul className="flex flex-col gap-8 sm:gap-12 ">
@@ -116,7 +121,7 @@ export default function MainNav() {
             <span className="font-extralight  text-amber-50">Profile</span>
           </StyledNavLink>
         </li>
-        <li>
+        <li className="mb-30">
           <Modal>
             <Menus>
               <AddNavButton id="add-ops">
@@ -172,8 +177,41 @@ export default function MainNav() {
             </Menus>
           </Modal>
         </li>
+        <li>
+          <Modal>
+            <Menus>
+              <AddNavButton id="more">
+                <RxHamburgerMenu />
+                <span className="font-extralight  text-amber-50">More</span>
+              </AddNavButton>
+              <Menus.List id="more">
+                <Menus.MButton
+                  icon={
+                    <IoSettingsOutline
+                      className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      color="white"
+                    />
+                  }
+                >
+                  <span className="text-amber-50">Settings</span>
+                </Menus.MButton>
+                <Menus.MButton
+                  onClick={logout}
+                  disabled={isLoggingOut}
+                  icon={
+                    <BiSolidDoorOpen
+                      className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      color="white"
+                    />
+                  }
+                >
+                  <span className="text-amber-50">Log out</span>
+                </Menus.MButton>
+              </Menus.List>
+            </Menus>
+          </Modal>
+        </li>
       </ul>
-      
     </nav>
   );
 }

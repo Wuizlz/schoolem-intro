@@ -26,7 +26,7 @@ export default function useSignIn({
       setLastError(null);
 
       try {
-        console.log("[signIn] start", email);
+        
 
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -69,7 +69,7 @@ export default function useSignIn({
         toast.error(msg);
         console.error(e);
       } finally {
-        console.log("[signIn] finally");
+        
         setIsLoading(false);
       }
     },

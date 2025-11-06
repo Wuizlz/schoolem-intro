@@ -18,12 +18,11 @@ const StyledList = styled.ul`
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
   min-width: 10rem;
-  padding: 0.8rem 0.4rem;
+  
   background-color: #262626;
   box-shadow: var(--shadow-sm);
-  border-radius: var(--border-radius-md);
+   border-radius: 10px;
   
   right: ${({ position }) => position?.x ?? 0}px;
   top: ${({ position }) => position?.y ?? 0}px;
@@ -57,10 +56,11 @@ function Toggle({ id, children, className, onActiveChange, ...rest }) {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
     const rawRight = window.innerWidth - rect.right;
+    const offsetY = id !== "more" ? 1 : -170;
 
     setPosition({
       x: Math.max(0, rawRight - MENU_HORIZONTAL_OFFSET),
-      y: rect.bottom + MENU_VERTICAL_OFFSET,
+      y: rect.bottom + offsetY,
     });
 
     if (isOpen) {
@@ -100,17 +100,21 @@ function List({ id, children }) {
   );
 }
 
-function MButton({ children, icon, onClick }) {
+function MButton({ children, icon, onClick, disabled }) {
   const { close } = useContext(MenusContext);
 
-  function handleClick() {
-    onClick?.();
-    close();
+  async function handleClick() {
+    if (disabled) return;
+    try {
+      await onClick?.();
+    } finally {
+      close();
+    }
   }
 
   return (
     <li>
-      <Button type="modalButton" onClick={handleClick}>
+      <Button type="menusOpt" onClick={handleClick} disabled={disabled}>
         {icon}
         <span className="ml-2">{children}</span>
       </Button>
