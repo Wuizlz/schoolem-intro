@@ -1,19 +1,13 @@
 import { Outlet } from "react-router-dom";
-function AppLayout()
-{
-    return(
-        // <Header />
-        // <Sidebar/>
-        // <Main>
-        //     <Container>
-        //         <Outlet/>
-        //     </Container>
-        // </Main>
+import SideBar from "./SideBar";
 
-        <div>
-            
-        </div>
-    )
+export default function AppLayout() {
+  return (
+    <div className="grid grid-cols-[13rem_1fr] grid-rows-[auto_1fr] h-screen bg-black ">
+      <SideBar />
+      <main className="overflow-scroll ">
+        <Outlet />
+      </main>
+    </div>
+  );
 }
-
-export default AppLayout

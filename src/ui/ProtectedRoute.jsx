@@ -1,56 +1,27 @@
-import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import supabase from "../services/supabase";
+import PropTypes from "prop-types";
+import { useAuth } from "../hooks/useAuth";
 import Spinner from "./Spinner";
 
 export default function ProtectedRoute({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const { session, isLoading } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    checkAuth();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setAuthenticated(!!session);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  async function checkAuth() {
-    try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setAuthenticated(!!session);
-    } catch (error) {
-      console.error("Auth check error:", error);
-      setAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Show loading spinner while checking authentication
-  if (loading) {
+  if (!session && isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-dvh flex items-center justify-center bg-black">
         <Spinner />
       </div>
     );
   }
 
-  // Redirect to signin if not authenticated
-  // Save the attempted location so we can redirect back after login
-  if (!authenticated) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+  if (!session) {
+    return <Navigate to="/signin" replace state={{ from: location }} />;
   }
 
-  // User is authenticated, render the protected content
   return children;
 }
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node,
+};

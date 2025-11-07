@@ -1,7 +1,5 @@
 export default function Uni() {
   return (
-    <div>
-      <p></p>
-    </div>
+    <div className="bg-emerald-500"></div>
   );
 }

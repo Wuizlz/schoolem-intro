@@ -1,12 +1,30 @@
 /* src/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Island+Moments&family=Instrument+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 @tailwind utilities;
 
+@layer theme {
+  :root {
+    --font-handwriting: "Island Moments", cursive;
+    --font-serif-display: "Instrument Serif", serif;
+  }
+}
 
 @layer components {
   .input {
     @apply  rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 focus:outline-none focus:ring focus:ring-yellow-400 md:px-6 md:py-3;
   }
+}
+
+@layer utilities {
+  .font-handwriting {
+    font-family: "Island Moments", cursive;
+  }
+
+  .font-serif-display {
+    font-family: "Instrument Serif", serif;
+  }
+
   /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
   .loader {
     width: 45px;
@@ -47,4 +65,3 @@
     }
   }
 }
-
