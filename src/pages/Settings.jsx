@@ -1,26 +1,82 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProfile } from "../../hooks/useProfile";
+import Spinner from "../ui/Spinner";
 
 export default function Settings() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState(null);
 
-  // Mock user data - replace with actual user data later
-  const mockUser = {
-    fullName: "Daniel Briseno",
-    username: "Wuzi",
-    bio: "God's perfect creation leads to our beloved imperfect sensations",
-    age: 21,
-    birthdate: "08/25/2004",
-    gender: "Prefer not to disclose",
-    university: "Purdue University Northwest - Hammond Campus",
-    profileImage: null, // Will use default icon if null
+  // Fetch real user data from Supabase
+  const { data: profile, isLoading, error } = useProfile();
+
+  // Helper functions to transform data
+  const calculateAge = (birthdate) => {
+    if (!birthdate) return null;
+    const today = new Date();
+    const birth = new Date(birthdate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-xl mb-4">Error loading profile</p>
+          <p className="text-zinc-400 mb-4">{error.message}</p>
+          <button
+            onClick={() => navigate("/signin")}
+            className="px-6 py-2 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transition-colors"
+          >
+            Back to Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Transform profile data to match the format expected by components
+  const userData = {
+    fullName: profile.full_name || "Unknown User",
+    username: profile.display_name || profile.email?.split("@")[0],
+    bio: profile.bio || "",
+    age: calculateAge(profile.b_date),
+    birthdate: formatDate(profile.b_date),
+    gender: profile.gender || "Prefer not to disclose",
+    // university: "Purdue University Northwest - Hammond Campus", // TODO: Join with universities table
+    university: profile.uni_id.name,
+    profileImage: profile.avatar_url || null,
   };
 
   const renderContent = () => {
     switch (activeSection) {
       case "edit-profile":
-        return <EditProfileContent user={mockUser} />;
+        return <EditProfileContent user={userData} />;
       case "posts-stories":
         return <PlaceholderContent title="Posts & Stories" />;
       case "liked":

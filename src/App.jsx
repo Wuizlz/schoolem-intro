@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Uni from "./pages/Uni";
 import Settings from "./pages/Settings";
+import ProtectedRoute from "./ui/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { startAuthListenerEnsureProfile } from "./services/apiProfile";
@@ -42,11 +43,27 @@ function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="auth/callback" element={<AuthCallback />} />
-          {/* App routes */}
-          <Route path="uni" element={<Uni />} />
-          <Route path="settings" element={<Settings />} />
-          {/* Catch-all -> /signin */}
-          <Route path="*" element={<Navigate to="signin" replace />} />
+          
+          {/* Protected routes */}
+          <Route
+            path="uni"
+            element={
+              <ProtectedRoute>
+                <Uni />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          
+          {/* Catch-all -> /uni (which will redirect to signin if not authenticated) */}
+          <Route path="*" element={<Navigate to="uni" replace />} />
         </Routes>
       </BrowserRouter>
 

@@ -1,8 +1,11 @@
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
 import Input from "../ui/Input";
+import { useSignIn } from "../../hooks/useSignIn";
 
 export default function SignIn() {
+  const { signIn, isSigningIn } = useSignIn();
+  
   const {
     register,
     handleSubmit,
@@ -11,7 +14,8 @@ export default function SignIn() {
   } = useForm();
 
   function onSubmit(data) {
-    console.log(data);
+    const { email, password } = data;
+    signIn({ email, password });
   }
 
   return (
@@ -61,8 +65,13 @@ export default function SignIn() {
 
           <div className="flex flex-col items-center gap-3">
             {/* Submit button in a form */}
-            <Button type="primary" buttonType="submit" className="self-center">
-              Sign In
+            <Button 
+              type="primary" 
+              buttonType="submit" 
+              className="self-center"
+              disabled={isSigningIn}
+            >
+              {isSigningIn ? "Signing in..." : "Sign In"}
             </Button>
             <div className="w-full flex items-center gap-4">
               <span
