@@ -30,6 +30,11 @@ export default function Button({
       "border border-transparent transition-colors duration-300 text-inherit " +
       "hover:border-yellow-500 hover:bg-white/10 focus-visible:border-yellow-500 " +
       "focus-visible:bg-white/10 focus-visible:outline-none focus-visible:ring-0",
+    modalButtonAlternative:
+      "group flex items-center gap-[1rem] px-[1rem] py-[0.3rem] rounded-full " +
+      "border border-transparent transition-colors duration-300 text-inherit " +
+      "hover:border-yellow-500 hover:bg-white/10 focus-visible:border-yellow-500 " +
+      "focus-visible:bg-white/10 focus-visible:outline-none focus-visible:ring-0",
     menusOpt:
       "group flex items-center gap-[1.2rem] px-[1.6rem] py-[0.8rem] rounded-full " +
       "border border-transparent transition-colors duration-300 text-inherit hover:cursor-pointer",

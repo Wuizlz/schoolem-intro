@@ -8,6 +8,8 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 
 import Alerts from "./pages/Alerts";
 import SignIn from "./pages/SignIn";
+import ForgotPassword from "./pages/ForgotPassword";
+import UpdatePassword from "./pages/UpdatePassword";
 import SignUp from "./pages/SignUp";
 import Uni from "./pages/Uni";
 import AuthCallback from "./pages/AuthCallBack";
@@ -32,8 +34,10 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/signup" replace />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn />} /> 
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/UpdatePassword" element={<UpdatePassword />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route
               element={
