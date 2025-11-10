@@ -57,7 +57,7 @@ export default function UserPost({ postData, id }) {
 
           <div className="flex">
             <p className="text-amber-50 my-1">
-              <span className="font-extrabold bg-amber-50">{author.full_name}</span>:{postData.caption}
+              <span className="font-extrabold">{author.full_name}</span>: {postData.caption}
             </p>
           </div>
         </div>

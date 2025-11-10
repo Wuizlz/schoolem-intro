@@ -121,7 +121,7 @@ export default function MainNav() {
             <span className="font-extralight  text-amber-50">Profile</span>
           </StyledNavLink>
         </li>
-        <li className="mb-30">
+        <li className="mb-[105px]">
           <Modal>
             <Menus>
               <AddNavButton id="add-ops">
