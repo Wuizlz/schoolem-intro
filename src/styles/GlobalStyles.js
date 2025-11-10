@@ -4,7 +4,7 @@ const GlobalStyles = createGlobalStyle`
 html, body {
   height: 100%;
   background-color: #000;   /* or whatever you want */
-  overflow: hidden;         /* optional: stop the page from scrolling */
+ 
 }
 :root {
   /* Indigo */
