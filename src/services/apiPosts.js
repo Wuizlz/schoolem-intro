@@ -93,7 +93,43 @@ export async function createPost({ caption, mediaItems, authorId }) {
   } catch (err) {
     // best-effort cleanup
     await removeUploadedFiles(uploads);
-    await supabase.from("publications").delete().eq("publication_id", publicationId);
+    await supabase
+      .from("publications")
+      .delete()
+      .eq("publication_id", publicationId);
     throw err;
   }
+}
+
+export async function getPostsForUni(uniId) {
+  if (!uniId) return new Error("Missing University id ");
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+      caption,
+      pic_url,
+      publications!inner(
+      publication_id,
+      created_at,
+      profiles!inner(
+      id, 
+      avatar_url,
+      uni_id,
+      display_name,
+      full_name
+      )
+      )`
+    )
+    .eq("publications.profiles.uni_id", uniId)
+    .order("created_at", { referencedTable: "publications", ascending: false });
+
+   
+    if(error){
+      console.error(error)
+      throw new Error("Unable to load post for this University")
+    }
+
+    return data
 }

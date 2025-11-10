@@ -107,7 +107,7 @@ export async function ensureProfile(opts = {}) {
   if (sessErr) throw sessErr;
   const user = session?.user;
   if (!user) throw new Error("Not signed in");
-  console.log("[ensureProfile] session ok", user.id);
+
 
   // 2) Derive display name from metadata
   const meta = user.user_metadata || {};
@@ -125,7 +125,7 @@ export async function ensureProfile(opts = {}) {
       "university_id_for_email",
       { p_email: user.email }
     );
-    console.log("[ensureProfile] rpc result", { uniLookup, uniErr });
+    
     if (uniErr) {
       // non-fatal; just log and continue
       console.warn("university_id_for_email failed:", uniErr);
@@ -147,7 +147,7 @@ export async function ensureProfile(opts = {}) {
     .select("id, email, display_name, uni_id")
     .eq("id", user.id)
     .maybeSingle();
-  console.log("[ensureProfile] profile select", { existing, selErr });
+  
   if (selErr) throw selErr;
 
   // Build the row we want to persist (only set uni_id if we actually found one)
@@ -164,7 +164,7 @@ export async function ensureProfile(opts = {}) {
     existing.email !== row.email ||
     (display_name && existing.display_name !== display_name) ||
     (uniId && existing.uni_id !== uniId);
-  console.log("[ensureProfile] needsUpsert", needsUpsert, { row });
+ 
 
   if (needsUpsert) {
     const { error: upsertErr } = await supabase
@@ -175,7 +175,7 @@ export async function ensureProfile(opts = {}) {
   }
 
   const result = { created: !existing, user, allowed: true, uniId };
-  console.log("[ensureProfile] returning", result);
+  
   return result;
 }
 

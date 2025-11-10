@@ -5,7 +5,6 @@ import Button from "./Button";
 import useOutsideClick from "../hooks/useOutsideClick";
 
 const MENU_HORIZONTAL_OFFSET = 35;
-const MENU_VERTICAL_OFFSET = 0;
 
 const Menu = styled.div`
   display: flex;

@@ -1,6 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
+html, body {
+  height: 100%;
+  background-color: #000;   /* or whatever you want */
+  overflow: hidden;         /* optional: stop the page from scrolling */
+}
 :root {
   /* Indigo */
   --color-brand-50: #eef2ff;
@@ -98,6 +103,6 @@ const GlobalStyles = createGlobalStyle`
   --surface: 217 33% 10%;
 }
 
-`
+`;
 
-export default GlobalStyles
+export default GlobalStyles;
