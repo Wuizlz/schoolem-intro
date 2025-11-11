@@ -123,7 +123,7 @@ export async function getPostsForUni(uniId) {
       )`
     )
     .eq("publications.profiles.uni_id", uniId)
-    .order("created_at", { referencedTable: "publications", ascending: false });
+    .order("publications(created_at)", { ascending: false });
 
    
     if(error){

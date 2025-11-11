@@ -7,7 +7,6 @@ export default function UniFeed() {
   const uniId = profile?.uni_id;
 
   const { data: posts = [], isPending, isError, error } = useGetPostFeed(uniId);
-  console.log(posts);
 
   return (
     <ul className="flex flex-col gap-15 ">

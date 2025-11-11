@@ -4,10 +4,6 @@ import styled from "styled-components";
 import Button from "./Button";
 import useOutsideClick from "../hooks/useOutsideClick";
 
-const PANEL_MIN_WIDTH = 100; // 12rem (smaller than before)
-const VIEWPORT_MARGIN = 10;  // keep panel off screen edges
-const GAP = 4;               // distance from trigger (smaller/closer)
-
 const MenusContext = createContext();
 
 const Menu = styled.div`
@@ -22,41 +18,35 @@ const StyledList = styled.ul`
 
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-
-  /* Smaller panel */
   min-width: 10rem;
-  padding: 0.2rem;
-  background-color: #18181b;     /* dark panel */
-  border: 1px solid #3f3f46;     /* zinc-700-ish */
-  border-radius: 14px;           /* rounded like your selects */
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 2rem);
+  background-color: #262626;
+  box-shadow: var(--shadow-sm);
 
-  left: ${({ position }) => position?.left ?? 0}px;
-  top: ${({ position }) => position?.top ?? 0}px;
-
-  /* Place above or below without guessing height */
-  transform: translateY(
-    ${({ position }) =>
-      position?.placement === "above"
-        ? `calc(-100% - ${GAP}px)`
-        : `${GAP}px`}
+  border-radius: 10px;
+  left: ${({ position }) => position?.x ?? 0}px;
+  top: ${({ position }) => position?.y ?? 0}px;
+  transform: translate(
+    -50%,
+    ${({ position }) => (position?.placement === "top" ? "-100%" : "0")}
   );
 `;
 
 export default function Menus({ children }) {
   const [openId, setOpenId] = useState("");
   const [position, setPosition] = useState({
-    left: 0,
-    top: 0,
-    placement: "below",
+    x: 0,
+    y: 0,
+    placement: "bottom",
   });
 
   const close = () => setOpenId("");
   const open = setOpenId;
 
   return (
-    <MenusContext.Provider value={{ openId, position, setPosition, close, open }}>
+    <MenusContext.Provider
+      value={{ openId, position, setPosition, close, open }}
+    >
       {children}
     </MenusContext.Provider>
   );
@@ -74,20 +64,19 @@ function Toggle({ id, children, className, onActiveChange, ...rest }) {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
 
-    // Bottom "More" opens above; others open below.
-    const placement = id === "more" ? "above" : "below";
-
-    // Clamp left so the panel stays in the viewport.
-    const unclampedLeft = rect.left;
-    const maxLeft = window.innerWidth - PANEL_MIN_WIDTH - VIEWPORT_MARGIN;
-    const left = Math.min(
-      Math.max(VIEWPORT_MARGIN, unclampedLeft),
-      Math.max(VIEWPORT_MARGIN, maxLeft)
+    const viewportPadding = 16;
+    const gap = 12;
+    const estimatedMenuHeight = 200;
+    const centerX = rect.left + rect.width / 2;
+    const clampedX = Math.min(
+      window.innerWidth - viewportPadding,
+      Math.max(viewportPadding, centerX)
     );
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const placement = spaceBelow < estimatedMenuHeight ? "top" : "bottom";
+    const y = placement === "bottom" ? rect.bottom + gap : rect.top - gap;
 
-    const top = placement === "above" ? rect.top : rect.bottom;
-
-    setPosition({ left, top, placement });
+    setPosition({ x: clampedX, y, placement });
 
     if (isOpen) close();
     else open(id);
@@ -132,7 +121,12 @@ function List({ id, children }) {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList ref={ref} position={position} role="menu" aria-orientation="vertical">
+    <StyledList
+      ref={ref}
+      position={position}
+      role="menu"
+      aria-orientation="vertical"
+    >
       {children}
     </StyledList>,
     document.body
@@ -154,7 +148,7 @@ function MButton({ children, icon, onClick, disabled }) {
   return (
     <li role="none">
       <Button
-        type="menusOpt"               // <-- your original button style
+        type="menusOpt" // <-- your original button style
         role="menuitem"
         onClick={handleClick}
         disabled={disabled}

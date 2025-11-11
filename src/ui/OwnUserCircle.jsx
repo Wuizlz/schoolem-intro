@@ -7,7 +7,7 @@ export default function OwnUserStory() {
 
   return (
     <div className="flex flex-col ">
-      <div className="h-16 w-16 rounded-full border border-zinc-600 p-[3px]">
+      <div className="h-25 w-25 rounded-full border border-zinc-600 p-[3px]">
         <img
           src={avatarUrl}
           alt={username ?? "Your story"}

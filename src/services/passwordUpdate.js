@@ -71,6 +71,7 @@ export default function usePasswordUpdate() {
     if (!password) throw new Error("Password is required.");
 
     const { error } = await supabase.auth.updateUser({ password });
+    await supabase.auth.signOut();
     if (error) throw error;
 
     return { ok: true };

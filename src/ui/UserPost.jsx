@@ -23,8 +23,8 @@ export default function UserPost({ postData, id }) {
   return (
     <li className=" flex-row w-full ">
       <div className="flex">
-        <header className="h-12 w-12 rounded-full border p-[3px]">
-          <img src={author.avatar_url} className="rounded-full" />
+        <header className="h-16 w-16 rounded-full border p-[3px]">
+          <img src={author.avatar_url} className="h-full w-full rounded-full object-cover py-5x" />
         </header>
         <div className=" flex-row">
           <div className="flex">
@@ -45,8 +45,8 @@ export default function UserPost({ postData, id }) {
 
       <div className="flex justify-center  ">
         <div className="flex-row w-96 ">
-          <div className="flex border border-gray-500">
-            <img className="w-96" src={postData.pic_url}></img>
+          <div className="flex border border-gray-500 rounded-sm  ">
+            <img className="w-fit rounded-sm" src={postData.pic_url}></img>
           </div>
           <div className="flex">
             <div className="flex text-2xl items-center gap-1 leading-none" >

@@ -17,7 +17,7 @@ export default function ForgotPassword() {
     const { sendResetEmail } = usePasswordReset();
 
     const onSubmit = async ({ email }) => {
-        const result = await sendResetEmail({ email });
+        const result = await sendResetEmail({ email});
         if (result?.ok) reset();
     };
 

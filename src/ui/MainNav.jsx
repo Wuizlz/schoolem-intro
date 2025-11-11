@@ -80,6 +80,12 @@ const AddNavButton = styled(Menus.Toggle)`
   ${navItemStyles};
   cursor: pointer;
   &:active svg { color: var(--color-amber-200); }
+  width: 100%;
+
+
+  &:active svg {
+    color: var(--color-amber-200);
+  }
 `;
 
 export default function MainNav() {
@@ -111,7 +117,7 @@ export default function MainNav() {
             </StyledNavLink>
           </li>
 
-          <li className="w-fit">
+          <li>
             <Modal>
               <AddNavButton id="add-ops">
                 <IoIosAddCircleOutline
