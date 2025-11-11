@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Button from "./Button";
 import useOutsideClick from "../hooks/useOutsideClick";
 
-const MENU_HORIZONTAL_OFFSET = 35;
+
 
 const Menu = styled.div`
   display: flex;
@@ -18,20 +18,27 @@ const StyledList = styled.ul`
   display: flex;
   flex-direction: column;
   min-width: 10rem;
-  
+  max-width: calc(100vw - 2rem);
   background-color: #262626;
   box-shadow: var(--shadow-sm);
-   border-radius: 10px;
-  
-  right: ${({ position }) => position?.x ?? 0}px;
+  border-radius: 10px;
+  left: ${({ position }) => position?.x ?? 0}px;
   top: ${({ position }) => position?.y ?? 0}px;
+  transform: translate(
+    -50%,
+    ${({ position }) => (position?.placement === "top" ? "-100%" : "0")}
+  );
 `;
 
 const MenusContext = createContext();
 
 export default function Menus({ children }) {
   const [openId, setOpenId] = useState("");
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({
+    x: 0,
+    y: 0,
+    placement: "bottom",
+  });
 
   const close = () => setOpenId("");
   const open = setOpenId;
@@ -54,12 +61,24 @@ function Toggle({ id, children, className, onActiveChange, ...rest }) {
   function handleClick(event) {
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    const rawRight = window.innerWidth - rect.right;
-    const offsetY = id !== "more" ? 1 : -170;
+    const viewportPadding = 16;
+    const gap = 12;
+    const estimatedMenuHeight = 200;
+    const centerX = rect.left + rect.width / 2;
+    const clampedX = Math.min(
+      window.innerWidth - viewportPadding,
+      Math.max(viewportPadding, centerX)
+    );
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const placement =
+      spaceBelow < estimatedMenuHeight ? "top" : "bottom";
+    const y =
+      placement === "bottom" ? rect.bottom + gap : rect.top - gap;
 
     setPosition({
-      x: Math.max(0, rawRight - MENU_HORIZONTAL_OFFSET),
-      y: rect.bottom + offsetY,
+      x: clampedX,
+      y,
+      placement,
     });
 
     if (isOpen) {

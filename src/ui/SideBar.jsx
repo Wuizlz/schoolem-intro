@@ -12,7 +12,7 @@ export default function SideBar() {
         <UniHolder />
       </div>
 
-      <div className="w-full h-fit px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <div className="flex w-full flex-1 flex-col mt-10 px-1">
         <MainNav />
       </div>
     </aside>

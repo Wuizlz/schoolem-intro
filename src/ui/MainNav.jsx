@@ -36,6 +36,7 @@ const ProfileIcon = styled.span`
 `;
 
 const navItemStyles = css`
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 1.2rem;
@@ -92,6 +93,7 @@ const AddNavButton = styled(Menus.Toggle)`
   ${navItemStyles};
   cursor: pointer;
 
+
   &:active svg {
     color: var(--color-amber-200);
   }
@@ -100,8 +102,8 @@ const AddNavButton = styled(Menus.Toggle)`
 export default function MainNav() {
   const { logout, isLoggingOut } = useLogout();
   return (
-    <nav>
-      <ul className="flex flex-col gap-8 sm:gap-12 ">
+    <nav className="flex h-full w-full flex-1 flex-col">
+      <ul className="flex flex-col gap-8 sm:gap-12">
         <li>
           <StyledNavLink to="/uni">
             <LiaUniversitySolid />
@@ -121,7 +123,7 @@ export default function MainNav() {
             <span className="font-extralight  text-amber-50">Profile</span>
           </StyledNavLink>
         </li>
-        <li className="mb-[105px]">
+        <li className="w-fit">
           <Modal>
             <Menus>
               <AddNavButton id="add-ops">
@@ -177,6 +179,8 @@ export default function MainNav() {
             </Menus>
           </Modal>
         </li>
+      </ul>
+      <ul className="mt-auto pt-12 sm:pt-16">
         <li>
           <Modal>
             <Menus>
