@@ -2,15 +2,12 @@ import { IoIosAddCircleOutline, IoIosNotifications } from "react-icons/io";
 import { LiaUniversitySolid } from "react-icons/lia";
 import { MdAddToPhotos } from "react-icons/md";
 import { FaRegFileLines } from "react-icons/fa6";
-
 import { NavLink } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 import Modal from "./Modal";
 import Menus from "./Menus";
-
 import CreatePostModa from "../ui/CreatePostModal";
-import { Menu } from "@headlessui/react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -46,8 +43,7 @@ const navItemStyles = css`
   background: transparent;
   color: inherit;
   text-decoration: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 
   &:hover,
   &:focus-visible {
@@ -56,9 +52,7 @@ const navItemStyles = css`
     outline: none;
   }
 
-  &.active {
-    border-color: var(--color-yellow-500);
-  }
+  &.active { border-color: var(--color-yellow-500); }
 
   & svg,
   & ${ProfileIcon} {
@@ -70,19 +64,12 @@ const navItemStyles = css`
     transition: all 0.3s;
   }
 
-  &:active ${ProfileIcon}, &.active svg,
-  &.active ${ProfileIcon} {
-    color: var(--color-amber-200);
-  }
+  &:active ${ProfileIcon},
+  &.active svg,
+  &.active ${ProfileIcon} { color: var(--color-amber-200); }
 
-  span {
-    transition: color 0.3s;
-  }
-
-  &:active span,
-  &.active span {
-    font-weight: bolder;
-  }
+  span { transition: color 0.3s; }
+  &:active span, &.active span { font-weight: bolder; }
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -92,40 +79,40 @@ const StyledNavLink = styled(NavLink)`
 const AddNavButton = styled(Menus.Toggle)`
   ${navItemStyles};
   cursor: pointer;
-
-
-  &:active svg {
-    color: var(--color-amber-200);
-  }
+  &:active svg { color: var(--color-amber-200); }
 `;
 
 export default function MainNav() {
   const { logout, isLoggingOut } = useLogout();
+
   return (
     <nav className="flex h-full w-full flex-1 flex-col">
-      <ul className="flex flex-col gap-8 sm:gap-12">
-        <li>
-          <StyledNavLink to="/uni">
-            <LiaUniversitySolid />
-            <span className="font-extralight text-amber-50">Uni</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/alerts">
-            <IoIosNotifications />
-            <span className="font-extralight  text-amber-50">Alerts</span>
-          </StyledNavLink>
-        </li>
-        <li>
-          <StyledNavLink to="/profile">
-            <ProfileIcon aria-hidden="true" />
+      {/* ONE Menus provider wraps both Add and More */}
+      <Menus>
+        <ul className="flex flex-col gap-8 sm:gap-12">
+          <li>
+            <StyledNavLink to="/uni">
+              <LiaUniversitySolid />
+              <span className="font-extralight text-amber-50">Uni</span>
+            </StyledNavLink>
+          </li>
 
-            <span className="font-extralight  text-amber-50">Profile</span>
-          </StyledNavLink>
-        </li>
-        <li className="w-fit">
-          <Modal>
-            <Menus>
+          <li>
+            <StyledNavLink to="/alerts">
+              <IoIosNotifications />
+              <span className="font-extralight text-amber-50">Alerts</span>
+            </StyledNavLink>
+          </li>
+
+          <li>
+            <StyledNavLink to="/profile">
+              <ProfileIcon aria-hidden="true" />
+              <span className="font-extralight text-amber-50">Profile</span>
+            </StyledNavLink>
+          </li>
+
+          <li className="w-fit">
+            <Modal>
               <AddNavButton id="add-ops">
                 <IoIosAddCircleOutline
                   aria-hidden="true"
@@ -135,6 +122,7 @@ export default function MainNav() {
                   Add
                 </span>
               </AddNavButton>
+
               <Menus.List id="add-ops">
                 <Modal.Open opens="post">
                   <Menus.MButton
@@ -148,6 +136,7 @@ export default function MainNav() {
                     <span className="text-amber-50">Post</span>
                   </Menus.MButton>
                 </Modal.Open>
+
                 <Modal.Open opens="thread">
                   <Menus.MButton
                     icon={
@@ -160,6 +149,7 @@ export default function MainNav() {
                     <span className="text-amber-50">Thread</span>
                   </Menus.MButton>
                 </Modal.Open>
+
                 <Modal.Open opens="quickie">
                   <Menus.MButton
                     icon={
@@ -173,49 +163,49 @@ export default function MainNav() {
                   </Menus.MButton>
                 </Modal.Open>
               </Menus.List>
+
               <Modal.Window name="post">
-                <CreatePostModa></CreatePostModa>
+                <CreatePostModa />
               </Modal.Window>
-            </Menus>
-          </Modal>
-        </li>
-      </ul>
-      <ul className="mt-auto pt-12 sm:pt-16">
-        <li>
-          <Modal>
-            <Menus>
-              <AddNavButton id="more">
-                <RxHamburgerMenu />
-                <span className="font-extralight  text-amber-50">More</span>
-              </AddNavButton>
-              <Menus.List id="more">
-                <Menus.MButton
-                  icon={
-                    <IoSettingsOutline
-                      className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
-                      color="white"
-                    />
-                  }
-                >
-                  <span className="text-amber-50">Settings</span>
-                </Menus.MButton>
-                <Menus.MButton
-                  onClick={logout}
-                  disabled={isLoggingOut}
-                  icon={
-                    <BiSolidDoorOpen
-                      className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
-                      color="white"
-                    />
-                  }
-                >
-                  <span className="text-amber-50">Log out</span>
-                </Menus.MButton>
-              </Menus.List>
-            </Menus>
-          </Modal>
-        </li>
-      </ul>
+            </Modal>
+          </li>
+        </ul>
+
+        <ul className="mt-auto pt-12 sm:pt-16">
+          <li>
+            <AddNavButton id="more">
+              <RxHamburgerMenu />
+              <span className="font-extralight text-amber-50">More</span>
+            </AddNavButton>
+
+            <Menus.List id="more">
+              <Menus.MButton
+                icon={
+                  <IoSettingsOutline
+                    className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                    color="white"
+                  />
+                }
+              >
+                <span className="text-amber-50">Settings</span>
+              </Menus.MButton>
+
+              <Menus.MButton
+                onClick={logout}
+                disabled={isLoggingOut}
+                icon={
+                  <BiSolidDoorOpen
+                    className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                    color="white"
+                  />
+                }
+              >
+                <span className="text-amber-50">Log out</span>
+              </Menus.MButton>
+            </Menus.List>
+          </li>
+        </ul>
+      </Menus>
     </nav>
   );
 }
