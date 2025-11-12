@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProfile } from "../../hooks/useProfile";
-import Spinner from "../ui/Spinner";
+import { useProfile } from "../../../hooks/useProfile";
+import { EditProfileContent } from "./EditProfile";
+import { updateProfile } from "../../services/apiProfile";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import Spinner from "../../ui/Spinner";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -27,6 +31,7 @@ export default function Settings() {
     if (!dateString) return "";
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
+      timeZone: "UTC",
       month: "2-digit",
       day: "2-digit",
       year: "numeric",
@@ -68,8 +73,7 @@ export default function Settings() {
     age: calculateAge(profile.b_date),
     birthdate: formatDate(profile.b_date),
     gender: profile.gender || "Prefer not to disclose",
-    // university: "Purdue University Northwest - Hammond Campus", // TODO: Join with universities table
-    university: profile.uni_id.name,
+    university: profile.university_name,
     profileImage: profile.avatar_url || null,
   };
 
@@ -106,44 +110,6 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 flex">
-      {/* Left Sidebar */}
-      <aside className="w-48 border-r border-zinc-800 p-6 flex flex-col gap-8">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <img src="/favicon.ico" alt="SchoolEm" className="h-12 w-12" />
-          <div>
-            <div className="text-sm font-serif italic">SchoolEm</div>
-            <div className="text-xs text-zinc-400">Purdue Northwest</div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex flex-col gap-6">
-          <button
-            onClick={() => navigate("/uni")}
-            className="flex items-center gap-3 text-zinc-300 hover:text-zinc-100 transition-colors"
-          >
-            <span className="text-2xl">🏛️</span>
-            <span className="text-base">Uni</span>
-          </button>
-          <button className="flex items-center gap-3 text-zinc-300 hover:text-zinc-100 transition-colors">
-            <span className="text-2xl">🔔</span>
-            <span className="text-base">Alerts</span>
-          </button>
-          <button className="flex items-center gap-3 text-zinc-300 hover:text-zinc-100 transition-colors">
-            <span className="text-2xl">😊</span>
-            <span className="text-base">Profile</span>
-          </button>
-          <button className="flex items-center gap-3 text-zinc-300 hover:text-zinc-100 transition-colors">
-            <span className="text-2xl">➕</span>
-            <span className="text-base">Create</span>
-          </button>
-          <button className="flex items-center gap-3 text-zinc-300 hover:text-zinc-100 transition-colors">
-            <span className="text-2xl">📊</span>
-            <span className="text-base">More</span>
-          </button>
-        </nav>
-      </aside>
 
       {/* Middle Panel - Settings Menu */}
       <div className="w-80 border-r border-zinc-800 p-8 overflow-y-auto">
@@ -329,180 +295,6 @@ function PlaceholderContent({ title }) {
     <div className="p-12">
       <h2 className="text-3xl font-bold mb-4">{title}</h2>
       <p className="text-zinc-400">This section is coming soon...</p>
-    </div>
-  );
-}
-
-// Edit Profile Content
-function EditProfileContent({ user }) {
-  return (
-    <div className="p-12">
-      <div className="max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-4xl font-bold">Edit Profile</h2>
-          <button className="px-6 py-2.5 bg-yellow-400 text-black font-medium rounded-full hover:bg-yellow-500 transition-colors">
-            Change Your Look
-          </button>
-        </div>
-
-        {/* Profile Picture and Username */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-24 h-24 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden">
-            {user.profileImage ? (
-              <img
-                src={user.profileImage}
-                alt={user.fullName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-4xl">👤</span>
-            )}
-          </div>
-          <div>
-            <h3 className="text-2xl font-bold">{user.fullName}</h3>
-            <p className="text-zinc-400">{user.username}</p>
-          </div>
-        </div>
-
-        {/* Form Fields */}
-        <div className="space-y-6">
-          {/* Name */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Name</label>
-            <input
-              type="text"
-              defaultValue={user.fullName}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
-            />
-          </div>
-
-          {/* Username */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Username</label>
-            <input
-              type="text"
-              defaultValue={user.username}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
-            />
-          </div>
-
-          {/* Bio */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Bio</label>
-            <textarea
-              defaultValue={user.bio}
-              rows={3}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-3xl text-lg focus:outline-none focus:ring-2 focus:ring-white/30 resize-none"
-            />
-          </div>
-
-          {/* Age and Date of Birth */}
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-lg font-medium mb-2">Age</label>
-              <input
-                type="text"
-                value={user.age}
-                readOnly
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
-              />
-            </div>
-            <div>
-              <label className="block text-lg font-medium mb-2">
-                Date of Birth
-              </label>
-              <input
-                type="text"
-                defaultValue={user.birthdate}
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
-              />
-            </div>
-          </div>
-
-          {/* Gender */}
-          <div>
-            <label className="block text-lg font-medium mb-2">Gender</label>
-            <div className="relative">
-              <select
-                defaultValue={user.gender}
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none cursor-pointer"
-              >
-                <option value="Male" className="bg-zinc-900">
-                  Male
-                </option>
-                <option value="Female" className="bg-zinc-900">
-                  Female
-                </option>
-                <option value="Non-binary" className="bg-zinc-900">
-                  Non-binary
-                </option>
-                <option value="Prefer not to say" className="bg-zinc-900">
-                  Prefer not to say
-                </option>
-                <option value="Other" className="bg-zinc-900">
-                  Other
-                </option>
-              </select>
-              <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-zinc-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* University */}
-          <div>
-            <label className="block text-lg font-medium mb-2">University</label>
-            <div className="relative">
-              <select
-                defaultValue={user.university}
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none cursor-pointer"
-              >
-                <option
-                  value="Purdue University Northwest - Hammond Campus"
-                  className="bg-zinc-900"
-                >
-                  Purdue University Northwest - Hammond Campus
-                </option>
-                <option
-                  value="Purdue University Northwest - Westville Campus"
-                  className="bg-zinc-900"
-                >
-                  Purdue University Northwest - Westville Campus
-                </option>
-                {/* Add more universities as needed */}
-              </select>
-              <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-zinc-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

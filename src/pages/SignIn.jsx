@@ -6,18 +6,16 @@ import useSignIn from "../hooks/useSignIn";
 import { ensureProfile } from "../services/apiProfile";
 
 export default function SignIn() {
-  const { signIn, isSigningIn } = useSignIn();
+  const { signIn, isSigningIn } = useSignIn({
+    ensureProfileFn: ensureProfile,
+    redirectTo: "/uni",
+  });
   
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { email: "", password: "" } });
-
-  const { signIn, isLoading } = useSignIn({
-    ensureProfileFn: ensureProfile,
-    redirectTo: "/uni",
-  });
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
@@ -59,9 +57,9 @@ export default function SignIn() {
               type="primary"
               buttonType="submit"
               className="self-center"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting || isSigningIn}
             >
-              {isSubmitting || isLoading ? "Signing In…" : "Sign In"}
+              {isSubmitting || isSigningIn ? "Signing In…" : "Sign In"}
             </Button>
 
             <div className="w-full flex items-center gap-4">

@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import { startAuthListenerEnsureProfile } from "./services/apiProfile";
 import { AuthProvider } from "./hooks/useAuth";
 import Profile from "./pages/Profile";
+import Settings from "./pages/settings/Settings";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },
@@ -43,8 +44,9 @@ export default function App() {
               }
             >
               <Route path="uni" element={<Uni />} />
+              <Route path="settings" element={<Settings />} />
               <Route path="alerts" element={<Alerts />} />
-              <Route path="profile" element = {<Profile/>}/>
+              <Route path="profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<Navigate to="/signin" replace />} />
           </Routes>

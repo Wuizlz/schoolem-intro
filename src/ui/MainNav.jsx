@@ -3,13 +3,13 @@ import { LiaUniversitySolid } from "react-icons/lia";
 import { MdAddToPhotos } from "react-icons/md";
 import { FaRegFileLines } from "react-icons/fa6";
 
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 import Modal from "./Modal";
 import Menus from "./Menus";
 
-import CreatePostModa from "../ui/CreatePostModal";
+import CreatePostModal from "../ui/CreatePostModal";
 import { Menu } from "@headlessui/react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -38,8 +38,8 @@ const ProfileIcon = styled.span`
 const navItemStyles = css`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
-  padding: 0.8rem 1.6rem;
+  gap: 1.1rem;
+  padding: 0.8rem 0.8rem;
   border-radius: 999px;
   border: 1px solid transparent;
   background: transparent;
@@ -172,7 +172,7 @@ export default function MainNav() {
                 </Modal.Open>
               </Menus.List>
               <Modal.Window name="post">
-                <CreatePostModa></CreatePostModa>
+                <CreatePostModal></CreatePostModal>
               </Modal.Window>
             </Menus>
           </Modal>
@@ -193,7 +193,9 @@ export default function MainNav() {
                     />
                   }
                 >
-                  <span className="text-amber-50">Settings</span>
+                  <Link to="/settings">
+                    <span className="text-amber-50">Settings</span>
+                  </Link>
                 </Menus.MButton>
                 <Menus.MButton
                   onClick={logout}
