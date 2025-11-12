@@ -208,3 +208,70 @@ export function startAuthListenerEnsureProfile() {
   };
   return authListenerCleanup;
 }
+
+/**
+ * Update user profile with new data
+ */
+export async function updateProfile({ fullName, username, bio, birthdate, gender, avatarFile }) {
+  // Get current user
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw userError;
+  if (!user) throw new Error("Not authenticated");
+
+  let avatarUrl = null;
+
+  // Upload avatar if provided (unique path + no upsert → INSERT only)
+  if (avatarFile) {
+    const extFromName = avatarFile.name?.split(".").pop()?.toLowerCase();
+    const fallbackExt = (avatarFile.type && avatarFile.type.split("/")[1]) || "jpg";
+    const fileExt = extFromName || fallbackExt;
+    const filePath = `${user.id}/${user.id}-${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("profile-pic")
+      .upload(filePath, avatarFile, {
+        cacheControl: "360",                 // ok to bump if you like
+        upsert: true,                       
+        contentType: avatarFile.type || `image/${fileExt}`,
+      });
+
+    if (uploadError) throw uploadError;
+
+    // Public bucket: get public URL and cache-bust
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("profile-pic").getPublicUrl(filePath);
+
+    avatarUrl = `${publicUrl}?v=${Date.now()}`;
+  }
+
+  // Convert birthdate MM/DD/YYYY -> YYYY-MM-DD (if needed)
+  let dbBirthdate = birthdate;
+  if (birthdate && birthdate.includes("/")) {
+    const [month, day, year] = birthdate.split("/");
+    dbBirthdate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
+
+  // Update profile in database
+  const updateData = {
+    full_name: fullName,
+    display_name: username,
+    bio: bio || null,
+    b_date: dbBirthdate || null,
+    gender: gender || null,
+  };
+  if (avatarUrl) updateData.avatar_url = avatarUrl;
+
+  const { error: updateError } = await supabase
+    .from("profiles")
+    .update(updateData)
+    .eq("id", user.id);
+
+  if (updateError) throw updateError;
+
+  return { success: true, avatarUrl };
+}

@@ -6,16 +6,16 @@ import useSignIn from "../hooks/useSignIn";
 import { ensureProfile } from "../services/apiProfile";
 
 export default function SignIn() {
+  const { signIn, isLoading: isSigningIn } = useSignIn({
+    ensureProfileFn: ensureProfile,
+    redirectTo: "/uni",
+  });
+  
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { email: "", password: "" } });
-
-  const { signIn, isLoading } = useSignIn({
-    ensureProfileFn: ensureProfile,
-    redirectTo: "/uni",
-  });
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
@@ -60,7 +60,7 @@ export default function SignIn() {
               to="/ForgotPassword"
               className="self-start text-sm font-semibold text-yellow-400 hover:text-yellow-300 
                 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting || isSigningIn}
             >
               Forgot password?
             </Button>
@@ -70,9 +70,9 @@ export default function SignIn() {
               type="primary"
               buttonType="submit"
               className="self-center"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting || isSigningIn}
             >
-              {isSubmitting || isLoading ? "Signing In…" : "Sign In"}
+              {isSubmitting || isSigningIn ? "Signing In…" : "Sign In"}
             </Button>
    
           </div>
