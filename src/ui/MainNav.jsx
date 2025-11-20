@@ -5,16 +5,17 @@ import { FaRegFileLines } from "react-icons/fa6";
 import { Link, NavLink } from "react-router-dom";
 import styled, { css } from "styled-components";
 
-import Modal from "./Modal";
-import Menus from "./Menus";
-import CreatePostModal from "../ui/CreatePostModal";
+import Modal from "./ui components/Modal";
+import Menus from "./ui components/Menus";
+import CreatePostModal from "./pop-ups/CreatePostModal";
 import { FaRegUserCircle } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoSettingsOutline } from "react-icons/io5";
 import { BiSolidDoorOpen } from "react-icons/bi";
 import useLogout from "../hooks/useLogout";
+import CreateThreadForm from "./pop-ups/CreateThreadModal";
 
-const ProfileIcon = styled.span`
+export const ProfileIcon = styled.span`
   width: 2.4rem;
   height: 2.4rem;
   flex-shrink: 0;
@@ -32,7 +33,7 @@ const ProfileIcon = styled.span`
   transition: background-color 0.3s ease, color 0.3s ease;
 `;
 
-const navItemStyles = css`
+export const navItemStyles = css`
   width: 100%;
   display: flex;
   align-items: center;
@@ -43,7 +44,8 @@ const navItemStyles = css`
   background: transparent;
   color: inherit;
   text-decoration: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
 
   &:hover,
   &:focus-visible {
@@ -52,7 +54,9 @@ const navItemStyles = css`
     outline: none;
   }
 
-  &.active { border-color: var(--color-yellow-500); }
+  &.active {
+    border-color: var(--color-yellow-500);
+  }
 
   & svg,
   & ${ProfileIcon} {
@@ -64,24 +68,55 @@ const navItemStyles = css`
     transition: all 0.3s;
   }
 
-  &:active ${ProfileIcon},
-  &.active svg,
-  &.active ${ProfileIcon} { color: var(--color-amber-200); }
+  &:active ${ProfileIcon}, &.active svg,
+  &.active ${ProfileIcon} {
+    color: var(--color-amber-200);
+  }
 
-  span { transition: color 0.3s; }
-  &:active span, &.active span { font-weight: bolder; }
+  span {
+    transition: color 0.3s;
+  }
+  &:active span,
+  &.active span {
+    font-weight: bolder;
+  }
+
+  ${({ $compactOnMobile = true }) =>
+    $compactOnMobile &&
+    css`
+      @media (max-width: 1023px) {
+        width: 3.6rem;
+        height: 3.6rem;
+        padding: 0.6rem;
+        gap: 0;
+        justify-content: center;
+        border-radius: 999px;
+
+        &:hover,
+        &:focus-visible {
+          border-color: transparent;
+          background-color: transparent;
+        }
+
+        &.active {
+          border-color: transparent;
+          background-color: transparent;
+        }
+      }
+    `}
 `;
 
-const StyledNavLink = styled(NavLink)`
+export const StyledNavLink = styled(NavLink)`
   ${navItemStyles};
 `;
 
-const AddNavButton = styled(Menus.Toggle)`
+const AddNavButton = styled(Menus.Toggle).attrs({ align: "left" })`
   ${navItemStyles};
   cursor: pointer;
-  &:active svg { color: var(--color-amber-200); }
+  &:active svg {
+    color: var(--color-amber-200);
+  }
   width: 100%;
-
 
   &:active svg {
     color: var(--color-amber-200);
@@ -95,25 +130,31 @@ export default function MainNav() {
     <nav className="flex h-full w-full flex-1 flex-col">
       {/* ONE Menus provider wraps both Add and More */}
       <Menus>
-        <ul className="flex flex-col gap-8 sm:gap-12">
+        <ul className="flex flex-col gap-12">
           <li>
             <StyledNavLink to="/uni">
               <LiaUniversitySolid />
-              <span className="font-extralight text-amber-50">Uni</span>
+              <span className="hidden font-extralight text-amber-50 lg:inline">
+                Uni
+              </span>
             </StyledNavLink>
           </li>
 
           <li>
             <StyledNavLink to="/alerts">
               <IoIosNotifications />
-              <span className="font-extralight text-amber-50">Alerts</span>
+              <span className="hidden font-extralight text-amber-50 lg:inline">
+                Alerts
+              </span>
             </StyledNavLink>
           </li>
 
           <li>
             <StyledNavLink to="/profile">
               <ProfileIcon aria-hidden="true" />
-              <span className="font-extralight text-amber-50">Profile</span>
+              <span className="hidden font-extralight text-amber-50 lg:inline">
+                Profile
+              </span>
             </StyledNavLink>
           </li>
 
@@ -124,7 +165,7 @@ export default function MainNav() {
                   aria-hidden="true"
                   className="h-[2.4rem] w-[2.4rem] shrink-0 text-grey-50 transition-colors duration-300"
                 />
-                <span className="font-extralight text-amber-50 transition-colors duration-300">
+                <span className="hidden font-extralight text-amber-50 transition-colors duration-300 lg:inline">
                   Add
                 </span>
               </AddNavButton>
@@ -173,6 +214,10 @@ export default function MainNav() {
               <Modal.Window name="post">
                 <CreatePostModal />
               </Modal.Window>
+
+              <Modal.Window name="thread">
+                <CreateThreadForm />
+              </Modal.Window>
             </Modal>
           </li>
         </ul>
@@ -181,23 +226,25 @@ export default function MainNav() {
           <li>
             <AddNavButton id="more">
               <RxHamburgerMenu />
-              <span className="font-extralight text-amber-50">More</span>
+              <span className="hidden font-extralight text-amber-50 lg:inline">
+                More
+              </span>
             </AddNavButton>
 
             <Menus.List id="more">
-              <Menus.MButton
-                icon={
-                  <IoSettingsOutline
-                    className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
-                    color="white"
-                  />
-                }
-              >
-                <Link to="/settings">
+              {" "}
+              <Link to="/settings">
+                <Menus.MButton
+                  icon={
+                    <IoSettingsOutline
+                      className="h-[1.4rem] w-[1.4rem] shrink-0 text-grey-50 transition-colors duration-300"
+                      color="white"
+                    />
+                  }
+                >
                   <span className="text-amber-50">Settings</span>
-                </Link>
-              </Menus.MButton>
-
+                </Menus.MButton>{" "}
+              </Link>
               <Menus.MButton
                 onClick={logout}
                 disabled={isLoggingOut}
@@ -214,6 +261,6 @@ export default function MainNav() {
           </li>
         </ul>
       </Menus>
-      </nav>
-           
-)}
+    </nav>
+  );
+}

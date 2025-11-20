@@ -7,7 +7,7 @@ export default function SideBar() {
   return (
     <aside className="flex min-h-screen w-full max-w-xs flex-col items-start  border-grey-100 border-r border-r-gray-600 bg-grey-700 text-grey-100 sm:max-w-sm lg:max-w-[24rem]">
       <Logo className="self-start p-4" />
-      <div className="w-full">
+      <div className="hidden w-full lg:block">
         <SchoolEm />
         <UniHolder />
       </div>

@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import GlobalStyles from "./styles/GlobalStyles";
 
-import AppLayout from "./ui/AppLayout";
+import AppLayout from "./ui/Layouts/AppLayout";
 import ProtectedRoute from "./ui/ProtectedRoute";
 
 import Alerts from "./pages/Alerts";
@@ -21,6 +21,10 @@ import { startAuthListenerEnsureProfile } from "./services/apiProfile";
 import { AuthProvider } from "./hooks/useAuth";
 import Profile from "./pages/Profile";
 import Settings from "./pages/settings/Settings";
+import ProfileTabsLayout from "./ui/Layouts/ProfileTabsLayout";
+import ProfilePosts from "./ui/profile/Posts";
+import ProfileSaved from "./ui/profile/ProfileSaved";
+import ProfileTagged from "./ui/profile/ProfileTagged";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },
@@ -35,7 +39,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/signup" replace />} />
-            <Route path="/signin" element={<SignIn />} /> 
+            <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/ForgotPassword" element={<ForgotPassword />} />
             <Route path="/UpdatePassword" element={<UpdatePassword />} />
@@ -50,11 +54,18 @@ export default function App() {
               <Route path="uni" element={<Uni />} />
               <Route path="settings" element={<Settings />} />
               <Route path="alerts" element={<Alerts />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="profile" element={<Profile />}>
+                <Route element={<ProfileTabsLayout />}>
+                  <Route index element={<ProfilePosts />} />
+                  <Route path="saved" element={<ProfileSaved />} />
+                  <Route path="tagged" element={<ProfileTagged />} />
+                </Route>
+              </Route>
             </Route>
             <Route path="*" element={<Navigate to="/signin" replace />} />
           </Routes>
         </BrowserRouter>
+
         <Toaster
           position="top-center"
           gutter={12}

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import Button from "./Button";
-import useOutsideClick from "../hooks/useOutsideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const MenusContext = createContext();
 
@@ -27,7 +27,7 @@ const StyledList = styled.ul`
   left: ${({ position }) => position?.x ?? 0}px;
   top: ${({ position }) => position?.y ?? 0}px;
   transform: translate(
-    -50%,
+    ${({ position }) => (position?.align === "center" ? "-50%" : "0")},
     ${({ position }) => (position?.placement === "top" ? "-100%" : "0")}
   );
 `;
@@ -38,6 +38,7 @@ export default function Menus({ children }) {
     x: 0,
     y: 0,
     placement: "bottom",
+    align: "center",
   });
 
   const close = () => setOpenId("");
@@ -52,7 +53,14 @@ export default function Menus({ children }) {
   );
 }
 
-function Toggle({ id, children, className, onActiveChange, ...rest }) {
+function Toggle({
+  id,
+  children,
+  className,
+  onActiveChange,
+  align = "center",
+  ...rest
+}) {
   const { openId, open, close, setPosition } = useContext(MenusContext);
   const isOpen = openId === id;
 
@@ -67,16 +75,23 @@ function Toggle({ id, children, className, onActiveChange, ...rest }) {
     const viewportPadding = 16;
     const gap = 12;
     const estimatedMenuHeight = 200;
-    const centerX = rect.left + rect.width / 2;
+
+    const computedStyles = window.getComputedStyle(button);
+    const paddingLeft = parseFloat(computedStyles.paddingLeft) || 0;
+    const anchorX =
+      align === "left"
+        ? rect.left + paddingLeft
+        : rect.left + rect.width / 2;
+
     const clampedX = Math.min(
       window.innerWidth - viewportPadding,
-      Math.max(viewportPadding, centerX)
+      Math.max(viewportPadding, anchorX)
     );
     const spaceBelow = window.innerHeight - rect.bottom;
     const placement = spaceBelow < estimatedMenuHeight ? "top" : "bottom";
     const y = placement === "bottom" ? rect.bottom + gap : rect.top - gap;
 
-    setPosition({ x: clampedX, y, placement });
+    setPosition({ x: clampedX, y, placement, align });
 
     if (isOpen) close();
     else open(id);

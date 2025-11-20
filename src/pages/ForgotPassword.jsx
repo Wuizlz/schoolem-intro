@@ -1,7 +1,7 @@
 // src/pages/ForgotPassword.jsx
 import { useForm } from "react-hook-form";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
+import Button from "../ui/ui components/Button";
+import Input from "../ui/ui components/Input";
 import usePasswordReset from "../services/PasswordReset";
 
 export default function ForgotPassword() {

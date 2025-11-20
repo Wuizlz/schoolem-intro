@@ -1,12 +1,16 @@
-// src/ui/DateAndGenderFrom.jsx
+// src/ui/DateAndGenderForm.jsx
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import Input from "./Input";
-import Button from "./Button";
-import ScrollDown from "./ScrollDown";
-import { useCreateProfile } from "../hooks/useCreateProfile";
+import Input from "../ui components/Input";
+import Button from "../ui components/Button";
+import ScrollDown from "../ScrollDown";
+import { useCreateProfile } from "../../hooks/useCreateProfile";
 
-export default function DateAndGenderFrom({ initialData, onSuccess, onBack }) {
+export default function DateAndGenderForm({
+  initialData,
+  onSuccess,
+  onBack,
+}) {
   const { createProfile, isCreating } = useCreateProfile();
 
   const {

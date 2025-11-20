@@ -108,7 +108,6 @@ export async function ensureProfile(opts = {}) {
   const user = session?.user;
   if (!user) throw new Error("Not signed in");
 
-
   // 2) Derive display name from metadata
   const meta = user.user_metadata || {};
   const fromMeta = meta.display_name && String(meta.display_name).trim();
@@ -125,7 +124,7 @@ export async function ensureProfile(opts = {}) {
       "university_id_for_email",
       { p_email: user.email }
     );
-    
+
     if (uniErr) {
       // non-fatal; just log and continue
       console.warn("university_id_for_email failed:", uniErr);
@@ -147,7 +146,7 @@ export async function ensureProfile(opts = {}) {
     .select("id, email, display_name, uni_id")
     .eq("id", user.id)
     .maybeSingle();
-  
+
   if (selErr) throw selErr;
 
   // Build the row we want to persist (only set uni_id if we actually found one)
@@ -164,7 +163,6 @@ export async function ensureProfile(opts = {}) {
     existing.email !== row.email ||
     (display_name && existing.display_name !== display_name) ||
     (uniId && existing.uni_id !== uniId);
- 
 
   if (needsUpsert) {
     const { error: upsertErr } = await supabase
@@ -175,7 +173,7 @@ export async function ensureProfile(opts = {}) {
   }
 
   const result = { created: !existing, user, allowed: true, uniId };
-  
+
   return result;
 }
 
@@ -212,7 +210,14 @@ export function startAuthListenerEnsureProfile() {
 /**
  * Update user profile with new data
  */
-export async function updateProfile({ fullName, username, bio, birthdate, gender, avatarFile }) {
+export async function updateProfile({
+  fullName,
+  username,
+  bio,
+  birthdate,
+  gender,
+  avatarFile,
+}) {
   // Get current user
   const {
     data: { user },
@@ -227,15 +232,16 @@ export async function updateProfile({ fullName, username, bio, birthdate, gender
   // Upload avatar if provided (unique path + no upsert → INSERT only)
   if (avatarFile) {
     const extFromName = avatarFile.name?.split(".").pop()?.toLowerCase();
-    const fallbackExt = (avatarFile.type && avatarFile.type.split("/")[1]) || "jpg";
+    const fallbackExt =
+      (avatarFile.type && avatarFile.type.split("/")[1]) || "jpg";
     const fileExt = extFromName || fallbackExt;
     const filePath = `${user.id}/${user.id}-${Date.now()}.${fileExt}`;
 
     const { error: uploadError } = await supabase.storage
       .from("profile-pic")
       .upload(filePath, avatarFile, {
-        cacheControl: "360",                 // ok to bump if you like
-        upsert: true,                       
+        cacheControl: "360", // ok to bump if you like
+        upsert: true,
         contentType: avatarFile.type || `image/${fileExt}`,
       });
 
@@ -253,7 +259,9 @@ export async function updateProfile({ fullName, username, bio, birthdate, gender
   let dbBirthdate = birthdate;
   if (birthdate && birthdate.includes("/")) {
     const [month, day, year] = birthdate.split("/");
-    dbBirthdate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    dbBirthdate = `${year}-${String(month).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
   }
 
   // Update profile in database
@@ -274,4 +282,15 @@ export async function updateProfile({ fullName, username, bio, birthdate, gender
   if (updateError) throw updateError;
 
   return { success: true, avatarUrl };
+}
+
+export async function getUserPublications(author_id, pubType) {
+  if (!author_id) throw new Error("Not authorized to perform action");
+
+  const { data, error } = await supabase
+    .from("publications")
+    .select(
+      "publication_id, created_at, type, post:posts(caption,pic_url),thread:threads(thread_text)"
+    ).eq('author_id', author_id).eq('type', pubType).order('created_at', {ascending: false});
+    return data
 }

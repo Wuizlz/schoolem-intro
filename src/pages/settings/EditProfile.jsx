@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { updateProfile } from "../../services/apiProfile";
+import OwnUserCircle from "../../ui/ui components/OwnUserCircle";
+import Button from "../../ui/ui components/Button";
 
 // Edit Profile Content
 export function EditProfileContent({ user }) {
@@ -112,13 +114,12 @@ export function EditProfileContent({ user }) {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-4xl font-bold">Edit Profile</h2>
-          <button 
+          <Button 
             onClick={handleChangePhotoClick}
-            type="button"
-            className="px-6 py-2.5 bg-yellow-400 text-black font-medium rounded-full hover:bg-yellow-500 transition-colors"
+            buttonType="button"
           >
             Change Your Look
-          </button>
+          </Button>
           {/* Hidden file input */}
           <input
             ref={fileInputRef}
@@ -131,17 +132,7 @@ export function EditProfileContent({ user }) {
 
         {/* Profile Picture and Username */}
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-24 h-24 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden border-2 border-zinc-700">
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt={formData.fullName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-4xl">👤</span>
-            )}
-          </div>
+          <OwnUserCircle type = "editStyle"/>
           <div>
             <h3 className="text-2xl font-bold">{formData.fullName}</h3>
             <p className="text-zinc-400">{formData.username}</p>

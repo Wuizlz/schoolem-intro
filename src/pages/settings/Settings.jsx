@@ -1,18 +1,19 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProfile } from "../../../hooks/useProfile";
+import { useAuth } from "../../hooks/useAuth";
 import { EditProfileContent } from "./EditProfile";
 import { updateProfile } from "../../services/apiProfile";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import Spinner from "../../ui/Spinner";
+import Spinner from "../../ui/ui components/Spinner"
+import Button from "../../ui/ui components/Button";
 
 export default function Settings() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState(null);
 
   // Fetch real user data from Supabase
-  const { data: profile, isLoading, error } = useProfile();
+  const { profile, isLoading, error } = useAuth();
 
   // Helper functions to transform data
   const calculateAge = (birthdate) => {
@@ -21,7 +22,10 @@ export default function Settings() {
     const birth = new Date(birthdate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
       age--;
     }
     return age;
@@ -54,12 +58,9 @@ export default function Settings() {
         <div className="text-center">
           <p className="text-red-500 text-xl mb-4">Error loading profile</p>
           <p className="text-zinc-400 mb-4">{error.message}</p>
-          <button
-            onClick={() => navigate("/signin")}
-            className="px-6 py-2 bg-yellow-400 text-black rounded-full hover:bg-yellow-500 transition-colors"
-          >
+          <Button onClick={() => navigate("/signin")} type="settingsButton">
             Back to Sign In
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -110,60 +111,47 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 flex">
-
       {/* Middle Panel - Settings Menu */}
-      <div className="w-80 border-r border-zinc-800 p-8 overflow-y-auto">
-        <h1 className="text-4xl font-bold mb-8">Settings</h1>
+      <div className="md:w-40 lg:w-80 border-r border-zinc-800 p-8 overflow-y-auto">
+        <h1 className="md:2xl lg:text-4xl font-bold mb-8">Settings</h1>
 
         {/* Profile Info Section */}
-        <div className="mb-6">
-          <h2 className="text-xl font-bold mb-3">Profile Info</h2>
-          <button
-            onClick={() => setActiveSection("edit-profile")}
-            className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-              activeSection === "edit-profile"
-                ? "bg-yellow-400 text-black font-medium"
-                : "hover:bg-zinc-800 text-zinc-100"
-            }`}
+        <div className="mb-6 ">
+          <h2 className="lg:text-xl font-bold mb-3 ">Profile Info</h2>
+          <SettingsNavButton
+            id="edit-profile"
+            activeSection={activeSection}
+            onSelect={setActiveSection}
           >
             Edit profile
-          </button>
+          </SettingsNavButton>
         </div>
 
         {/* Your Activity Section */}
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-3">Your Activity</h2>
           <div className="flex flex-col gap-1">
-            <button
-              onClick={() => setActiveSection("posts-stories")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "posts-stories"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            <SettingsNavButton
+              id="posts-stories"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Posts & Stories
-            </button>
-            <button
-              onClick={() => setActiveSection("liked")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "liked"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="liked"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Liked
-            </button>
-            <button
-              onClick={() => setActiveSection("blocked")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "blocked"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="blocked"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Blocked
-            </button>
+            </SettingsNavButton>
           </div>
         </div>
 
@@ -171,36 +159,27 @@ export default function Settings() {
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-3">App preferences</h2>
           <div className="flex flex-col gap-1">
-            <button
-              onClick={() => setActiveSection("theme")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "theme"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            <SettingsNavButton
+              id="theme"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Theme
-            </button>
-            <button
-              onClick={() => setActiveSection("notifications")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "notifications"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="notifications"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Notifications
-            </button>
-            <button
-              onClick={() => setActiveSection("accessibility")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "accessibility"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="accessibility"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Accessibility
-            </button>
+            </SettingsNavButton>
           </div>
         </div>
 
@@ -208,26 +187,20 @@ export default function Settings() {
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-3">Account preferences</h2>
           <div className="flex flex-col gap-1">
-            <button
-              onClick={() => setActiveSection("visibility")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "visibility"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            <SettingsNavButton
+              id="visibility"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Visibility
-            </button>
-            <button
-              onClick={() => setActiveSection("other-accounts")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "other-accounts"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="other-accounts"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Other Accounts
-            </button>
+            </SettingsNavButton>
           </div>
         </div>
 
@@ -235,36 +208,27 @@ export default function Settings() {
         <div className="mb-6">
           <h2 className="text-xl font-bold mb-3">Security</h2>
           <div className="flex flex-col gap-1">
-            <button
-              onClick={() => setActiveSection("password")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "password"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            <SettingsNavButton
+              id="password"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Password
-            </button>
-            <button
-              onClick={() => setActiveSection("authentication")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "authentication"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="authentication"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Authentication
-            </button>
-            <button
-              onClick={() => setActiveSection("account-recovery")}
-              className={`w-full text-left px-4 py-2.5 rounded-full transition-colors ${
-                activeSection === "account-recovery"
-                  ? "bg-yellow-400 text-black font-medium"
-                  : "hover:bg-zinc-800 text-zinc-100"
-              }`}
+            </SettingsNavButton>
+            <SettingsNavButton
+              id="account-recovery"
+              activeSection={activeSection}
+              onSelect={setActiveSection}
             >
               Account Recovery
-            </button>
+            </SettingsNavButton>
           </div>
         </div>
       </div>
@@ -280,7 +244,9 @@ function WelcomeContent() {
   return (
     <div className="h-full flex items-center justify-center">
       <div className="text-center">
-        <h2 className="text-4xl font-bold mb-4">Welcome to your settings page!</h2>
+        <h2 className="text-4xl font-bold mb-4">
+          Welcome to your settings page!
+        </h2>
         <p className="text-zinc-400 text-lg">
           Select an option from the menu to get started
         </p>
@@ -296,5 +262,22 @@ function PlaceholderContent({ title }) {
       <h2 className="text-3xl font-bold mb-4">{title}</h2>
       <p className="text-zinc-400">This section is coming soon...</p>
     </div>
+  );
+}
+
+function SettingsNavButton({ id, activeSection, onSelect, children }) {
+  const isActive = activeSection === id;
+  const variant = isActive
+    ? "bg-amber-300 text-black font-medium"
+    : "hover:bg-zinc-800 text-zinc-100";
+
+  return (
+    <Button
+      type="settingsButton"
+      onClick={() => onSelect(id)}
+      className={variant}
+    >
+      {children}
+    </Button>
   );
 }

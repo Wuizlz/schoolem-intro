@@ -1,9 +1,10 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { CiHeart } from "react-icons/ci";
 import { GoDot } from "react-icons/go";
-import { TfiThought } from "react-icons/tfi";
+import { FaRegFileLines } from "react-icons/fa6";
+import ThoughtIcon from "./ui components/ThoughtIcon";
+import HeartIcon from "./ui components/HeartIcon";
 
-export default function UserPost({ postData, id }) {
+export default function UserPost({ publicationData, publicationId }) {
   const formatRelative = (dateString) => {
     if (!dateString) return "";
     const now = Date.now();
@@ -18,50 +19,116 @@ export default function UserPost({ postData, id }) {
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;
   };
-  const author = postData.publications.profiles;
-  const publications = postData.publications;
-  return (
-    <li className=" flex-row w-full ">
-      <div className="flex">
-        <header className="h-16 w-16 rounded-full border p-[3px]">
-          <img src={author.avatar_url} className="h-full w-full rounded-full object-cover py-5x" />
-        </header>
-        <div className=" flex-row">
-          <div className="flex">
-            <GoDot  className="text-[13px] my-auto text-gray-600 " />
 
-            <p className="text-gray-600 text-[12px] pl-[1px]">
-              {formatRelative(publications.created_at)}
+  const author = publicationData.profiles;
+
+  if (publicationData.type === "post") {
+    const postData = publicationData.posts;
+
+    return (
+      <li className="flex flex-col gap-4 border-t border-gray-800/60 py-6">
+        <div className="flex items-center gap-3">
+          <div className="h-14 w-14 rounded-full border p-[3px] shadow-[0_0_25px_-10px_rgb(245_158_11)]">
+            <img
+              src={author.avatar_url}
+              className="h-full w-full rounded-full object-cover"
+              alt={author.full_name}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <p className="text-sm uppercase tracking-wide text-amber-300/70">
+              Post
             </p>
-          </div>
-          <p className="text-white font-bold pl-[1px] text-[16px]">
-            {author.display_name}
-          </p>
-        </div>
-        <button className="ml-auto text-[20px]">
-          <BsThreeDotsVertical color="white"></BsThreeDotsVertical>
-        </button>
-      </div>
-
-      <div className="flex justify-center  ">
-        <div className="flex-row w-96 ">
-          <div className="flex border border-gray-500 rounded-sm  ">
-            <img className="w-fit rounded-sm" src={postData.pic_url}></img>
-          </div>
-          <div className="flex">
-            <div className="flex text-2xl items-center gap-1 leading-none" >
-              <CiHeart color="white" className="my-1 h-8 w-8   " />
-              <TfiThought color="white" className="my-1 h-8 w-6 " />
+            <p className="text-lg font-semibold text-white">
+              {author.display_name}
+            </p>
+            <div className="flex items-center gap-1 text-xs text-gray-400">
+              <GoDot className="text-[12px]" />
+              <span>{formatRelative(publicationData.created_at)}</span>
             </div>
           </div>
 
-          <div className="flex">
-            <p className="text-amber-50 my-1">
-              <span className="font-extrabold">{author.full_name}</span>: {postData.caption}
-            </p>
+          <button
+            className="ml-auto rounded-full p-1.5 text-xl text-gray-300 hover:text-white"
+            aria-label="Post options"
+          >
+            <BsThreeDotsVertical />
+          </button>
+        </div>
+
+        <div className="flex flex-col items-center ">
+          <div className="w-full max-w-sm sm:max-w-md lg:max-w-2xl space-y-4 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
+            <div className="overflow-hidden rounded-2xl border border-amber-200/30">
+              <img
+                className="h-full w-full object-cover"
+                src={postData.pic_url[0]}
+                alt="Post media"
+              />
+            </div>
+            <div className="flex items-center gap-2 text-white/90">
+              <button className="text-2xl transition-transform hover:scale-105">
+                <HeartIcon className="h-7 w-8"   />
+              </button>
+              <button className="text-xl transition-transform hover:scale-105">
+                <ThoughtIcon className="h-7 w-8"/>
+              </button>
+              <div className="ml-auto text-xs uppercase tracking-wide text-gray-400">
+                Share the vibe
+              </div>
+            </div>
+            <div className="text-amber-50 break-words">
+              <p className="leading-snug">
+                <span className="font-extrabold">{author.full_name}</span>
+                <span className="font-extralight">: {postData.caption}</span>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </li>
-  );
+      </li>
+    );
+  } else if (publicationData.type === "thread") {
+    return (
+      <li className="w-full border-t border-gray-800/60 py-6 ">
+        <div className="flex gap-3 ">
+          <header className="h-14 w-14 rounded-full border p-[3px]">
+            <img
+              src={author.avatar_url}
+              className="h-full w-full rounded-full object-cover"
+            />
+          </header>
+
+          <div className="flex flex-col flex-1 gap-3 rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200">
+              <FaRegFileLines className="text-sm" />
+              <span>Thread</span>
+              <span className="text-gray-400">•</span>
+              <span className="text-gray-300">
+                {formatRelative(publicationData.created_at)}
+              </span>
+
+              <button
+                className="ml-auto text-lg text-gray-300 hover:text-white"
+                aria-label="Thread options"
+              >
+                <BsThreeDotsVertical />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <p className="text-white text-sm font-semibold">
+                {author.display_name}
+              </p>
+              <GoDot className="text-[11px] text-gray-500" />
+            </div>
+
+            <div className="text-amber-50 font-extralight leading-relaxed">
+              <span className="font-extrabold">{author.full_name}</span>:{" "}
+              {publicationData.threads.thread_text}
+            </div>
+          </div>
+        </div>
+      </li>
+    );
+  }
 }

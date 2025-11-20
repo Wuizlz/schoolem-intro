@@ -1,5 +1,5 @@
 /* src/index.css */
-@import url("https://fonts.googleapis.com/css2?family=Island+Moments&family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Island+Moments&family=Instrument+Serif:ital@0;1&display=swap");
 @import "tailwindcss";
 @tailwind utilities;
 
@@ -7,6 +7,7 @@
   :root {
     --font-handwriting: "Island Moments", cursive;
     --font-serif-display: "Instrument Serif", serif;
+    --font-crimson: "Crimson Pro", serif;
   }
 }
 
@@ -23,6 +24,10 @@
 
   .font-serif-display {
     font-family: "Instrument Serif", serif;
+  }
+
+  .font-crimson {
+    font-family: "Crimson Pro", serif;
   }
 
   /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */

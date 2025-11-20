@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useAuth } from "../hooks/useAuth";
-import Spinner from "./Spinner";
+import Spinner from "./ui components/Spinner";
 
 export default function ProtectedRoute({ children }) {
   const { session, isLoading } = useAuth();
@@ -10,7 +10,7 @@ export default function ProtectedRoute({ children }) {
   if (!session && isLoading) {
     return (
       <div className="min-h-dvh flex items-center justify-center bg-black">
-        <Spinner />
+       <div className="h-dvh bg-black" />
       </div>
     );
   }

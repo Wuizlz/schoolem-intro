@@ -1,9 +1,12 @@
 // src/pages/SignIn.jsx
-import Button from "../ui/Button";
+
 import { useForm } from "react-hook-form";
-import Input from "../ui/Input";
+
 import useSignIn from "../hooks/useSignIn";
 import { ensureProfile } from "../services/apiProfile";
+
+import Input from "../ui/ui components/Input"
+import Button from "../ui/ui components/Button";
 
 export default function SignIn() {
   const { signIn, isLoading: isSigningIn } = useSignIn({
