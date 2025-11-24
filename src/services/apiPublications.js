@@ -52,7 +52,7 @@ export async function createPost({ caption, mediaItems, authorId }) {
     .from("publications")
     .insert({
       author_id: authorId,
-      type: POST_TYPE,
+      type: "post",
     })
     .select("publication_id, created_at")
     .single();
@@ -93,7 +93,109 @@ export async function createPost({ caption, mediaItems, authorId }) {
   } catch (err) {
     // best-effort cleanup
     await removeUploadedFiles(uploads);
-    await supabase.from("publications").delete().eq("publication_id", publicationId);
+    await supabase
+      .from("publications")
+      .delete()
+      .eq("publication_id", publicationId);
     throw err;
   }
+}
+
+export async function createThread({ thread_text, authorId }) {
+  console.log(thread_text, authorId);
+  if (!authorId) throw new Error("You must be signed in to create a thread.");
+  if (!thread_text?.length) throw new Error("Thread must have content");
+
+  const Pub_type = "thread";
+
+  const { data: publication, error: pubError } = await supabase
+    .from("publications")
+    .insert({
+      author_id: authorId,
+      type: Pub_type,
+    })
+    .select("publication_id, created_at")
+    .single();
+  if (pubError) throw pubError;
+
+  const publication_id = publication.publication_id;
+  const created_at = publication.created_at;
+  try {
+    const { data: thread, error: threadError } = await supabase
+      .from("threads")
+      .insert({
+        thread_id: publication_id,
+
+        thread_text: thread_text,
+      })
+      .select("thread_id , thread_text")
+      .single();
+
+    if (threadError) throw threadError;
+
+    return {
+      publication: {
+        ...publication,
+        thread_id: thread.thread_id,
+      },
+      thread,
+    };
+  } catch (err) {
+    await supabase
+      .from("publications")
+      .delete()
+      .eq("publication_id", publication_id);
+    throw err;
+  }
+}
+
+export async function getPostsThreadsForUni(uniId) {
+  if (!uniId) return new Error("Missing University id ");
+
+  const { data, error } = await supabase
+    .from("publications")
+    .select(
+      `
+      publication_id,
+      created_at,
+      author_id,
+      type,
+      posts(
+        caption,
+        pic_url
+      ),
+      threads(
+        thread_text
+      ),
+      profiles!inner(
+        id,
+        avatar_url,
+        uni_id,
+        display_name,
+        full_name
+      )
+    `
+    )
+    .eq("profiles.uni_id", uniId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    throw new Error("Unable to load post for this University");
+  }
+
+  return data;
+}
+
+export async function getPublicationCountByAuth(author_id, type)
+{
+  if(!author_id) throw new Error("Need access to fetch own count")
+
+  const query = supabase.from("publications").select("publication_id", {count: 'exact', head: true}).eq("author_id", author_id)
+
+  if(type) query.eq("type", type )
+
+    const {count, error } = await query;
+    if (error) throw error 
+    return count ?? 0;
 }

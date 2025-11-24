@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 
-import Input from "./../ui/Input";
-import Button from "../ui/Button";
+import Input from "./../ui/ui components/Input";
+import Button from "../ui/ui components/Button";
 
-import DateAndGenderFrom from "../ui/DateAndGenderForm";
+import DateAndGenderForm from "../ui/pop-ups/DateAndGenderForm";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
@@ -50,7 +50,7 @@ export default function SignUp() {
   if (showDetailsModal && signupData)
     return (
       <main className="min-h-dvh flex items-center justify-center bg-black  text-zinc-100">
-        <DateAndGenderFrom
+        <DateAndGenderForm
           initialData={signupData}
           onSuccess={handleAdditionalInfoSuccess}
           onBack={handleAdditionalInfoBack}

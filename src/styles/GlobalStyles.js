@@ -1,6 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`
+html, body {
+  height: 100%;
+  background-color: #000;   /* or whatever you want */
+
+ 
+}
 :root {
   /* Indigo */
   --color-brand-50: #eef2ff;
@@ -98,6 +104,25 @@ const GlobalStyles = createGlobalStyle`
   --surface: 217 33% 10%;
 }
 
-`
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 
-export default GlobalStyles
+.shimmer {
+  animation: shimmer 1.6s infinite;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+}
+
+`;
+
+export default GlobalStyles;

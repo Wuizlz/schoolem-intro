@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { TbPhoto } from "react-icons/tb";
 import toast from "react-hot-toast";
 
-import Button from "./Button";
-import { useCreatePost } from "../hooks/useCreatePost";
+import Button from "../ui components/Button";
+import { useCreatePost } from "../../hooks/useCreatePost";
+import Input from "../ui components/Input";
 
 function generateId() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -161,7 +162,7 @@ export default function CreatePostModal({ onCloseModal }) {
             )}
 
             {hasSelection ? (
-              <div className="relative z-10 flex h-full flex-col justify-end gap-4 p-6 text-left">
+              <div className="relative z-10 flex h-ful flex-col justify-end gap-4 p-6 text-left">
                 <div>
                   <p className="text-lg font-semibold text-zinc-50">Looks great!</p>
                   <p className="text-sm text-zinc-300">
@@ -218,7 +219,7 @@ export default function CreatePostModal({ onCloseModal }) {
               </>
             )}
 
-            <input
+            <Input
               ref={inputRef}
               type="file"
               accept="image/*,video/*"
@@ -273,11 +274,11 @@ export default function CreatePostModal({ onCloseModal }) {
 
       {step === "details" && primaryItem && (
         <form onSubmit={handleSubmit(onSubmit)} className="grid w-full gap-6">
-          <div className="overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-800">
+          <div className="overflow-hidden rounded-2xl w-full">
             {primaryItem.kind === "video" ? (
               <video
                 src={primaryItem.previewUrl}
-                className="max-h-[420px] w-full object-contain"
+                className="max-h-[50vh] w-full object-contain"
                 controls
                 playsInline
               />
@@ -285,15 +286,13 @@ export default function CreatePostModal({ onCloseModal }) {
               <img
                 src={primaryItem.previewUrl}
                 alt={primaryItem.file.name}
-                className="max-h-[420px] w-full object-contain"
+                className="max-h-[40vh] w-full object-contain"
               />
             )}
           </div>
 
           <div className="flex w-full flex-col gap-4">
-            <label className="text-sm font-semibold uppercase tracking-wide text-zinc-300">
-              Caption
-            </label>
+            
             <textarea
               {...register("caption", {
                 required: "Please add a caption before sharing.",
@@ -303,8 +302,8 @@ export default function CreatePostModal({ onCloseModal }) {
                 },
               })}
               placeholder="Write something about this moment..."
-              rows={5}
-              className="w-full resize-none rounded-2xl border border-zinc-700 bg-zinc-800 p-4 text-base text-zinc-100 placeholder:text-zinc-500 focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500/40"
+              rows={2}
+              className="w-full resize-none rounded-2xl   p-1 text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none "
             />
             {errors.caption && (
               <p className="text-sm font-medium text-red-400">

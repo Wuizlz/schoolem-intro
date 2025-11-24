@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { createPost } from "../services/apiPosts";
+import { createPost } from "../services/apiPublications";
 import { useAuth } from "./useAuth";
 
 export function useCreatePost() {

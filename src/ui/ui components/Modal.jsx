@@ -2,7 +2,7 @@
 import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
-import useOutsideClick from "../hooks/useOutsideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const ModalContext = createContext();
 
@@ -47,7 +47,7 @@ function Window({ children, name, widthClass = "max-w-xl" }) {
     >
       <div
         ref={ref}
-        className={`relative w-[92vw] ${widthClass} rounded-3xl border
+        className={`relative w-[92vw]  ${widthClass} rounded-3xl border
                     border-zinc-700 bg-zinc-900 p-6 sm:p-8 shadow-2xl`}
       >
         <button

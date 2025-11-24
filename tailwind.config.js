@@ -8,6 +8,7 @@ export default {
         sans: ['"Roboto Mono"', 'monospace'],
         handwriting: ['"Island Moments"', 'cursive'],
         serifDisplay: ['"Instrument Serif"', 'serif'],
+        crimson: ['"Crimson Pro"', 'serif'],
       },
       colors: {
         brand: {
