@@ -3,15 +3,20 @@ import React, { forwardRef, useId } from "react";
 
 const Input = forwardRef(
   (
-    { id, type = "text", placeholder, className = "", error, ...props },
+    { id, type = "text", styleType="signForm", placeholder, className = "", error, ...props },
     ref
   ) => {
     const generatedId = useId(); // ✅ always called
     const inputId = id ?? generatedId; // choose after
 
-    const border = error
+    const border = error 
       ? "border-red-500 focus:ring-red-500"
       : " border-zinc-600/70  focus:ring-white/30";
+
+    const style = {
+      signForm: "w-full rounded-full border px-4 py-4 text-lg  placeholder:text-zinc-400 focus:outline-none focus:ring-2",
+      comment: "w-full  focus:outline-none focuc:ring-0 focus:border-transparent "
+    }
 
     return (
       <div className="space-y-2">
@@ -20,7 +25,7 @@ const Input = forwardRef(
           ref={ref}
           type={type}
           placeholder={placeholder}
-          className={`w-full rounded-full border px-4 py-4 text-lg  placeholder:text-zinc-400 focus:outline-none focus:ring-2 ${border} ${className}`}
+          className={`${style[styleType]} ${border} ${className}`}
           {...props}
         />
 

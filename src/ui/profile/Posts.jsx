@@ -1,21 +1,23 @@
-import { useAuth } from "../../hooks/useAuth";
 import useUserPublications from "../../hooks/useUserPublications";
 import ProfilePostCard from "./ProfilePostCard";
 
+import { useOutletContext, useParams } from "react-router-dom";
+
 export default function Posts() {
-  const { user } = useAuth();
-  const author_id = user?.id;
+  const { username } = useParams()
+  
+
   const pubType = "post"
-  const { data: userPub = [], error } = useUserPublications(author_id, pubType);
-  console.log(userPub)
+  const { data: userPub = [], error } = useUserPublications(username, pubType);
+
 
   return (
-    <ul className="md:grid md:grid-cols-3 lg:grid lg:grid-cols-4  ">
+    <ul className="grid grid-cols-3 md:grid md:grid-cols-3 lg:grid lg:grid-cols-5  ">
       {userPub.map((userPost) => (
         <ProfilePostCard
           profileuserPost={userPost}
-          key={userPub.publication_id}
-          id={userPub.publications_id}
+          key={userPost.publication_id}
+          id={userPost.publications_id}
         />
       ))}
     </ul>

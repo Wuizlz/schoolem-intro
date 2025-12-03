@@ -15,6 +15,8 @@ import { BiSolidDoorOpen } from "react-icons/bi";
 import useLogout from "../hooks/useLogout";
 import CreateThreadForm from "./pop-ups/CreateThreadModal";
 
+import { useAuth } from "../hooks/useAuth";
+
 export const ProfileIcon = styled.span`
   width: 2.4rem;
   height: 2.4rem;
@@ -124,6 +126,8 @@ const AddNavButton = styled(Menus.Toggle).attrs({ align: "left" })`
 `;
 
 export default function MainNav() {
+  const { profile } = useAuth();
+  const username = profile?.display_name 
   const { logout, isLoggingOut } = useLogout();
 
   return (
@@ -150,7 +154,7 @@ export default function MainNav() {
           </li>
 
           <li>
-            <StyledNavLink to="/profile">
+            <StyledNavLink to={username ? `/${username}` : "/"}>
               <ProfileIcon aria-hidden="true" />
               <span className="hidden font-extralight text-amber-50 lg:inline">
                 Profile

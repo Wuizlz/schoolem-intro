@@ -115,7 +115,13 @@ export function AuthProvider({ children }) {
 
   const handleAuthChange = useCallback(
     async (event, newSession) => {
-      setIsLoading(true);
+      const showSpinner =
+        event === "INITIAL_SESSION" ||
+        event === "SIGNED_IN" ||
+        event === "SIGNED_OUT" ||
+        event === "USER_DELETED";
+
+      if (showSpinner) setIsLoading(true);
       try {
         if (!isMountedRef.current) return;
 
@@ -173,7 +179,7 @@ export function AuthProvider({ children }) {
           }
         }
       } finally {
-        if (isMountedRef.current) setIsLoading(false);
+        if (isMountedRef.current && showSpinner) setIsLoading(false);
       }
     },
     [loadProfile, verifySession]
