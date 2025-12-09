@@ -12,7 +12,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import SignUp from "./pages/SignUp";
 import Uni from "./pages/Uni";
-import AuthCallback from "./pages/AuthCallBack";
+import AuthCallback from "./pages/AuthCallback";
 
 import { Toaster } from "react-hot-toast";
 
