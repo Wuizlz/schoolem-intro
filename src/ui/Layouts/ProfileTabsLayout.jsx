@@ -1,14 +1,16 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useOutletContext } from "react-router-dom";
 import ProfileTabsNav from "../profile/ProfileTabsNav";
 
 export default function ProfileTabsLayout() {
+  
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex w-10/12">
+    <div className="flex flex-col self-center w-11/12">
+      <div className="flex justify-around">
         <ProfileTabsNav />
       </div>
-      <main className="flex-1 overflow-y-scroll border-t border-gray-500 w-10/12 rounded-lg">
-        <Outlet />
+      <main className=" flex flex-1 overflow-y-scroll border-t border-gray-500 rounded-lg">
+        <Outlet/>
       </main>
     </div>
   );

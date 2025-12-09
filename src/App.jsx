@@ -54,7 +54,7 @@ export default function App() {
               <Route path="uni" element={<Uni />} />
               <Route path="settings" element={<Settings />} />
               <Route path="alerts" element={<Alerts />} />
-              <Route path="profile" element={<Profile />}>
+              <Route path=":username" element={<Profile />}>
                 <Route element={<ProfileTabsLayout />}>
                   <Route index element={<ProfilePosts />} />
                   <Route path="saved" element={<ProfileSaved />} />

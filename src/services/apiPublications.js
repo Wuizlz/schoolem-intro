@@ -148,54 +148,59 @@ export async function createThread({ thread_text, authorId }) {
     throw err;
   }
 }
+//without endless-scroll
+// export async function getPostsThreadsForUni(uniId) {
+//   const { data, error } = await supabase.rpc("feed_get_page", {
+//     p_limit: 10,
+//     p_cursor: null,
+//   });
+//   if (error) {
+//     throw error;
+//   }
 
-export async function getPostsThreadsForUni(uniId) {
-  if (!uniId) return new Error("Missing University id ");
+//   return data;
+// }
 
-  const { data, error } = await supabase
-    .from("publications")
-    .select(
-      `
-      publication_id,
-      created_at,
-      author_id,
-      type,
-      posts(
-        caption,
-        pic_url
-      ),
-      threads(
-        thread_text
-      ),
-      profiles!inner(
-        id,
-        avatar_url,
-        uni_id,
-        display_name,
-        full_name
-      )
-    `
-    )
-    .eq("profiles.uni_id", uniId)
-    .order("created_at", { ascending: false });
+export async function handleLike(actorId, publicationId) {
+  if (!(actorId && publicationId))
+    throw new Error("Acted publication or actor not received");
 
-  if (error) {
-    console.error(error);
-    throw new Error("Unable to load post for this University");
-  }
-
-  return data;
+  const { error } = await supabase
+    .from("publication_likes")
+    .insert({
+      publication_id: publicationId,
+      actor_id: actorId,
+      reaction: "like",
+    })
+    .select("id")
+    .eq("publication_id", publicationId)
+    .eq("actor_id", actorId);
+  if (error) throw error;
 }
 
-export async function getPublicationCountByAuth(author_id, type)
-{
-  if(!author_id) throw new Error("Need access to fetch own count")
+export async function handleUnLike(actorId, publicationId) {
+  if (!(actorId && publicationId))
+    throw new Error("Acted publication or actor not received");
 
-  const query = supabase.from("publications").select("publication_id", {count: 'exact', head: true}).eq("author_id", author_id)
+  const { data, error } = await supabase
+    .from("publication_likes")
+    .select("id")
+    .eq("actor_id", actorId)
+    .eq("publication_id", publicationId)
+    .maybeSingle();
+  if (error) throw error;
+  const { error: deleteError } = await supabase
+    .from("publication_likes")
+    .delete("id")
+    .eq("id", data.id);
+  if (deleteError) throw deleteError;
+}
 
-  if(type) query.eq("type", type )
-
-    const {count, error } = await query;
-    if (error) throw error 
-    return count ?? 0;
+export async function fetchFeedPage({ cursor, limit = 10 }) {
+  const { data, error } = await supabase.rpc("feed_get_page", {
+    p_limit: limit,
+    p_cursor: cursor ?? null,
+  });
+  if (error) throw error;
+  return data; //includes next_cursor on each row
 }

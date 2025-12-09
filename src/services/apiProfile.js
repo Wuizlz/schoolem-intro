@@ -16,7 +16,6 @@ export async function signUpWithEmail({
   gender,
   genderLabel,
 }) {
-  console.log("SignUpwithEmail was hit");
   const { data: uniId, error: uniError } = await supabase.rpc("email_domain", {
     p_email: email,
   });
@@ -24,7 +23,6 @@ export async function signUpWithEmail({
   if (!uniId) {
     throw new Error("University not yet supported.");
   }
-  console.log("Uni not supp");
 
   const fullName =
     [firstName, lastName].filter(Boolean).join(" ").trim() || null;
@@ -51,7 +49,7 @@ export async function signUpWithEmail({
     },
   });
 
-  console.log(data);
+
   if (error) {
     if (error.message?.toLowerCase().includes("user already registered")) {
       throw new Error("Account already created, sign in instead!");
@@ -284,13 +282,68 @@ export async function updateProfile({
   return { success: true, avatarUrl };
 }
 
-export async function getUserPublications(author_id, pubType) {
-  if (!author_id) throw new Error("Not authorized to perform action");
 
-  const { data, error } = await supabase
+
+export async function getUserPublications(username, pubType) {
+  if (!username) throw new Error("Not authorized to perform action");
+
+  const { data: userRow, error: userIdError } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("display_name", username)
+    .maybeSingle();
+
+  if (userIdError) throw userIdError;
+  if (!userRow?.id) throw new Error("User not found");
+
+  const query = supabase
     .from("publications")
     .select(
       "publication_id, created_at, type, post:posts(caption,pic_url),thread:threads(thread_text)"
-    ).eq('author_id', author_id).eq('type', pubType).order('created_at', {ascending: false});
-    return data
+    )
+    .eq("author_id", userRow.id)
+    .order("created_at", { ascending: false });
+
+  if (pubType) query.eq("type", pubType);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
 }
+
+export async function getProfileByUsername(username) {
+  if (!username) throw new Error("Username failed to transfer");
+  //1) Look up the profile in database using username from params to receive basic information
+  
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, avatar_url, display_name, full_name, bio")
+    .eq("display_name", username)
+    .maybeSingle();
+  if (profileError) throw profileError;
+  
+  //2) Now get count of publications published from user using data.id
+  const { count: publicationsCount, error: publicationsError } = await supabase
+    .from("publications")
+    .select("publication_id", { count: "exact", head: true })
+    .eq("author_id", profile.id);
+  if (publicationsError) throw publicationsError;
+
+  const { count: followingCount, error: followingError } = await supabase
+    .from("followings")
+    .select("id", { count: "exact", head: true })
+    .eq("follower_id", profile.id);
+  if (followingError) throw followingError;
+  const { count: followersCount, error: followersError } = await supabase
+    .from("followings")
+    .select("id", { count: "exact", head: true })
+    .eq("followee_id", profile.id);
+  if(followersError) throw followersError
+  return {
+    ...profile,
+    publicationsCount: publicationsCount ?? 0,
+    followersCount: followersCount ?? 0, //TODO: ADD REAL FOLLOWER COUNT
+    followingCount: followingCount ?? 0, //TODO: ADD REAL FOLLOWING COUNT
+  };
+}
+

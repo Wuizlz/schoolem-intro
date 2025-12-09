@@ -11,10 +11,10 @@ export default function Button({
   className = "",
   ...rest
 }) {
-  const base =
-    "inline-flex items-center justify-center text-sm rounded-full font-semibold " +
+  const base = buttonType !== "iconButton" ?
+    "inline-flex  items-center justify-center text-sm rounded-full font-semibold " +
     "focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 " +
-    "disabled:opacity-50 disabled:cursor-not-allowed text-black";
+    "disabled:opacity-50 disabled:cursor-not-allowed text-black" : ""
 
   const styles = {
     primary: `${base} bg-amber-300 hover:bg-amber-500 px-4 py-3 md:px-6 md:py-4 `,
@@ -33,7 +33,8 @@ export default function Button({
       "border border-transparent transition-colors duration-300 text-inherit hover:cursor-pointer",
     settingsButton:
       "w-full text-left px-4 py-2.5 rounded-full transition-colors duration-200",
-  };
+    iconButton: "transition-transform hover:scale-105 hover:cursor-pointer"
+  }
 
   const selectedStyle = styles[type] ?? styles.primary;
   const cls = `${selectedStyle} ${className}`.trim();

@@ -74,7 +74,7 @@ export default function Settings() {
     age: calculateAge(profile.b_date),
     birthdate: formatDate(profile.b_date),
     gender: profile.gender || "Prefer not to disclose",
-    university: profile.university_name,
+    university: profile.universities.name,
     profileImage: profile.avatar_url || null,
   };
 
