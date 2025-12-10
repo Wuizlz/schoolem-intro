@@ -165,16 +165,12 @@ export async function handleLike(actorId, publicationId) {
   if (!(actorId && publicationId))
     throw new Error("Acted publication or actor not received");
 
-  const { error } = await supabase
-    .from("publication_likes")
-    .insert({
-      publication_id: publicationId,
-      actor_id: actorId,
-      reaction: "like",
-    })
-    .select("id")
-    .eq("publication_id", publicationId)
-    .eq("actor_id", actorId);
+  const { error } = await supabase.from("publication_likes").insert({
+    publication_id: publicationId,
+    actor_id: actorId,
+    reaction: "like",
+  });
+
   if (error) throw error;
 }
 
@@ -196,6 +192,19 @@ export async function handleUnLike(actorId, publicationId) {
   if (deleteError) throw deleteError;
 }
 
+export async function createComment(publicationId, actorId, userComment) {
+  console.log(actorId, publicationId, userComment);
+  if (!(actorId && publicationId && userComment))
+    throw new Error("Missing data piece to insert a tuple relation");
+
+  const { error } = await supabase.from("publication_comments").insert({
+    publication_id: publicationId,
+    author_id: actorId,
+    body: userComment,
+  });
+  if (error) throw error;
+}
+
 export async function fetchFeedPage({ cursor, limit = 10 }) {
   const { data, error } = await supabase.rpc("feed_get_page", {
     p_limit: limit,
@@ -203,4 +212,17 @@ export async function fetchFeedPage({ cursor, limit = 10 }) {
   });
   if (error) throw error;
   return data; //includes next_cursor on each row
+}
+
+export async function receivePubData(user, postId) {
+  if (!(user && postId))
+    throw new Error("not authroized or post doesn't exist");
+
+  const { data, error } = await supabase.rpc("publication_payload", {
+    publication_uuid: postId,
+    current_user_id: user,
+    comments_limit: 50,
+  });
+  if(error) throw error
+  return data
 }

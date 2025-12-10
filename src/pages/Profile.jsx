@@ -84,11 +84,11 @@ export default function Profile() {
     <div className="flex flex-col gap-5 ">
       <header className="pt-10 flex justify-center sm:justify-start  lg:justify-center ">
         <div className="flex flex-row ">
-          <div className="mr-10 md:mr-25 h-fit flex flex-col">
-            <div className="h-30 w-30 md:h-35 md:w-35 lg:h-40 lg:w-40 rounded-full  p-[3px] shadow-[0_0_25px_-10px_rgb(245_158_11)]">
+          <div className="mr-2 md:mr-25 h-fit flex flex-col">
+            <div className="h-25 w-25 md:h-35 md:w-35 lg:h-40 lg:w-40 rounded-full  p-[3px] shadow-[0_0_25px_-10px_rgb(245_158_11)]">
               <img
                 src={avatar}
-                alt={username ?? "Your story"}
+                alt={username ?? "Your picture"}
                 className="rounded-full object-cover h-full w-full "
               />
             </div>

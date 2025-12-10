@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import Button from "../ui/ui components/Button";
 import Input from "../ui/ui components/Input";
-import usePasswordReset from "../services/PasswordReset";
+import usePasswordReset from "../services/passwordReset";
 
 export default function ForgotPassword() {
     const {
