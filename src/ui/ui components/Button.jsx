@@ -11,7 +11,7 @@ export default function Button({
   className = "",
   ...rest
 }) {
-  const base = buttonType !== "iconButton" ?
+  const base = type !== "iconButton" && "commentButton" ?
     "inline-flex  items-center justify-center text-sm rounded-full font-semibold " +
     "focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 " +
     "disabled:opacity-50 disabled:cursor-not-allowed text-black" : ""
@@ -33,7 +33,9 @@ export default function Button({
       "border border-transparent transition-colors duration-300 text-inherit hover:cursor-pointer",
     settingsButton:
       "w-full text-left px-4 py-2.5 rounded-full transition-colors duration-200",
-    iconButton: "transition-transform hover:scale-105 hover:cursor-pointer"
+    iconButton: "transition-transform hover:scale-105 hover:cursor-pointer",
+    commentButton: "transition-transform hover:scale-105 hover:cursor-pointer hover:text-amber-50 hover:font-bold"
+
   }
 
   const selectedStyle = styles[type] ?? styles.primary;

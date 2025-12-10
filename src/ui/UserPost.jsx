@@ -5,42 +5,45 @@ import HeartIcon from "./icons/HeartIcon";
 import ThoughtIcon from "./icons/ThoughtIcon";
 
 import Input from "../ui/ui components/Input";
-
-import { Link, NavLink } from "react-router-dom";
 import Button from "./ui components/Button";
+
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
+
 import useHandleLike from "../hooks/useHandleLike";
 import useHandleUnLike from "../hooks/useHandleUnLike";
+import { formatRelative } from "../utils/helpers";
+import useHandleComment from "../hooks/useHandleComment";
 
-export default function UserPost({ publicationData, publicationId, actorId, uniId }) {
-  console.log(publicationData)
-  const formatRelative = (dateString) => {
-    if (!dateString) return "";
-    const now = Date.now();
-    const then = new Date(dateString).getTime();
-    const diff = Math.max(0, now - then);
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    if (seconds < 60) return `${seconds}s ago`;
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  };
-  
-  
-  const liked = publicationData?.liked_by_current_user
 
-  const {handleLikeAsync} = useHandleLike();
-  const {handleUnLikeAsync } = useHandleUnLike();
+export default function UserPost({
+  publicationData,
+  publicationId,
+  actorId,
+  uniId,
+}) {
+  const location = useLocation();
+  const [userComment, setUserComment] = useState("");
+
+
+  const liked = publicationData?.liked_by_current_user;
+
+  const { handleLikeAsync } = useHandleLike();
+  const { handleUnLikeAsync } = useHandleUnLike();
 
   function handleLike(actorId, publicationId, uniId) {
-    handleLikeAsync({actorId, publicationId, uniId})
+    handleLikeAsync({ actorId, publicationId, uniId });
   }
 
-function handleUnLike(actorId, publicationId, uniId){
-  handleUnLikeAsync({actorId, publicationId, uniId})
-}
+  function handleUnLike(actorId, publicationId, uniId) {
+    handleUnLikeAsync({ actorId, publicationId, uniId });
+  }
+  const { handleCommentAsync } = useHandleComment();
+  function handleComment(e, userComment) {
+    e.preventDefault();
+    handleCommentAsync({ publicationId, actorId, userComment });
+    setUserComment("");
+  }
 
   if (publicationData.type === "post") {
     const username = publicationData.display_name;
@@ -89,14 +92,32 @@ function handleUnLike(actorId, publicationId, uniId){
               />
             </div>
             <div className="flex items-center gap-2 text-white/90">
-              {!liked ? <Button type="iconButton" onClick={() => handleLike(actorId, publicationId, uniId)}>
-                <HeartIcon className="h-7 w-8" />
-              </Button> : <Button type="iconButton" onClick={() => handleUnLike(actorId, publicationId, uniId)}>
-                <HeartIcon className="h-7 w-8" fill="#FFE082" stroke="#FFE082"  />
-              </Button> }
-              <Button type="iconButton">
-                <ThoughtIcon className="h-7 w-8" />
-              </Button>
+              {!liked ? (
+                <Button
+                  type="iconButton"
+                  onClick={() => handleLike(actorId, publicationId, uniId)}
+                >
+                  <HeartIcon className="h-7 w-8" />
+                </Button>
+              ) : (
+                <Button
+                  type="iconButton"
+                  onClick={() => handleUnLike(actorId, publicationId, uniId)}
+                >
+                  <HeartIcon
+                    className="h-7 w-8"
+                    fill="#FFE082"
+                    stroke="#FFE082"
+                  />
+                </Button>
+              )}
+              <Link
+                type="iconButton"
+                to={`/p/${publicationId}`}
+                state={{ backgroundLocation: location }}
+              >
+                <ThoughtIcon className="h-7 w-8 transition-transform hover:scale-105 hover:cursor-pointer" />
+              </Link>
               <div className="ml-auto text-xs uppercase tracking-wide text-gray-400">
                 Share the vibe
               </div>
@@ -104,8 +125,12 @@ function handleUnLike(actorId, publicationId, uniId){
 
             <div className="text-amber-50 break-words">
               <div className="flex gap-1 ">
-                <span className="text-amber-50  ">{publicationData.likes_count}</span>
-                <span className="text-amber-50  font-extrabold">{publicationData.likes_count === 1 ? "dub" : "dubs"}</span>
+                <span className="text-amber-50  ">
+                  {publicationData.likes_count}
+                </span>
+                <span className="text-amber-50  font-extrabold">
+                  {publicationData.likes_count === 1 ? "dub" : "dubs"}
+                </span>
               </div>
 
               <p className="leading-snug">
@@ -117,15 +142,24 @@ function handleUnLike(actorId, publicationId, uniId){
                 </span>
               </p>
             </div>
-
-            <div className="text-gray-400 font-extralight flex flex-row  justify-between">
-              <Input
-                placeholder="Write a comment..."
-                styleType="comment"
-                className="flex-1"
-              />
-              <p>Post</p>
-            </div>
+            <form onSubmit={(e) => handleComment(e, userComment)}>
+              <div className="text-gray-400 font-extralight flex items-center gap-3">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Write a comment..."
+                    value={userComment}
+                    onChange={(e) => setUserComment(e.target.value)}
+                    styleType="comment"
+                    className="w-full"
+                  />
+                </div>
+                {userComment === "" ? null : (
+                  <Button type="commentButton" buttonType="submit">
+                    Post
+                  </Button>
+                )}
+              </div>
+            </form>
           </div>
         </div>
       </li>
@@ -134,7 +168,7 @@ function handleUnLike(actorId, publicationId, uniId){
     const username = publicationData.display_name;
     return (
       <li className="w-full border-t border-gray-800/60 py-6 ">
-        <div className="flex gap-3 ">
+        <div className="flex gap-3 w-full ">
           <header className="h-14 w-14 rounded-full border p-[3px]">
             <img
               src={publicationData.avatar_url}
@@ -142,7 +176,7 @@ function handleUnLike(actorId, publicationId, uniId){
             />
           </header>
 
-          <div className="flex flex-col flex-1 gap-3 rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
+          <div className="flex flex-col flex-1  gap-3 rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200">
               <span>Thread</span>
               <span className="text-gray-400">•</span>
@@ -169,7 +203,9 @@ function handleUnLike(actorId, publicationId, uniId){
               <span className="font-extrabold">
                 {publicationData.full_name}
               </span>
-              : {publicationData.thread_text}
+              <span className="w-full break-words break-all whitespace-pre-wrap">
+                : {publicationData.thread_text}
+              </span>
             </div>
           </div>
         </div>

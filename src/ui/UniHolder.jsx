@@ -5,7 +5,6 @@ export default function UniHolder() {
   const { profile, isLoading: authLoading, error } = useAuth();
 
   const uni = profile?.universities?.name;
-
   const isInitialLoading = authLoading && !uni;
 
   if (isInitialLoading) {

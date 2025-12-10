@@ -106,10 +106,38 @@ export const navItemStyles = css`
         }
       }
     `}
+
+  ${({ $forceCompact }) =>
+    $forceCompact &&
+    css`
+        width: 3.6rem;
+        height: 3.6rem;
+        padding: 0.6rem;
+        gap: 0;
+        justify-content: center;
+        border-radius: 999px;
+        margin: 0 auto;
+
+        &:hover,
+        &:focus-visible {
+          border-color: transparent;
+          background-color: transparent;
+        }
+
+        &.active {
+          border-color: transparent;
+          background-color: transparent;
+        }
+    `}
 `;
 
 export const StyledNavLink = styled(NavLink)`
   ${navItemStyles};
+`;
+
+const NavButton = styled.div`
+  ${navItemStyles};
+  cursor: pointer;
 `;
 
 const AddNavButton = styled(Menus.Toggle).attrs({ align: "left" })`
@@ -125,10 +153,12 @@ const AddNavButton = styled(Menus.Toggle).attrs({ align: "left" })`
   }
 `;
 
-export default function MainNav() {
+export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
   const { profile } = useAuth();
   const username = profile?.display_name 
   const { logout, isLoggingOut } = useLogout();
+
+  const textClass = `hidden font-extralight text-amber-50 ${isAlertsOpen ? 'hidden' : 'hidden lg:inline'}`;
 
   return (
     <nav className="flex h-full w-full flex-1 flex-col">
@@ -136,27 +166,27 @@ export default function MainNav() {
       <Menus>
         <ul className="flex flex-col gap-12">
           <li>
-            <StyledNavLink to="/uni">
+            <StyledNavLink to="/uni" onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
               <LiaUniversitySolid />
-              <span className="hidden font-extralight text-amber-50 lg:inline">
+              <span className={textClass}>
                 Uni
               </span>
             </StyledNavLink>
           </li>
 
           <li>
-            <StyledNavLink to="/alerts">
+            <NavButton onClick={() => setIsAlertsOpen && setIsAlertsOpen(!isAlertsOpen)} className={isAlertsOpen ? 'active' : ''} $forceCompact={isAlertsOpen}>
               <IoIosNotifications />
-              <span className="hidden font-extralight text-amber-50 lg:inline">
+              <span className={textClass}>
                 Alerts
               </span>
-            </StyledNavLink>
+            </NavButton>
           </li>
 
           <li>
-            <StyledNavLink to={username ? `/${username}` : "/"}>
+            <StyledNavLink to={username ? `/${username}` : "/"} onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
               <ProfileIcon aria-hidden="true" />
-              <span className="hidden font-extralight text-amber-50 lg:inline">
+              <span className={textClass}>
                 Profile
               </span>
             </StyledNavLink>
@@ -164,12 +194,12 @@ export default function MainNav() {
 
           <li>
             <Modal>
-              <AddNavButton id="add-ops">
+              <AddNavButton id="add-ops" $forceCompact={isAlertsOpen}>
                 <IoIosAddCircleOutline
                   aria-hidden="true"
                   className="h-[2.4rem] w-[2.4rem] shrink-0 text-grey-50 transition-colors duration-300"
                 />
-                <span className="hidden font-extralight text-amber-50 transition-colors duration-300 lg:inline">
+                <span className={`${textClass} transition-colors duration-300`}>
                   Add
                 </span>
               </AddNavButton>
@@ -228,9 +258,9 @@ export default function MainNav() {
 
         <ul className="mt-auto pt-12 sm:pt-16">
           <li>
-            <AddNavButton id="more">
+            <AddNavButton id="more" $forceCompact={isAlertsOpen}>
               <RxHamburgerMenu />
-              <span className="hidden font-extralight text-amber-50 lg:inline">
+              <span className={textClass}>
                 More
               </span>
             </AddNavButton>

@@ -16,7 +16,8 @@ export default function useOutsideClick(handler, ignoreSelector) {
     }
     // capture so it runs before other handlers that might stopPropagation
     document.addEventListener("pointerdown", onPointerDown, true);
-    return () => document.removeEventListener("pointerdown", onPointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", onPointerDown, true);
   }, [handler, ignoreSelector]);
 
   return ref;
