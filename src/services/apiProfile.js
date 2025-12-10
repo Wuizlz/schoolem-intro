@@ -38,12 +38,12 @@ export async function signUpWithEmail({
       // attach to user_metadata
       data: {
         display_name: displayName,
-        username: username ?? null,
-        first_name: firstName ?? null,
-        last_name: lastName ?? null,
-        birthdate: birthdate ?? null,
-        gender: gender ?? null,
-        gender_label: genderLabel ?? null,
+        username: username,
+        first_name: firstName,
+        last_name: lastName,
+        birthdate: birthdate,
+        gender: gender,
+        gender_label: genderLabel,
         full_name: fullName,
       },
     },
@@ -77,8 +77,8 @@ export async function signUpWithEmail({
       // Your BEFORE INSERT trigger sets : id := auth.uid(), email, uni_id
       display_name: displayName,
       full_name: fullName,
-      b_date: birthdate ?? null,
-      gender: gender ?? null,
+      b_date: birthdate,
+      gender: gender
     });
     if (insertError) profileError = insertError;
     else profileInserted = true;
