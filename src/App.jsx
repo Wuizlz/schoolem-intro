@@ -21,12 +21,13 @@ import { AuthProvider } from "./hooks/useAuth";
 // 🔹 Lazy-loaded pages & components (code-splitting)
 import Alerts from "./pages/Alerts";
 import Overlay from "./ui/ui components/Overlay"
+import AuthCallback from "../src/pages/AuthCallback"
 const SignIn = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const Uni = lazy(() => import("./pages/Uni"));
-const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+
 
 const Profile = lazy(() => import("./pages/Profile"));
 const Settings = lazy(() => import("./pages/settings/Settings"));
