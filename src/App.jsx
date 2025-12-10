@@ -19,7 +19,8 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import { AuthProvider } from "./hooks/useAuth";
 
 // 🔹 Lazy-loaded pages & components (code-splitting)
-const Alerts = lazy(() => import("./pages/Alerts"));
+import Alerts from "./pages/Alerts";
+import Overlay from "./ui/ui components/Overlay"
 const SignIn = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
@@ -36,7 +37,7 @@ const ProfileSaved = lazy(() => import("./ui/profile/ProfileSaved"));
 const ProfileTagged = lazy(() => import("./ui/profile/ProfileTagged"));
 
 const UserPostPage = lazy(() => import("./ui/UserPostPage"));
-const Overlay = lazy(() => import("./ui/ui components/Overlay"));
+
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import SideBar from "../SideBar";
 import { lazy, useState } from "react";
-const Alerts = lazy(() => import("../../pages/Alerts"));
+import Alerts from "../../pages/Alerts";
 
 export default function AppLayout() {
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
