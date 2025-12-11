@@ -48,6 +48,8 @@ export default function UserPost({
   if (publicationData.type === "post") {
     const username = publicationData.display_name;
 
+  const firstPic = publicationData.pic_url?.[0];
+
     return (
       <li className="flex flex-col gap-4 border-t border-gray-800/60 py-6">
         <div className="flex items-center gap-3">
@@ -85,11 +87,13 @@ export default function UserPost({
         <div className="flex flex-col items-center ">
           <div className="w-full max-w-sm sm:max-w-md lg:max-w-2xl space-y-4 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
             <div className="overflow-hidden rounded-2xl border border-amber-200/30">
-              <img
-                className="h-full w-full object-cover"
-                src={publicationData.pic_url[0]}
-                alt="Post media"
-              />
+              {firstpic && (
+                <img
+                  className="h-full w-full object-cover"
+                  src={firstPic}
+                  alt="Post media"
+                />
+              )}
             </div>
             <div className="flex items-center gap-2 text-white/90">
               {!liked ? (
