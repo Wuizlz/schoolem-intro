@@ -87,7 +87,7 @@ export default function UserPost({
         <div className="flex flex-col items-center ">
           <div className="w-full max-w-sm sm:max-w-md lg:max-w-2xl space-y-4 rounded-3xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]">
             <div className="overflow-hidden rounded-2xl border border-amber-200/30">
-              {firstpic && (
+              {firstPic && (
                 <img
                   className="h-full w-full object-cover"
                   src={firstPic}
