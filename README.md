@@ -1,56 +1,91 @@
-# SchoolEm – Production Frontend
+# React + Vite
 
-This repository is the **production frontend** for **SchoolEm**, a social platform built for college students to connect, collaborate, and discover what’s happening on their campus.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-> **Note:** This repo is a fork of [`Wuizlz/schoolem-intro`](https://github.com/Wuizlz/schoolem-intro) and is used as the **deployment source** for the live site.
+Currently, two official plugins are available:
 
----
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## 🌐 Live Application
-## React Compiler (For devs)
+## React Compiler
 
-- **Production:** https://officialschoolem.org  
+The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
 
-(Deployed via Vercel, connected to this repository’s `main` branch.)
+## Expanding the ESLint configuration
 
----
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# schoolem-intro
 
-## 🚀 What is SchoolEm?
 
-SchoolEm is a campus-focused social media platform inspired by apps like Instagram and YikYak.  
-It gives students a dedicated space to:
+# Getting started
+To begin clone the repository into a native repo folder or into your desired IDE. 
+"git clone ..."
 
-- Post and share updates with their university community  
-- Discover and promote clubs, events, and student projects  
-- Find study groups and like-minded people  
-- Speak more freely than on traditional school-run apps
+After that go ahead and run to install all needed dependancies.
+"npm i"
 
----
+0) Start on main and get the latest code
+    git switch main 
+    → move to the local main branch.
 
-## 🧰 Tech Stack
+    git fetch origin 
+    → download the latest branch pointers from GitHub (no file changes yet).
 
-- **Frontend:** React (SPA)
-- **Routing:** React Router
-- **Styling:** Tailwind CSS / styled-components (hybrid)
-- **State & Data:** React Query + custom hooks
-- **Backend-as-a-Service:** Supabase (Postgres, Auth, RLS)
-- **Deployment:** Vercel
-- **Auth:** Supabase email-based auth (university email domain restricted)
+    git pull --ff-only origin main 
+    → update local main to match GitHub using a fast-forward only update (prevents accidental merge commits on main).
 
----
+1) Create and switch to your feature branch
+    git switch -c krish/<short-topic>
+    → -c creates a new branch and switches to it.
+    → Use a clear name, e.g. krish/login-divider or krish/signup-first-last.
 
-## 🗂 Branch & Repo Structure
+2) Make your code changes
+    git status
+    → see what changed and what’s staged.
 
-- **`main`** – Production branch.  
-  - Connected to Vercel.
-  - Every push to `main` triggers a new production deployment.
-- **Feature branches** – For new work (e.g. `feature/new-feed`, `fix/email-flow`).
-  - Create PRs into `main` after testing.
+    git add -A
+    → stage all changes (new/modified/deleted).
 
-Upstream (original dev repo):  
-- [`Wuizlz/schoolem-intro`](https://github.com/Wuizlz/schoolem-intro)
+    git commit -m "feat(signin): bold divider; feat(signup): split full name"
+    → save a snapshot locally.
 
-This fork (production):  
-- [`kishnahai0806/schoolem-intro`](https://github.com/kishnahai0806/schoolem-intro)
+3) Push the branch to GitHub (first time)
+    git push -u origin HEAD
+    → Pushes the current branch to origin and remembers it (so future pushes can be just git push).
+    → HEAD is a shortcut for “the branch I’m on.”
+ 
+4) Open a Pull Request (PR) to main
+    On GitHub UI, click “Compare & pull request.”
 
----
+5) Address review feedback (if any)
+    git add -A
+    → stage all changes
+
+    git commit -m "fix: adjust divider thickness"
+    → record a snapshot of staged changes.
+
+    git push
+
+6) Merge the PR
+    → On GitHub, click “Squash and merge” (recommended).
+    → Produces a single clean commit on main with a helpful message.
+    → Alternatives: “Merge commit” (keeps all commits) or “Rebase & merge” (linear, preserves commits).
+
+7) Go back to main locally and update it
+    git switch main
+    git pull --ff-only origin main
+
+
+8) Clean up the merged branch (remote + local)
+    git push origin --delete krish/<short-topic>
+    → delete the branch on GitHub.
+
+    git branch -d krish/<short-topic>
+    → delete a local branch that’s already merged.
+
+    git fetch --prune
+    → remove local refs to remote branches that no longer exist.
+
+9) Repeat for the next change/feature
+    git switch -c krish/<next-topic>
+
