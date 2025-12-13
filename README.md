@@ -15,7 +15,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 # schoolem-intro
 
-# Getting started
+## Getting started
 To begin clone the repository into a native repo folder or into your desired IDE. 
 "git clone ..." (USE HTTP)
 
@@ -34,11 +34,14 @@ After that go ahead and run to install all needed dependancies.
 
 ## Running the project 
 0.5) To run and initialize the project:
-    a) Ensure that you have run a git fetch/pull to bring the latest changes to your local machine
-    b) Run *npm i* to install the latest dependencies
-    c) Finally, run *npm run dev* to run the project on your local host. The local host link will be visible in your terminal
 
-## Dev Work (For the people who work on this project)
+    1) Ensure that you have run a git fetch/pull to bring the latest changes to your local machine.
+    
+    2) Run [*npm i*] to install the latest dependencies.
+    
+    3) Finally, run [*npm run dev*] to run the project on your local host. The local host link will be visible in your terminal.
+
+## Dev process (For the people who work on this project)
 1) Create and switch to your feature branch
     git checkout -b <branch-name>
     → -b creates a new branch
