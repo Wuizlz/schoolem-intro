@@ -7,6 +7,7 @@ This repository is the **production frontend** for **SchoolEm**, a social platfo
 ---
 
 ## 🌐 Live Application
+## React Compiler (For devs)
 
 - **Production:** https://officialschoolem.org  
 
