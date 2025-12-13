@@ -63,7 +63,7 @@ export default function AuthCallback() {
         navigate("/signin", { replace: true });
       } finally {
         if (isActive && window.history.replaceState) {
-          window.history.replaceState({}, document.title, "/auth/callback");
+          window.history.replaceState({}, document.title, "/Uni");
         }
       }
     }

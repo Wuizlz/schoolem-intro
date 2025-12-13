@@ -12,13 +12,19 @@ export default function UserPostPage() {
   const { data, isLoading, error } = useReceivePubData(user, postId);
   console.log(data)
   const comments = data?.latest_comments;
+  const firstPic = data?.post?.pic_url?.[0];
   if (isLoading) return <Spinner />;
   if (error) return <p>Failed to load</p>;
 
   return (
     <div className="grid grid-cols-2 w-full gap-4 max-h-[90vh] overflow-y-auto ">
       <div className="w-full">
-        <img src={data?.post?.pic_url[0]}></img>
+        {firstPic && (
+          <img
+            src={firstPic}
+            alt="Post media"
+          />
+        )}
       </div>
       <div className="w-full">
         <div className="flex flex-col max-h-[65vh] overflow-y-auto">
