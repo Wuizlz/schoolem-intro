@@ -37,9 +37,10 @@ After that go ahead and run to install all needed dependancies.
 
     1) Ensure that you have run a git fetch/pull to bring the latest changes to your local machine.
     
-    2) Run [*npm i*] to install the latest dependencies.
+    2) Run [ npm i] to install the latest dependencies.
     
-    3) Finally, run [*npm run dev*] to run the project on your local host. The local host link will be visible in your terminal.
+    3) Finally, run [npm run dev] to run the project on your local host. 
+                The local host link will be visible in your terminal.
 
 ## Dev process (For the people who work on this project)
 1) Create and switch to your feature branch
