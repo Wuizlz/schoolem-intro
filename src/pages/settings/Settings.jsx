@@ -7,6 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Spinner from "../../ui/ui components/Spinner"
 import Button from "../../ui/ui components/Button";
+import { useTheme } from "../../hooks/useTheme";
+
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -45,7 +47,7 @@ export default function Settings() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-grey-50)] flex items-center justify-center">
         <Spinner />
       </div>
     );
@@ -54,10 +56,10 @@ export default function Settings() {
   // Show error state
   if (error) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-grey-50)] flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 text-xl mb-4">Error loading profile</p>
-          <p className="text-zinc-400 mb-4">{error.message}</p>
+          <p className="text-[var(--color-grey-500)] mb-4">{error.message}</p>
           <Button onClick={() => navigate("/signin")} type="settingsButton">
             Back to Sign In
           </Button>
@@ -89,7 +91,7 @@ export default function Settings() {
       case "blocked":
         return <PlaceholderContent title="Blocked" />;
       case "theme":
-        return <PlaceholderContent title="Theme" />;
+        return <ThemeContent />;
       case "notifications":
         return <PlaceholderContent title="Notifications" />;
       case "accessibility":
@@ -110,9 +112,9 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 flex">
+    <div className="min-h-screen bg-[var(--color-grey-50)] text-[var(--color-grey-900)] flex">
       {/* Middle Panel - Settings Menu */}
-      <div className="md:w-40 lg:w-80 border-r border-zinc-800 p-8 overflow-y-auto">
+      <div className="md:w-40 lg:w-80 border-r border-[var(--color-grey-200)] p-8 overflow-y-auto">
         <h1 className="md:2xl lg:text-4xl font-bold mb-8">Settings</h1>
 
         {/* Profile Info Section */}
@@ -247,7 +249,7 @@ function WelcomeContent() {
         <h2 className="text-4xl font-bold mb-4">
           Welcome to your settings page!
         </h2>
-        <p className="text-zinc-400 text-lg">
+        <p className="text-[var(--color-grey-500)] text-lg">
           Select an option from the menu to get started
         </p>
       </div>
@@ -260,16 +262,17 @@ function PlaceholderContent({ title }) {
   return (
     <div className="p-12">
       <h2 className="text-3xl font-bold mb-4">{title}</h2>
-      <p className="text-zinc-400">This section is coming soon...</p>
+      <p className="text-[var(--color-grey-500)]">This section is coming soon...</p>
     </div>
   );
 }
 
 function SettingsNavButton({ id, activeSection, onSelect, children }) {
   const isActive = activeSection === id;
+
   const variant = isActive
     ? "bg-amber-300 text-black font-medium"
-    : "hover:bg-zinc-800 text-zinc-100";
+    : "hover:bg-[var(--color-grey-100)] text-[var(--color-grey-700)]";
 
   return (
     <Button
@@ -279,5 +282,48 @@ function SettingsNavButton({ id, activeSection, onSelect, children }) {
     >
       {children}
     </Button>
+  );
+}
+
+function ThemeContent() {
+  const { theme, setTheme, toggleTheme, isDark } = useTheme();
+
+  const baseBtn =
+    "border border-[var(--color-grey-200)] bg-[var(--color-grey-0)] text-[var(--color-grey-900)]";
+  const activeBtn = "bg-amber-300 text-black border border-amber-300";
+
+  return (
+    <div className="p-12">
+      <h2 className="text-3xl font-bold mb-2">Theme</h2>
+      <p className="text-[var(--color-grey-500)] mb-6">
+        Current: <span className="font-semibold text-[var(--color-grey-900)]">{theme}</span>
+      </p>
+
+      <div className="flex gap-3 flex-wrap">
+        <Button
+          type="settingsButton"
+          onClick={() => setTheme("light")}
+          className={theme === "light" ? activeBtn : baseBtn}
+        >
+          Light
+        </Button>
+
+        <Button
+          type="settingsButton"
+          onClick={() => setTheme("dark")}
+          className={theme === "dark" ? activeBtn : baseBtn}
+        >
+          Dark
+        </Button>
+
+        <Button
+          type="settingsButton"
+          onClick={toggleTheme}
+          className={baseBtn}
+        >
+          Toggle (switch to {isDark ? "Light" : "Dark"})
+        </Button>
+      </div>
+    </div>
   );
 }

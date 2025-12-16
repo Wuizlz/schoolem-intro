@@ -24,11 +24,6 @@ function createMediaEntry(file) {
   };
 }
 
-/**
- * CreatePostModal
- * - Step 1: pick or drop media (shows thumbnails + Next button)
- * - Step 2: add caption with a large preview and share
- */
 export default function CreatePostModal({ onCloseModal }) {
   const inputRef = useRef(null);
   const mediaItemsRef = useRef([]);
@@ -41,9 +36,7 @@ export default function CreatePostModal({ onCloseModal }) {
     getValues,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm({
-    defaultValues: { caption: "" },
-  });
+  } = useForm({ defaultValues: { caption: "" } });
 
   const { createPostAsync, isCreatingPost } = useCreatePost();
 
@@ -56,9 +49,7 @@ export default function CreatePostModal({ onCloseModal }) {
 
   useEffect(() => {
     return () => {
-      mediaItemsRef.current.forEach((entry) =>
-        URL.revokeObjectURL(entry.previewUrl)
-      );
+      mediaItemsRef.current.forEach((entry) => URL.revokeObjectURL(entry.previewUrl));
     };
   }, []);
 
@@ -111,10 +102,7 @@ export default function CreatePostModal({ onCloseModal }) {
     const caption = formValues.caption ?? getValues("caption");
 
     try {
-      await createPostAsync({
-        caption,
-        mediaItems,
-      });
+      await createPostAsync({ caption, mediaItems });
 
       mediaItems.forEach((entry) => URL.revokeObjectURL(entry.previewUrl));
       setMediaItems([]);
@@ -128,7 +116,7 @@ export default function CreatePostModal({ onCloseModal }) {
 
   return (
     <div className="flex w-full flex-col items-center gap-6">
-      <h2 className="text-center text-2xl font-semibold text-amber-50 sm:text-3xl">
+      <h2 className="text-center text-2xl font-semibold text-[var(--color-grey-900)] sm:text-3xl">
         Create new post!
       </h2>
 
@@ -137,9 +125,9 @@ export default function CreatePostModal({ onCloseModal }) {
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            className={`relative w-full min-h-[320px] overflow-hidden rounded-2xl border-2 border-dashed border-zinc-700 bg-zinc-800/40 ${
-              hasSelection ? "p-0" : "p-8 text-center"
-            }`}
+            className={`relative w-full min-h-[320px] overflow-hidden rounded-2xl border-2 border-dashed
+              ${hasSelection ? "p-0" : "p-8 text-center"}
+              border-[var(--color-grey-200)] bg-[var(--color-grey-50)]`}
           >
             {hasSelection && primaryItem && (
               <>
@@ -162,33 +150,31 @@ export default function CreatePostModal({ onCloseModal }) {
             )}
 
             {hasSelection ? (
-              <div className="relative z-10 flex h-ful flex-col justify-end gap-4 p-6 text-left">
+              <div className="relative z-10 flex h-full flex-col justify-end gap-4 p-6 text-left">
                 <div>
-                  <p className="text-lg font-semibold text-zinc-50">Looks great!</p>
-                  <p className="text-sm text-zinc-300">
+                  <p className="text-lg font-semibold text-white">Looks great!</p>
+                  <p className="text-sm text-white/80">
                     Drag more media to add them, or upload from your device.
                   </p>
                 </div>
+
                 <div className="flex flex-wrap gap-3">
                   <Button
-                    type="secondary"
                     buttonType="button"
                     onClick={handlePickClick}
-                    className="border-yellow-500/60 text-zinc-100 hover:bg-yellow-500/20"
+                    className="bg-[var(--color-grey-0)]/85 text-[var(--color-grey-900)] border border-[var(--color-grey-200)] hover:bg-[var(--color-grey-0)]"
                   >
                     Upload more
                   </Button>
+
                   <Button
-                    type="secondary"
                     buttonType="button"
                     onClick={() => {
-                      mediaItems.forEach((entry) =>
-                        URL.revokeObjectURL(entry.previewUrl)
-                      );
+                      mediaItems.forEach((entry) => URL.revokeObjectURL(entry.previewUrl));
                       setMediaItems([]);
                       reset({ caption: "" });
                     }}
-                    className="border-transparent bg-zinc-800/70 text-zinc-300 hover:bg-zinc-700/70"
+                    className="bg-[var(--color-grey-0)]/70 text-[var(--color-grey-700)] border border-transparent hover:bg-[var(--color-grey-100)]"
                   >
                     Clear selection
                   </Button>
@@ -196,15 +182,15 @@ export default function CreatePostModal({ onCloseModal }) {
               </div>
             ) : (
               <>
-                <p className="mb-3 text-lg text-zinc-200">
+                <p className="mb-3 text-lg text-[var(--color-grey-500)]">
                   Cherish and remember your moments! ✨
                 </p>
 
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-xl bg-zinc-700/60">
-                  <TbPhoto className="h-full w-full text-amber-50" />
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-xl bg-[var(--color-grey-0)] border border-[var(--color-grey-200)]">
+                  <TbPhoto className="h-9 w-9 text-[var(--color-grey-500)]" />
                 </div>
 
-                <p className="mb-4 text-xl font-semibold text-amber-50">
+                <p className="mb-4 text-xl font-semibold text-[var(--color-grey-700)]">
                   Drag photos and videos here
                 </p>
 
@@ -229,13 +215,15 @@ export default function CreatePostModal({ onCloseModal }) {
             />
 
             {hasSelection && (
-              <div className="mt-6 text-left">
-                <p className="mb-3 text-sm font-medium text-zinc-300">Selected media</p>
+              <div className="mt-6 px-6 pb-6 text-left relative z-10">
+                <p className="mb-3 text-sm font-medium text-white/80">
+                  Selected media
+                </p>
                 <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {mediaItems.map(({ id, previewUrl, kind, file }) => (
                     <li
                       key={id}
-                      className="relative aspect-square overflow-hidden rounded-xl border border-zinc-700 bg-zinc-800"
+                      className="relative aspect-square overflow-hidden rounded-xl border border-white/20 bg-black/20"
                     >
                       {kind === "video" ? (
                         <video
@@ -265,16 +253,12 @@ export default function CreatePostModal({ onCloseModal }) {
               </Button>
             </div>
           )}
-
-         
-
-          
         </>
       )}
 
       {step === "details" && primaryItem && (
         <form onSubmit={handleSubmit(onSubmit)} className="grid w-full gap-6">
-          <div className="overflow-hidden rounded-2xl w-full">
+          <div className="overflow-hidden rounded-2xl w-full border border-[var(--color-grey-200)] bg-[var(--color-grey-50)]">
             {primaryItem.kind === "video" ? (
               <video
                 src={primaryItem.previewUrl}
@@ -292,29 +276,31 @@ export default function CreatePostModal({ onCloseModal }) {
           </div>
 
           <div className="flex w-full flex-col gap-4">
-            
             <textarea
               {...register("caption", {
                 required: "Please add a caption before sharing.",
-                minLength: {
-                  value: 3,
-                  message: "Caption must be at least 3 characters.",
-                },
+                minLength: { value: 3, message: "Caption must be at least 3 characters." },
               })}
               placeholder="Write something about this moment..."
-              rows={2}
-              className="w-full resize-none rounded-2xl   p-1 text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none "
+              rows={3}
+              className="w-full resize-none rounded-2xl border border-[var(--color-grey-200)] bg-[var(--color-grey-0)] p-3 text-base text-[var(--color-grey-900)] placeholder:text-[var(--color-grey-500)] focus:outline-none focus:ring-2 focus:ring-amber-400"
             />
+
             {errors.caption && (
-              <p className="text-sm font-medium text-red-400">
+              <p className="text-sm font-medium text-red-500">
                 {errors.caption.message}
               </p>
             )}
 
             <div className="flex items-center justify-between gap-3">
-              <Button type="secondary" buttonType="button" onClick={handleBack}>
+              <Button
+                buttonType="button"
+                onClick={handleBack}
+                className="bg-[var(--color-grey-0)] text-[var(--color-grey-900)] border border-[var(--color-grey-200)] hover:bg-[var(--color-grey-100)]"
+              >
                 Back
               </Button>
+
               <Button
                 type="primary"
                 buttonType="submit"

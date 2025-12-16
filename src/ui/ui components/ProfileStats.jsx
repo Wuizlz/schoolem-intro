@@ -1,7 +1,7 @@
 export default function ProfileStats({isLoading, data})
 {
     return(
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6  text-amber-50 ">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6  text-[var(--color-grey-700)] ">
               <div className="flex items-baseline lg:gap-2 gap-1">
                 <span className="lg:text-3xl md:text-xl text-sm font-extrabold">
                   {isLoading ? "…" : data?.publicationsCount ?? ""}

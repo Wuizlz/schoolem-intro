@@ -9,8 +9,8 @@ export default function ProtectedRoute({ children }) {
 
   if (!session && isLoading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-black">
-       <div className="h-dvh bg-black" />
+      <div className="min-h-screen bg-[var(--color-grey-50)] flex items-center justify-center">
+       <div className="h-dvh bg-[var(--color-grey-50)]" />
       </div>
     );
   }

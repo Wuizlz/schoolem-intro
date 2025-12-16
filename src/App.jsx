@@ -14,6 +14,7 @@ import { Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
 
 import GlobalStyles from "./styles/GlobalStyles";
+import { ThemeProvider } from "./hooks/useTheme";
 import AppLayout from "./ui/Layouts/AppLayout";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import { AuthProvider } from "./hooks/useAuth";
@@ -126,35 +127,35 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {/* You can wrap this in NODE_ENV check if you want dev-only */}
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ThemeProvider>
+          {/* Devtools (optional) */}
+          <ReactQueryDevtools initialIsOpen={false} />
 
-        <GlobalStyles />
+          <GlobalStyles />
 
-        <BrowserRouter>
-          {/* Suspense handles all lazy-loaded pages/components */}
-          <Suspense fallback={<FullPageLoader />}>
-            <AppRoutes />
-          </Suspense>
-        </BrowserRouter>
+          <BrowserRouter>
+            <Suspense fallback={<FullPageLoader />}>
+              <AppRoutes />
+            </Suspense>
+          </BrowserRouter>
 
-        <Toaster
-          position="top-center"
-          gutter={12}
-          containerStyle={{ margin: 8 }}
-          toastOptions={{
-            success: { duration: 3000 },
-            error: { duration: 5000 },
-            style: {
-              fontSize: "16px",
-              maxWidth: "500px",
-              padding: "16px 24px",
-              // If you're using CSS vars, this is more correct:
-              // backgroundColor: "var(--color-white-0)",
-              // color: "var(--color-white-700)",
-            },
-          }}
-        />
+          <Toaster
+            position="top-center"
+            gutter={12}
+            containerStyle={{ margin: 8 }}
+            toastOptions={{
+              success: { duration: 3000 },
+              error: { duration: 5000 },
+              style: {
+                fontSize: "16px",
+                maxWidth: "500px",
+                padding: "16px 24px",
+                backgroundColor: "var(--color-grey-0)",
+                color: "var(--color-grey-900)",
+              },
+            }}
+          />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

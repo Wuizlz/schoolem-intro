@@ -9,6 +9,13 @@
       href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap"
       rel="stylesheet"
     />
+    <script>
+      (function () {
+        const t = localStorage.getItem("schoolem.theme") || "light";
+        document.documentElement.classList.toggle("dark", t === "dark");
+      })();
+    </script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SchoolEm</title>
 

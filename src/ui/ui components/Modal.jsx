@@ -1,4 +1,3 @@
-// src/ui/Modal.jsx
 import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
@@ -8,7 +7,6 @@ const ModalContext = createContext();
 
 export default function Modal({ children }) {
   const [openName, setOpenName] = useState("");
-
   const close = () => setOpenName("");
   const open = setOpenName;
 
@@ -19,19 +17,24 @@ export default function Modal({ children }) {
   );
 }
 
-// Wrap any trigger (Button, NavItem, etc.)
-
 function Open({ children, opens: opensWindowName }) {
   const { open } = useContext(ModalContext);
-  // No cloneElement; wrap the child and listen for clicks on the wrapper
+
   return (
-    <span className="inline-block" onClick={() => open(opensWindowName)}>
+    <span
+      className="inline-block"
+      onClick={() => open(opensWindowName)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") open(opensWindowName);
+      }}
+    >
       {children}
     </span>
   );
 }
 
-// The actual modal window
 function Window({ children, name, widthClass = "max-w-xl" }) {
   const { openName, close } = useContext(ModalContext);
   const ref = useOutsideClick(close);
@@ -40,26 +43,26 @@ function Window({ children, name, widthClass = "max-w-xl" }) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-1000 grid place-items-center
-                 bg-black/1 backdrop-blur-xs"
+      className="fixed inset-0 z-[1000] grid place-items-center backdrop-blur-sm"
+      style={{ backgroundColor: "var(--overlay-bg)" }}
       role="dialog"
       aria-modal="true"
     >
       <div
         ref={ref}
-        className={`relative w-[92vw]  ${widthClass} rounded-3xl border
-                    border-zinc-700 bg-zinc-900 p-6 sm:p-8 shadow-2xl`}
+        className={`relative w-[92vw] ${widthClass} rounded-3xl border
+          border-[var(--color-grey-200)] bg-[var(--color-grey-0)] p-6 sm:p-8 shadow-2xl`}
       >
         <button
           onClick={close}
           className="absolute right-3.5 top-3.5 rounded-md p-2
-                     text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+            text-[var(--color-grey-500)] hover:bg-[var(--color-grey-100)] hover:text-[var(--color-grey-900)]"
           aria-label="Close modal"
+          type="button"
         >
           <HiXMark className="h-6 w-6" />
         </button>
 
-        {/* Inject onCloseModal into the child content */}
         <div>{cloneElement(children, { onCloseModal: close })}</div>
       </div>
     </div>,
