@@ -158,7 +158,7 @@ export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
   const username = profile?.display_name 
   const { logout, isLoggingOut } = useLogout();
 
-  const textClass = `hidden font-extralight text-amber-50 ${isAlertsOpen ? 'hidden' : 'lg:inline'}`;
+  const textClass = `hidden font-extralight text-amber-50 ${isAlertsOpen ? 'hidden' : 'hidden lg:inline'}`;
 
   return (
     <nav className="flex h-full w-full flex-1 flex-col">
