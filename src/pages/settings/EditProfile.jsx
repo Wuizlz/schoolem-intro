@@ -2,12 +2,14 @@ import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { updateProfile } from "../../services/apiProfile";
+import { useAuth } from "../../hooks/useAuth";
 import OwnUserCircle from "../../ui/ui components/OwnUserCircle";
 import Button from "../../ui/ui components/Button";
 
 // Edit Profile Content
 export function EditProfileContent({ user }) {
   const queryClient = useQueryClient();
+  const { refreshProfile } = useAuth();
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(user.profileImage);
   const [isSaving, setIsSaving] = useState(false);
@@ -19,7 +21,10 @@ export function EditProfileContent({ user }) {
     username: user.username || "",
     bio: user.bio || "",
     birthdate: user.birthdate || "",
-    gender: user.gender || "Prefer not to disclose",
+    gender: user.gender 
+      ? (["Male", "Female", "Non-binary", "Prefer not to disclose", "Other"]
+          .find(opt => opt.toLowerCase() === user.gender.toLowerCase()) || user.gender)
+      : "Prefer not to disclose",
   });
 
   // Track if form has changes
@@ -81,6 +86,7 @@ export function EditProfileContent({ user }) {
 
       // Invalidate and refetch profile data
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await refreshProfile();
       
       toast.success("Changes saved successfully!");
       setHasChanges(false);
@@ -100,7 +106,10 @@ export function EditProfileContent({ user }) {
       username: user.username || "",
       bio: user.bio || "",
       birthdate: user.birthdate || "",
-      gender: user.gender || "Prefer not to disclose",
+      gender: user.gender 
+        ? (["Male", "Female", "Non-binary", "Prefer not to disclose", "Other"]
+            .find(opt => opt.toLowerCase() === user.gender.toLowerCase()) || user.gender)
+        : "Prefer not to disclose",
       profileImage: user.profileImage || null,
     });
     setImagePreview(user.profileImage);
