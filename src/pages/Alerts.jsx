@@ -5,7 +5,7 @@ import Spinner from "../ui/ui components/Spinner";
 export default function Alerts() {
   const { notifications, isLoading } = useNotifications();
 
-  if (isLoading) return <div className="h-full w-[24rem] border-r border-gray-800 bg-black p-6 flex justify-center items-center"><Spinner /></div>;
+  if (isLoading) return <div className="h-full w-[24rem] border-r border-[var(--color-grey-200)] bg-[var(--color-grey-50)] p-6 flex justify-center items-center"><Spinner /></div>;
 
   // Categorize notifications
   const now = Date.now();
@@ -27,7 +27,7 @@ export default function Alerts() {
   });
 
   return (
-    <div className="h-full w-[24rem] overflow-y-auto border-r border-gray-800 bg-black p-6 text-amber-50">
+    <div className="h-full w-[24rem] overflow-y-auto border-r border-[var(--color-grey-200)] bg-[var(--color-grey-50)] p-6 text-[var(--color-grey-700)]">
       <h2 className="mb-8 text-2xl font-bold">Alerts</h2>
 
       {recent.length > 0 && (
@@ -64,7 +64,7 @@ export default function Alerts() {
       )}
       
       {(!notifications || notifications.length === 0) && (
-          <p className="text-gray-500">No notifications yet.</p>
+          <p className="text-[var(--color-grey-500)]">No notifications yet.</p>
       )}
     </div>
   );

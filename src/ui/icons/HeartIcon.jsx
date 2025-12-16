@@ -4,7 +4,7 @@ export default function HeartIcon({
   viewBox = "0 0 16 16",
   className = "",
   fill = "none",
-  stroke = "#ffffff",
+  stroke = "currentColor",
   strokeWidth = 1,
   ...rest
 }) {

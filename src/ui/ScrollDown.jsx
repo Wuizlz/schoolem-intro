@@ -21,13 +21,13 @@ export default function ScrollDown({
           <Listbox.Button
             id={id}
             className={`w-full rounded-full border px-4 py-4 text-left text-lg
-                        border-zinc-600/70 bg-zinc-900 text-zinc-100
+                        border-zinc-600/70 bg-[var(--color-grey-0)] text-[var(--color-grey-900)]
                         focus:outline-none focus:ring-2 focus:ring-white/30
                         ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
             aria-invalid={!!error}
             aria-describedby={error ? `${id}-error` : undefined}
           >
-            <span className={!selected ? "text-zinc-400" : ""}>
+            <span className={!selected ? "text-[var(--color-grey-500)]" : ""}>
               {selected?.label ?? placeholder}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
@@ -46,7 +46,7 @@ export default function ScrollDown({
           >
             <Listbox.Options
               className="absolute z-50 mt-2 w-full overflow-hidden
-                         rounded-3xl border border-zinc-700 bg-zinc-900
+                         rounded-3xl border border-[var(--color-grey-200)] bg-[var(--color-grey-0)]
                          shadow-xl focus:outline-none"
             >
               {options.map((opt) => (
@@ -55,7 +55,7 @@ export default function ScrollDown({
                   value={opt.value}
                   className={({ active }) =>
                     `cursor-pointer select-none px-4 py-3 text-lg
-                     ${active ? "bg-zinc-800" : ""}`
+                     ${active ? "bg-[var(--color-grey-0)]" : ""}`
                   }
                 >
                   {({ selected }) => (

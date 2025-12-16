@@ -144,7 +144,7 @@ export function EditProfileContent({ user }) {
           <OwnUserCircle type = "editStyle"/>
           <div>
             <h3 className="text-2xl font-bold">{formData.fullName}</h3>
-            <p className="text-zinc-400">{formData.username}</p>
+            <p className="text-[var(--color-grey-500)]">{formData.username}</p>
             {selectedImage && (
               <p className="text-sm text-yellow-400 mt-1">
                 New photo selected
@@ -162,7 +162,7 @@ export function EditProfileContent({ user }) {
               type="text"
               value={formData.fullName}
               onChange={(e) => handleInputChange('fullName', e.target.value)}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="w-full px-6 py-4 bg-transparent border border-[var(--color-grey-200)] rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
             />
           </div>
 
@@ -173,7 +173,7 @@ export function EditProfileContent({ user }) {
               type="text"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="w-full px-6 py-4 bg-transparent border border-[var(--color-grey-200)] rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
             />
           </div>
 
@@ -184,7 +184,7 @@ export function EditProfileContent({ user }) {
               value={formData.bio}
               onChange={(e) => handleInputChange('bio', e.target.value)}
               rows={3}
-              className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-3xl text-lg focus:outline-none focus:ring-2 focus:ring-white/30 resize-none"
+              className="w-full px-6 py-4 bg-transparent border border-[var(--color-grey-200)] rounded-3xl text-lg focus:outline-none focus:ring-2 focus:ring-white/30 resize-none"
             />
           </div>
 
@@ -196,7 +196,7 @@ export function EditProfileContent({ user }) {
                 type="text"
                 value={user.age}
                 readOnly
-                className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-full text-lg text-zinc-400 cursor-not-allowed"
+                className="w-full px-6 py-4 bg-[var(--color-grey-0)] border border-[var(--color-grey-200)] rounded-full text-lg text-[var(--color-grey-500)] cursor-not-allowed"
               />
             </div>
             <div>
@@ -207,7 +207,7 @@ export function EditProfileContent({ user }) {
                 type="text"
                 value={formData.birthdate}
                 onChange={(e) => handleInputChange('birthdate', e.target.value)}
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
+                className="w-full px-6 py-4 bg-transparent border border-[var(--color-grey-200)] rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
               />
             </div>
           </div>
@@ -219,27 +219,27 @@ export function EditProfileContent({ user }) {
               <select
                 value={formData.gender}
                 onChange={(e) => handleInputChange('gender', e.target.value)}
-                className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none cursor-pointer"
+                className="w-full px-6 py-4 bg-transparent border border-[var(--color-grey-200)] rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none cursor-pointer"
               >
-                <option value="Male" className="bg-zinc-900">
+                <option value="Male" className="bg-[var(--color-grey-0)]">
                   Male
                 </option>
-                <option value="Female" className="bg-zinc-900">
+                <option value="Female" className="bg-[var(--color-grey-0)]">
                   Female
                 </option>
-                <option value="Non-binary" className="bg-zinc-900">
+                <option value="Non-binary" className="bg-[var(--color-grey-0)]">
                   Non-binary
                 </option>
-                <option value="Prefer not to disclose" className="bg-zinc-900">
+                <option value="Prefer not to disclose" className="bg-[var(--color-grey-0)]">
                   Prefer not to disclose
                 </option>
-                <option value="Other" className="bg-zinc-900">
+                <option value="Other" className="bg-[var(--color-grey-0)]">
                   Other
                 </option>
               </select>
               <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg
-                  className="w-5 h-5 text-zinc-400"
+                  className="w-5 h-5 text-[var(--color-grey-500)]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -263,7 +263,7 @@ export function EditProfileContent({ user }) {
                 type="text"
                 value={user.university}
                 readOnly
-                className="w-full px-6 py-4 bg-zinc-800 border border-zinc-700 rounded-full text-lg text-zinc-400 cursor-not-allowed"
+                className="w-full px-6 py-4 bg-[var(--color-grey-0)] border border-[var(--color-grey-200)] rounded-full text-lg text-[var(--color-grey-500)] cursor-not-allowed"
               />
             </div>
           </div>
@@ -271,11 +271,11 @@ export function EditProfileContent({ user }) {
 
         {/* Save/Cancel Buttons - Only show when there are changes */}
         {hasChanges && (
-          <div className="mt-8 flex items-center justify-end gap-4 border-t border-zinc-800 pt-6">
+          <div className="mt-8 flex items-center justify-end gap-4 border-t border-[var(--color-grey-200)] pt-6">
             <button
               onClick={handleCancel}
               disabled={isSaving}
-              className="px-6 py-2.5 border border-zinc-600 text-zinc-300 font-medium rounded-full hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 border border-zinc-600 text-[var(--color-grey-600)] font-medium rounded-full hover:bg-[var(--color-grey-100)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>

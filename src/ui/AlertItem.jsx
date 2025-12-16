@@ -19,22 +19,22 @@ export default function AlertItem({ item }) {
   return (
     <li className="flex items-center gap-4 py-3">
       <div className="relative">
-        <div className="h-10 w-10 overflow-hidden rounded-full bg-gray-700">
+        <div className="h-10 w-10 overflow-hidden rounded-full bg-[var(--color-grey-100)] border border-[var(--color-grey-200)]">
            {item.actor_avatar ? (
              <img src={item.actor_avatar} alt={item.actor_name} className="h-full w-full object-cover" />
            ) : (
-             <div className="h-full w-full bg-gray-600 flex items-center justify-center text-xs text-gray-400">
+             <div className="h-full w-full bg-[var(--color-grey-100)] flex items-center justify-center text-xs text-[var(--color-grey-500)]">
                {item.actor_name ? item.actor_name[0].toUpperCase() : '?'}
              </div>
            )}
         </div>
       </div>
-      <div className="flex-1 text-sm text-gray-200">
-        <span className="font-bold text-white">
+      <div className="flex-1 text-sm text-[var(--color-grey-700)]">
+        <span className="font-bold text-[var(--color-grey-900)]">
           {item.actor_name}
         </span>{" "}
-        <span className="text-gray-400">{text}</span>{" "}
-        <span className="text-gray-500">{formatRelative(item.created_at)}</span>
+        <span className="text-[var(--color-grey-500)]">{text}</span>{" "}
+        <span className="text-[var(--color-grey-500)]">{formatRelative(item.created_at)}</span>
       </div>
     </li>
   );
