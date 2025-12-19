@@ -21,8 +21,8 @@ export default function SignIn() {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   return (
-    <main className="min-h-dvh flex items-center justify-center bg-[var(--color-grey-50)] text-[var(--color-grey-900)]">
-      <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-[var(--color-grey-200)]/60 bg-[var(--color-grey-0)]/80 p-8 sm:p-12 flex flex-col gap-8">
+    <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
+      <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
         <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
           <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16  " />
           <h1 className="text-2xl font-semibold sm:text-4xl">
@@ -82,9 +82,12 @@ export default function SignIn() {
 
           <div className="flex flex-col items-center gap-3">
             <div className="w-full flex items-center gap-4">
-              <span aria-hidden className="h-0.5 flex-1 bg-[var(--color-grey-200)] rounded-full" />
-              <span className="text-sm font-semibold text-[var(--color-grey-500)]">or</span>
-              <span aria-hidden className="h-0.5 flex-1 bg-[var(--color-grey-200)] rounded-full" />
+              <span
+                aria-hidden
+                className="h-0.5 flex-1 bg-zinc-600 rounded-full"
+              />
+              <span className="text-sm font-semibold text-zinc-200">or</span>
+              <span aria-hidden className="h-0.5 flex-1 bg-zinc-600" />
             </div>
 
             <Button type="primary" to="/signup" className="self-center">

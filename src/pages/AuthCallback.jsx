@@ -76,10 +76,10 @@ export default function AuthCallback() {
   }, [location.hash, location.search, navigate]);
 
   return (
-    <main className="min-h-dvh flex items-center justify-center bg-[var(--color-grey-50)] text-[var(--color-grey-900)]">
-      <div className="w-full max-w-md rounded-3xl border-4 border-[var(--color-grey-200)]/60 bg-[var(--color-grey-0)]/80 p-10 text-center space-y-4">
+    <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
+      <div className="w-full max-w-md rounded-3xl border-4 border-zinc-700/60 bg-zinc-900/80 p-10 text-center space-y-4">
         <h1 className="text-2xl font-semibold">Hold tight…</h1>
-        <p className="text-base text-[var(--color-grey-600)]">{status}</p>
+        <p className="text-base text-zinc-300">{status}</p>
       </div>
     </main>
   );

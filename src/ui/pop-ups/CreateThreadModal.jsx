@@ -36,7 +36,7 @@ export default function CreateThreadForm({ onCloseModal }) {
   return (
     <div className="flex flex-col">
       <div className="flex justify-center w-full">
-        <header className=" text-2xl font-semibold text-[var(--color-grey-700)] sm:text-3xl">
+        <header className=" text-2xl font-semibold text-amber-50 sm:text-3xl">
           Let others know whats up!
         </header>
       </div>
@@ -51,7 +51,7 @@ export default function CreateThreadForm({ onCloseModal }) {
           })}
           placeholder="Whats up?"
           rows={2}
-          className="w-full  focus:border focus:ring-amber-50  resize-none rounded-2xl text-center my-5  p-1 text-base text-[var(--color-grey-900)] placeholder:text-[var(--color-grey-900)]0 focus:outline-none "
+          className="w-full  focus:border focus:ring-amber-50  resize-none rounded-2xl text-center my-5  p-1 text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none "
         />
         {showButton && (
           <div className="flex justify-end">

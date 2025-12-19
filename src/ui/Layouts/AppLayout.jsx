@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
 import SideBar from "../SideBar";
+import { lazy, useState } from "react";
 import Alerts from "../../pages/Alerts";
 
 export default function AppLayout() {
@@ -12,19 +12,22 @@ export default function AppLayout() {
         isAlertsOpen
           ? "sm:grid-cols-[4.5rem_auto_1fr]"
           : "sm:grid-cols-[4.5rem_1fr] lg:grid-cols-[18rem_1fr]"
-      } bg-[var(--color-grey-50)] text-[var(--color-grey-900)]`}
+      } bg-black`}
     >
-      <div className="hidden sm:block">
-        <SideBar isAlertsOpen={isAlertsOpen} setIsAlertsOpen={setIsAlertsOpen} />
+      <div className="hidden sm:block ">
+        <SideBar
+          isAlertsOpen={isAlertsOpen}
+          setIsAlertsOpen={setIsAlertsOpen}
+        />
       </div>
 
       {isAlertsOpen && (
-        <div className="hidden sm:block border-r border-[var(--color-grey-200)] overflow-y-auto bg-[var(--color-grey-50)]">
+        <div className="hidden sm:block border-r border-gray-800 overflow-y-auto">
           <Alerts />
         </div>
       )}
 
-      <main className="h-full overflow-y-auto bg-[var(--color-grey-50)]">
+      <main className="h-full overflow-y-auto">
         <Outlet />
       </main>
     </div>

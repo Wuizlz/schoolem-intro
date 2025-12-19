@@ -4,7 +4,7 @@ export default function ThoughtIcon({
   viewBox = "0 0 64 64",
   className = "",
   fill = "none",
-  stroke = "currentColor",
+  stroke = "#ffffff",
   strokeWidth = 4,
   ...rest
 }) {

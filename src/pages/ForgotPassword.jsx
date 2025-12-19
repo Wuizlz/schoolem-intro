@@ -22,8 +22,8 @@ export default function ForgotPassword() {
     };
 
     return (
-        <main className="min-h-dvh flex items-center justify-center bg-[var(--color-grey-50)] text-[var(--color-grey-900)]">
-            <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-[var(--color-grey-200)]/60 bg-[var(--color-grey-0)]/80 p-8 sm:p-12 flex flex-col gap-8">
+        <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
+            <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
                 <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
                     <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16" />
                     <h1 className="text-2xl font-semibold	sm:text-4xl">
@@ -32,7 +32,7 @@ export default function ForgotPassword() {
                 </div>
 
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <p className="text-sm text-center text-[var(--color-grey-600)]">
+                    <p className="text-sm text-center text-zinc-300">
                         Enter the email linked to your account and we will email you reset
                         instructions.
                     </p>
