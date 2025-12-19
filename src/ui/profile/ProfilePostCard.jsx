@@ -12,7 +12,7 @@ export default function ProfilePostCard({ profileuserPost, id }) {
         className="h-full object-cover border rounded-lg"
         alt="User post"
       ></img>
-      <div className="absolute top-2 left-2 flex flex-col gap-1 bg-[var(--color-grey-50)]/30 py-1 rounded text-[var(--color-grey-900)] text-sm">
+      <div className="absolute top-2 left-2 flex flex-col gap-1 bg-black/30 py-1 rounded text-white text-sm">
         <div className="flex items-center gap-1">
           <HeartIcon className="h-4 w-5"/>
           <span>0</span>

@@ -2,7 +2,7 @@ import { StyledNavLink } from "../MainNav";
 
 export default function ProfileTabsNav() {
   return (
-    <ul className="flex flex-row justify-evenly w-full text-[var(--color-grey-700)] text-2xl font-extrabold mb-.5 ">
+    <ul className="flex flex-row justify-evenly w-full text-amber-50 text-2xl font-extrabold mb-.5 ">
       <li>
         <StyledNavLink to="." end $compactOnMobile={false} >
           Pubs

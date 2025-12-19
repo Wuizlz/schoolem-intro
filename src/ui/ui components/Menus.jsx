@@ -18,25 +18,17 @@ const StyledList = styled.ul`
 
   display: flex;
   flex-direction: column;
-
   min-width: 10rem;
   max-width: calc(100vw - 2rem);
-
-  background-color: var(--color-grey-0);
-  color: var(--color-grey-900);
-  border: 1px solid var(--color-grey-200);
-
+  background-color: #262626;
   box-shadow: var(--shadow-sm);
-  border-radius: 12px;
 
-  padding: 0.4rem;
-  overflow: hidden;
-
-  left: ${({ $position }) => $position?.x ?? 0}px;
-  top: ${({ $position }) => $position?.y ?? 0}px;
+  border-radius: 10px;
+  left: ${({ position }) => position?.x ?? 0}px;
+  top: ${({ position }) => position?.y ?? 0}px;
   transform: translate(
-    ${({ $position }) => ($position?.align === "center" ? "-50%" : "0")},
-    ${({ $position }) => ($position?.placement === "top" ? "-100%" : "0")}
+    ${({ position }) => (position?.align === "center" ? "-50%" : "0")},
+    ${({ position }) => (position?.placement === "top" ? "-100%" : "0")}
   );
 `;
 
@@ -53,13 +45,22 @@ export default function Menus({ children }) {
   const open = setOpenId;
 
   return (
-    <MenusContext.Provider value={{ openId, position, setPosition, close, open }}>
+    <MenusContext.Provider
+      value={{ openId, position, setPosition, close, open }}
+    >
       {children}
     </MenusContext.Provider>
   );
 }
 
-function Toggle({ id, children, className, onActiveChange, align = "center", ...rest }) {
+function Toggle({
+  id,
+  children,
+  className,
+  onActiveChange,
+  align = "center",
+  ...rest
+}) {
   const { openId, open, close, setPosition } = useContext(MenusContext);
   const isOpen = openId === id;
 
@@ -77,15 +78,15 @@ function Toggle({ id, children, className, onActiveChange, align = "center", ...
 
     const computedStyles = window.getComputedStyle(button);
     const paddingLeft = parseFloat(computedStyles.paddingLeft) || 0;
-
     const anchorX =
-      align === "left" ? rect.left + paddingLeft : rect.left + rect.width / 2;
+      align === "left"
+        ? rect.left + paddingLeft
+        : rect.left + rect.width / 2;
 
     const clampedX = Math.min(
       window.innerWidth - viewportPadding,
       Math.max(viewportPadding, anchorX)
     );
-
     const spaceBelow = window.innerHeight - rect.bottom;
     const placement = spaceBelow < estimatedMenuHeight ? "top" : "bottom";
     const y = placement === "bottom" ? rect.bottom + gap : rect.top - gap;
@@ -135,20 +136,25 @@ function List({ id, children }) {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList ref={ref} $position={position} role="menu" aria-orientation="vertical">
+    <StyledList
+      ref={ref}
+      position={position}
+      role="menu"
+      aria-orientation="vertical"
+    >
       {children}
     </StyledList>,
     document.body
   );
 }
 
-function MButton({ children, icon, onClick, disabled, to }) {
+function MButton({ children, icon, onClick, disabled }) {
   const { close } = useContext(MenusContext);
 
-  async function handleClick(e) {
+  async function handleClick() {
     if (disabled) return;
     try {
-      await onClick?.(e);
+      await onClick?.();
     } finally {
       close();
     }
@@ -157,12 +163,11 @@ function MButton({ children, icon, onClick, disabled, to }) {
   return (
     <li role="none">
       <Button
-        type="menusOpt"
-        to={to}
+        type="menusOpt" // <-- your original button style
         role="menuitem"
         onClick={handleClick}
         disabled={disabled}
-        className="w-full flex items-center gap-3 rounded-xl px-3 py-2 hover:bg-[var(--color-grey-100)] text-[var(--color-grey-700)]"
+        className="w-full flex items-center gap-3 rounded-xl px-3 py-2"
       >
         {icon}
         <span className="ml-2">{children}</span>
