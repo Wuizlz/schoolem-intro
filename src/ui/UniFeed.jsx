@@ -51,7 +51,7 @@ export default function UniFeed() {
 
   if (isInitialLoading)
     return (
-      <ul className="flex flex-col gap-15 ">
+      <ul className="flex flex-col gap-15 w-full  ">
         {[...Array(3)].map((_,idx) => (
           <PostSkeleton key={idx} />
         ))}

@@ -13,6 +13,20 @@ export default function OwnUserCircle({ type }) {
     editStyle: "h-35 w-35 rounded-full  p-[3px] ",
   };
 
+  if (!avatarUrl)
+    return (
+      <div className="flex flex-col">
+        <div className={containerStyles[type]}>
+          <img src="favicon.ico" ></img>
+        </div>
+        {type === "uniStyle" && (
+          <span className="text-xs text-zinc-300 flex justify-center py-2">
+            {"You"}
+          </span>
+        )}
+      </div>
+    );
+
   return (
     <div className="flex flex-col">
       <div className={containerStyles[type]}>

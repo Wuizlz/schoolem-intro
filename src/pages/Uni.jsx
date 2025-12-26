@@ -4,7 +4,7 @@ import UniFeed from "../ui/UniFeed";
 
 export default function Uni() {
   return (
-    <div className="flex gap-6 sm:justify-center ">
+    <div className=" gap-6 sm:flex  sm:justify-center ">
       <section className="  sm:w-full sm:max-w-150 flex flex-col gap-6 py-5 ">
         <div className="flex gap-4 overflow-x-auto pl-2 py-2">
           <OwnUserCircle type="uniStyle"/>

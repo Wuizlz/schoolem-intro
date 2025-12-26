@@ -48,7 +48,7 @@ function FullPageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center text-[1.1rem] bg-black">
        <div className="h-20 w-20">
-          <img src="./favicon.ico"></img>
+          <img src="/favicon.ico" className="animate-spin"></img>
         </div>
     </div>
   );
