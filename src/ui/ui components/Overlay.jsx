@@ -12,7 +12,7 @@ export default function Overlay({ children, onClose }) {
       onMouseDown={handleBackdropClick}
     >
       <div
-        className="relative w-[92vw] max-w-5xl rounded-2xl bg-zinc-900 border border-zinc-700 p-6"
+        className="relative max-h-[90vh  sm:max-h-[65vh] sm:max-w-[90vw] md:max-h-[75vh]  lg:max-h-[85vh] rounded-2xl bg-zinc-900 border border-zinc-700 p-6"
       >
         <button
           onClick={onClose}

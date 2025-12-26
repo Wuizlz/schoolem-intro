@@ -101,8 +101,8 @@ export default function DateAndGenderForm({
                 validate: (value) => {
                   const d = new Date(value);
                   if (isNaN(d)) return "Invalid date.";
-                  if (d > maxDOB) return "You must be at least 18 years old.";
-                  if (d < minDOB) return "Please enter a valid birthdate.";
+                  if (d > maxDOB) return "You must be under 31.";
+                  if (d < minDOB) return "You must be at least 18";
                   return true;
                 },
               })}

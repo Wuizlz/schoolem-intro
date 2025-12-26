@@ -24,6 +24,7 @@ export default function useHandleFollow() {
                 return{
                     ...prev, followersCount: (prev.followersCount ?? 0) + 1,
                 }
+             
             }
             )
 

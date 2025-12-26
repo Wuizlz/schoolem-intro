@@ -9,7 +9,7 @@ export default function OwnUserCircle({ type }) {
 
   const containerStyles = {
     uniStyle:
-      "h-25 w-25 rounded-full   p-[3px] shadow-[0_0_25px_-10px_rgb(245_158_11)]",
+      "h-20 w-20 rounded-full   p-[3px] shadow-[0_0_25px_-10px_rgb(245_158_11)]",
     editStyle: "h-35 w-35 rounded-full  p-[3px] ",
   };
 

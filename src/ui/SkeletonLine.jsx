@@ -1,6 +1,6 @@
 export function PostSkeleton() {
   return (
-    <li className="flex flex-col gap-4 border-t border-gray-800/60 py-6">
+    <li className="flex flex-col gap-4 border-t border-gray-800/60 py-6 w-full ">
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-14 overflow-hidden rounded-full border bg-zinc-900">
           <div className="absolute inset-0 shimmer" />

@@ -299,7 +299,7 @@ export async function getUserPublications(username, pubType) {
   const query = supabase
     .from("publications")
     .select(
-      "publication_id, created_at, type, post:posts(caption,pic_url),thread:threads(thread_text)"
+      "publication_id, created_at, type, likes_count, comments_count, post:posts(caption,pic_url),thread:threads(thread_text)"
     )
     .eq("author_id", userRow.id)
     .order("created_at", { ascending: false });

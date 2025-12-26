@@ -10,7 +10,9 @@ export default function ProtectedRoute({ children }) {
   if (!session && isLoading) {
     return (
       <div className="min-h-dvh flex items-center justify-center bg-black">
-       <div className="h-dvh bg-black" />
+        <div className="h-20 w-20">
+          <img src="./favicon.ico"></img>
+        </div>
       </div>
     );
   }

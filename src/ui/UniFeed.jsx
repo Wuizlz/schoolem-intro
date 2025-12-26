@@ -51,14 +51,14 @@ export default function UniFeed() {
 
   if (isInitialLoading)
     return (
-      <ul className="flex flex-col gap-15">
+      <ul className="flex flex-col gap-15 ">
         {[...Array(3)].map((_,idx) => (
           <PostSkeleton key={idx} />
         ))}
       </ul>
     );
   return (
-    <ul className="flex flex-col gap-15 ">
+    <ul className="flex flex-col gap-20 w-full ">
       {publications.map((publications) => (
         <UserPost
           uniId={uniId}

@@ -20,14 +20,14 @@ import { AuthProvider } from "./hooks/useAuth";
 
 // 🔹 Lazy-loaded pages & components (code-splitting)
 import Alerts from "./pages/Alerts";
-import Overlay from "./ui/ui components/Overlay"
-import AuthCallback from "../src/pages/AuthCallback"
+import Overlay from "./ui/ui components/Overlay";
+import AuthCallback from "../src/pages/AuthCallback";
+import Spinner from "./ui/ui components/Spinner";
 const SignIn = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const Uni = lazy(() => import("./pages/Uni"));
-
 
 const Profile = lazy(() => import("./pages/Profile"));
 const Settings = lazy(() => import("./pages/settings/Settings"));
@@ -39,7 +39,6 @@ const ProfileTagged = lazy(() => import("./ui/profile/ProfileTagged"));
 
 const UserPostPage = lazy(() => import("./ui/UserPostPage"));
 
-
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },
 });
@@ -47,16 +46,10 @@ const queryClient = new QueryClient({
 // Simple full-screen loader for lazy chunks
 function FullPageLoader() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "1.1rem",
-      }}
-    >
-      Loading…
+    <div className="min-h-screen flex items-center justify-center text-[1.1rem] bg-black">
+       <div className="h-20 w-20">
+          <img src="./favicon.ico"></img>
+        </div>
     </div>
   );
 }

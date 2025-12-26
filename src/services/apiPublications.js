@@ -1,3 +1,4 @@
+import { downscaleFile } from "../utils/helpers";
 import supabase from "./supabase";
 
 const POSTS_BUCKET = "post-media";
@@ -5,7 +6,20 @@ const POST_TYPE = "post";
 
 function ensureFile(candidate) {
   if (!candidate) throw new Error("Invalid media item.");
+  if (candidate instanceof Blob) {
+    const name =
+      candidate?.name ?? `upload.${candidate.type?.split("/")[1] ?? "dat"}`;
+    return new File([candidate], name, { type: candidate.type });
+  }
   if (candidate instanceof File) return candidate;
+  if (candidate?.file instanceof Blob) {
+    const blob = candidate.file;
+    const name =
+      blob?.name ??
+      candidate?.name ??
+      `upload.${blob.type?.split("/")[1] ?? "dat"}`;
+    return new File([blob], name, { type: blob.type });
+  }
   if (candidate?.file instanceof File) return candidate.file;
   throw new Error("Media item is missing the underlying file.");
 }
@@ -48,6 +62,25 @@ export async function createPost({ caption, mediaItems, authorId }) {
     throw new Error("Select at least one photo or video before sharing.");
   }
 
+  const optimizedMedia = await Promise.all(
+    mediaItems.map(async (item) => {
+      const original = ensureFile(item);
+      if (!original?.type?.startsWith("image/")) return original;
+
+      const scaled = await downscaleFile(original);
+      if (scaled instanceof File) return scaled;
+      if (scaled instanceof Blob) {
+        const ext = scaled.type?.split("/")[1] ?? "dat";
+        const base =
+          original.name?.split(".").slice(0, -1).join(".") || "upload";
+        return new File([scaled], `${base}.${ext}`, {
+          type: scaled.type || original.type,
+        });
+      }
+      return original;
+    })
+  );
+
   const { data: publication, error: publicationError } = await supabase
     .from("publications")
     .insert({
@@ -64,8 +97,8 @@ export async function createPost({ caption, mediaItems, authorId }) {
 
   try {
     uploads = await Promise.all(
-      mediaItems.map((item, index) =>
-        uploadMediaFile(publicationId, item, index)
+      optimizedMedia.map((file, index) =>
+        uploadMediaFile(publicationId, file, index)
       )
     );
 
@@ -102,7 +135,6 @@ export async function createPost({ caption, mediaItems, authorId }) {
 }
 
 export async function createThread({ thread_text, authorId }) {
-  console.log(thread_text, authorId);
   if (!authorId) throw new Error("You must be signed in to create a thread.");
   if (!thread_text?.length) throw new Error("Thread must have content");
 
@@ -178,31 +210,39 @@ export async function handleUnLike(actorId, publicationId) {
   if (!(actorId && publicationId))
     throw new Error("Acted publication or actor not received");
 
-  const { data, error } = await supabase
-    .from("publication_likes")
-    .select("id")
-    .eq("actor_id", actorId)
-    .eq("publication_id", publicationId)
-    .maybeSingle();
-  if (error) throw error;
-  const { error: deleteError } = await supabase
+  const { error } = await supabase
     .from("publication_likes")
     .delete("id")
-    .eq("id", data.id);
-  if (deleteError) throw deleteError;
+    .eq("actor_id", actorId)
+    .eq("publication_id", publicationId);
+  if (error) throw error;
 }
 
 export async function createComment(publicationId, actorId, userComment) {
-  console.log(actorId, publicationId, userComment);
   if (!(actorId && publicationId && userComment))
     throw new Error("Missing data piece to insert a tuple relation");
 
-  const { error } = await supabase.from("publication_comments").insert({
-    publication_id: publicationId,
-    author_id: actorId,
-    body: userComment,
-  });
+  const { data, error } = await supabase
+    .from("publication_comments")
+    .insert({
+      publication_id: publicationId,
+      author_id: actorId,
+      body: userComment,
+    })
+    .select(
+      `body,
+    author:profiles!publication_comments_author_id_fkey(
+    id,
+    avatar_url,
+    display_name),
+    author_id,
+    comment_id,
+    created_at,
+    parent_comment_id`
+    )
+    .single();
   if (error) throw error;
+  return data;
 }
 
 export async function fetchFeedPage({ cursor, limit = 10 }) {
@@ -218,11 +258,34 @@ export async function receivePubData(user, postId) {
   if (!(user && postId))
     throw new Error("not authroized or post doesn't exist");
 
-  const { data, error } = await supabase.rpc("publication_payload", {
+  const { data, error } = await supabase.rpc("get_publication_payload", {
     publication_uuid: postId,
     current_user_id: user,
     comments_limit: 50,
   });
-  if(error) throw error
-  return data
+  if (error) throw error;
+  return data;
+}
+
+export async function createCommentLike(commentId, actorId) {
+  if (!(commentId && actorId))
+    throw new Error("Missing vital data information, cant create relationship");
+
+  const { error } = await supabase.from("publication_comment_likes").insert({
+    comment_id: commentId,
+    actor_id: actorId,
+  });
+
+  if (error) throw error;
+}
+
+export async function deleteCommentLike(commentId, actorId) {
+  if (!(commentId && actorId))
+    return new Error("Missing an argument to perform action");
+
+  const { data, error } = await supabase
+    .from("publication_comment_likes")
+    .delete("id")
+    .eq("actor_id", actorId)
+    .eq("comment_id", commentId);
 }

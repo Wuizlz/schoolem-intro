@@ -5,7 +5,7 @@ export default function ProfileTabsLayout() {
   
 
   return (
-    <div className="flex flex-col self-center w-11/12">
+    <div className="flex flex-col w-full ">
       <div className="flex justify-around">
         <ProfileTabsNav />
       </div>

@@ -4,10 +4,10 @@ export default function AlertItem({ item }) {
   let text = "";
   switch (item.action_type) {
     case "like":
-      text = "liked your post.";
+      text = `liked your ${item?.pub_type || item?.object_type}`;
       break;
     case "comment":
-      text = "commented on your post.";
+      text = `commented on your ${item?.pub_type || item?.object_type}.`;
       break;
     case "follow":
       text = "started following you.";
