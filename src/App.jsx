@@ -23,6 +23,9 @@ import Alerts from "./pages/Alerts";
 import Overlay from "./ui/ui components/Overlay";
 import AuthCallback from "../src/pages/AuthCallback";
 import Spinner from "./ui/ui components/Spinner";
+import NotFound from "./ui/ui components/NotFound";
+import FollowingOverlayPage from "./ui/FollowingOverlayPage";
+import FollowersOverlayPage from "./ui/ui components/FollowersOverlayPage";
 const SignIn = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
@@ -47,9 +50,9 @@ const queryClient = new QueryClient({
 function FullPageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center text-[1.1rem] bg-black">
-       <div className="h-20 w-20">
-          <img src="/favicon.ico" className="animate-spin"></img>
-        </div>
+      <div className="h-20 w-20">
+        <img src="/favicon.ico" className="animate-spin"></img>
+      </div>
     </div>
   );
 }
@@ -92,10 +95,17 @@ function AppRoutes() {
           </Route>
 
           {/* Full-page post view (non-modal) */}
-          <Route path="p/:postId" element={<UserPostPage />} />
+          <Route
+            path="p/:postId"
+            element={
+              <div className="flex h-lvh items-center justify-center">
+                <UserPostPage />
+              </div>
+            }
+          />
         </Route>
 
-        <Route path="*" element={<Navigate to="/signin" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {/* Modal overlay post view (when backgroundLocation exists) */}
@@ -104,8 +114,64 @@ function AppRoutes() {
           <Route
             path="p/:postId"
             element={
-              <Overlay onClose={() => navigate(-1)}>
+              <Overlay
+                element={
+                  <div className="flex  justify-center">
+                    <h1 className=" text-amber-300/70 text-lg font-black">
+                      Post
+                    </h1>
+                  </div>
+                }
+                onClose={() => navigate(-1)}
+              >
                 <UserPostPage />
+              </Overlay>
+            }
+          />
+          <Route
+            path=":username/following"
+            element={
+              <Overlay
+                lgH="45"
+                mdH="45"
+                smH="45"
+                bH="45"
+                smW="400"
+                side="px"
+                element={
+                  <div className="flex  justify-center">
+                    <h1 className="text-amber-50 text-lg font-black">
+                      Following
+                    </h1>
+                  </div>
+                }
+                onClose={() => navigate(-1)}
+              >
+                <FollowingOverlayPage />
+              </Overlay>
+            }
+          />
+
+          <Route
+            path=":username/followers"
+            element={
+              <Overlay
+                lgH="45"
+                mdH="45"
+                smH="45"
+                bH="45"
+                smW="400"
+                side="px"
+                element={
+                  <div className="flex  justify-center">
+                    <h1 className="text-amber-50 text-lg font-black">
+                      Followers
+                    </h1>
+                  </div>
+                }
+                onClose={() => navigate(-1)}
+              >
+                <FollowersOverlayPage/>
               </Overlay>
             }
           />

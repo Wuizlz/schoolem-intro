@@ -145,6 +145,7 @@ export default function Profile() {
                 <ProfileStats
                   data={profile ?? null}
                   isLoading={isLoadingUser}
+                  username = {username}
                 />
               </div>
             </div>

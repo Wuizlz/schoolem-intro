@@ -24,6 +24,7 @@ export default function () {
         author_id: data.id,
         comment_id: data.comment_id,
         created_at: rel,
+        comment_likes: 0,
         parent_comment_id: data.parent_comment_id,
       };
       toast.success("comment created");

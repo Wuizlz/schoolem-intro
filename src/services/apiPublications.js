@@ -238,7 +238,8 @@ export async function createComment(publicationId, actorId, userComment) {
     author_id,
     comment_id,
     created_at,
-    parent_comment_id`
+    parent_comment_id,
+    comment_likes`
     )
     .single();
   if (error) throw error;
@@ -289,3 +290,5 @@ export async function deleteCommentLike(commentId, actorId) {
     .eq("actor_id", actorId)
     .eq("comment_id", commentId);
 }
+
+

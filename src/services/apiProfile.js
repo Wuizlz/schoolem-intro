@@ -49,7 +49,6 @@ export async function signUpWithEmail({
     },
   });
 
-
   if (error) {
     if (error.message?.toLowerCase().includes("user already registered")) {
       throw new Error("Account already created, sign in instead!");
@@ -78,7 +77,7 @@ export async function signUpWithEmail({
       display_name: displayName,
       full_name: fullName,
       b_date: birthdate,
-      gender: gender
+      gender: gender,
     });
     if (insertError) profileError = insertError;
     else profileInserted = true;
@@ -282,8 +281,6 @@ export async function updateProfile({
   return { success: true, avatarUrl };
 }
 
-
-
 export async function getUserPublications(username, pubType) {
   if (!username) throw new Error("Not authorized to perform action");
 
@@ -314,14 +311,14 @@ export async function getUserPublications(username, pubType) {
 export async function getProfileByUsername(username) {
   if (!username) throw new Error("Username failed to transfer");
   //1) Look up the profile in database using username from params to receive basic information
-  
+
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("id, avatar_url, display_name, full_name, bio")
     .eq("display_name", username)
     .maybeSingle();
   if (profileError) throw profileError;
-  
+
   //2) Now get count of publications published from user using data.id
   const { count: publicationsCount, error: publicationsError } = await supabase
     .from("publications")
@@ -338,7 +335,7 @@ export async function getProfileByUsername(username) {
     .from("followings")
     .select("id", { count: "exact", head: true })
     .eq("followee_id", profile.id);
-  if(followersError) throw followersError
+  if (followersError) throw followersError;
   return {
     ...profile,
     publicationsCount: publicationsCount ?? 0,
@@ -347,3 +344,29 @@ export async function getProfileByUsername(username) {
   };
 }
 
+export async function getUserFollowings(username) {
+  if (!username) throw new Error("Need necessary data to perform action ");
+
+  const { data, error } = await supabase.rpc("get_followings_by_username", {
+    in_display_name: username,
+    in_limit: 10,
+  });
+
+  if (error) throw error;
+  if (!data) throw new Error("User doesnt exist");
+
+  return data;
+}
+
+export async function getUserFollowers(username) {
+  console.log("hi");
+  if (!username) throw new Error("Need necessary data to perform action");
+
+  const { data, error } = await supabase.rpc("get_followers_by_username", {
+    in_display_name: username,
+    in_limit: 10,
+  });
+  if (error) throw error;
+  if (!data) throw new Error("User doesnt exist");
+  return data;
+}

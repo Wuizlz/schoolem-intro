@@ -13,7 +13,7 @@ export default function Button({
 }) {
   const base = type !== "iconButton" && "commentButton" ?
     "inline-flex  items-center justify-center text-sm rounded-full font-semibold " +
-    "focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 " +
+    "focus:outline-none  " +
     "disabled:opacity-50 disabled:cursor-not-allowed text-black" : ""
 
   const styles = {

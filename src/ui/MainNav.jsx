@@ -184,7 +184,7 @@ export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
           </li>
 
           <li>
-            <StyledNavLink to={username ? `/${username}` : "/"} onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
+            <StyledNavLink end to={username ? `/${username}` : "/"} onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
               <ProfileIcon aria-hidden="true" />
               <span className={textClass}>
                 Profile

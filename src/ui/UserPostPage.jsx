@@ -9,13 +9,10 @@ import Button from "./ui components/Button";
 import useHandleLike from "../hooks/useHandleLike";
 import useHandleUnLike from "../hooks/useHandleUnLike";
 
-
-
 import { useQueryClient } from "@tanstack/react-query";
 import { CommentForm } from "./ui components/CommentForm";
 
 export default function UserPostPage() {
-
   const { profile } = useAuth();
   const user = profile?.id;
   const uniId = profile?.uni_id;
@@ -25,9 +22,6 @@ export default function UserPostPage() {
   const liked = data?.liked_by_current_user;
   const publicationId = data?.publication_id;
   const queryClient = useQueryClient();
-
-
-
 
   const { mutateHandleLike } = useHandleLike();
   const { mutateHandleUnlike } = useHandleUnLike();
@@ -108,16 +102,32 @@ export default function UserPostPage() {
     });
   }
 
-  
-
   const firstPic = data?.post?.pic_url[0];
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
   if (error) return <p>Failed to load</p>;
 
   return (
-    <div className=" grid sm:grid-cols-[1fr_1fr] md:grid-cols-[2fr_1fr] sm:gap-2 md:gap-4  ">
-      <div className="hidden sm:flex sm:flex-1 sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[80vh] bg-black  ">
+    <div className="overflow-y-scroll sm:grid sm:grid-cols-[1fr_1fr] md:grid-cols-[2fr_1fr] sm:gap-2 md:gap-4 ">
+      <div className="flex flex-row items-center sm:hidden ">
+        <div className="h-14 w-14 flex-none rounded-full border p-[3px] ">
+          <img
+            src={data?.author?.avatar_url}
+            className="h-full w-full rounded-full object-cover"
+          />
+        </div>
+        <Link to={`/${data?.author?.display_name ?? "404"}`}>
+          <p className="font-extrabold text-amber-50 justify-center wrap-anywhere  ">
+            {data?.author?.display_name}
+          </p>
+        </Link>
+      </div>
+      <div className=" flex flex-1  sm:max-h-[63vh] md:max-h-[73vh] lg:max-h-[83vh] bg-black  ">
         {firstPic && (
           <img
             src={firstPic}
@@ -125,8 +135,9 @@ export default function UserPostPage() {
           ></img>
         )}
       </div>
-      <div className="overflow-y-scroll max-h-[80vh] sm:max-h-[60vh] md:max-h-[70vh] lg:max-h-[80vh] grid sm:grid-rows-[auto_1fr_auto_auto]">
-        <div className="flex flex-row items-center ">
+
+      <div className="overflow-y-scroll flex flex-col ">
+        <div className="hidden sm:flex sm:flex-row items-center ">
           <div className="h-14 w-14 flex-none rounded-full border p-[3px] ">
             <img
               src={data?.author?.avatar_url}
@@ -140,7 +151,7 @@ export default function UserPostPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col break-words mb-4 overflow-y-auto my-4    ">
+        <div className="flex flex-col break-words mb-3 my-3 overflow-y-scroll h-50 sm:h-full  ">
           <p className="leading-snug text-md">
             <span className="text-amber-50 font-extrabold">
               {data?.author?.full_name}
@@ -150,19 +161,19 @@ export default function UserPostPage() {
             </span>
           </p>
           <span className="font-thin text-xs text-gray-400">
-            {(data?.relative_created_at)}
+            {data?.relative_created_at}
           </span>
           {data?.comments_count === 0 ? (
             <p className="text-amber-50 h-full flex justify-center items-center font-extrabold ">
               Be the first to comment!
             </p>
           ) : (
-            <ul className="flex flex-col gap-5 mt-1">
+            <ul className="flex flex-col gap-2 mt-1   ">
               {comments.map((comment) => (
                 <UserComment
                   key={comment?.comment_id}
                   data={comment}
-                  pubId = {publicationId}
+                  pubId={publicationId}
                   user={user}
                 />
               ))}
@@ -215,7 +226,11 @@ export default function UserPostPage() {
           </div>
 
           <div>
-            <CommentForm publicationId={publicationId} user={user} uniId={uniId} />
+            <CommentForm
+              publicationId={publicationId}
+              user={user}
+              uniId={uniId}
+            />
           </div>
         </div>
       </div>
