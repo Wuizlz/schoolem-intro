@@ -113,7 +113,7 @@ export default function UserPostPage() {
   if (error) return <p>Failed to load</p>;
 
   return (
-    <div className="overflow-y-scroll sm:grid sm:grid-cols-[1fr_1fr] md:grid-cols-[2fr_1fr] sm:gap-2 md:gap-4 ">
+    <div className="overflow-y-scroll sm:overflow-y-hidden sm:grid sm:grid-cols-[1fr_1fr] md:grid-cols-[2fr_1fr] sm:gap-2 md:gap-4  sm:h-[63vh] md:h-[73vh] lg:h-[82vh]  ">
       <div className="flex flex-row items-center sm:hidden ">
         <div className="h-14 w-14 flex-none rounded-full border p-[3px] ">
           <img
@@ -127,7 +127,7 @@ export default function UserPostPage() {
           </p>
         </Link>
       </div>
-      <div className=" flex flex-1  sm:max-h-[63vh] md:max-h-[73vh] lg:max-h-[83vh] bg-black  ">
+      <div className=" flex flex-1 sm:h-[62vh] md:h-[73vh] lg:h-[82vh] bg-black  ">
         {firstPic && (
           <img
             src={firstPic}
@@ -136,7 +136,7 @@ export default function UserPostPage() {
         )}
       </div>
 
-      <div className="overflow-y-scroll flex flex-col ">
+      <div className="overflow-y-scroll grid grid-rows-[auto_1fr_auto]  ">
         <div className="hidden sm:flex sm:flex-row items-center ">
           <div className="h-14 w-14 flex-none rounded-full border p-[3px] ">
             <img
@@ -151,7 +151,7 @@ export default function UserPostPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col break-words mb-3 my-3 overflow-y-scroll h-50 sm:h-full  ">
+        <div className="flex flex-col break-words    overflow-y-scroll h-50 sm:h-auto   ">
           <p className="leading-snug text-md">
             <span className="text-amber-50 font-extrabold">
               {data?.author?.full_name}
@@ -168,7 +168,7 @@ export default function UserPostPage() {
               Be the first to comment!
             </p>
           ) : (
-            <ul className="flex flex-col gap-2 mt-1   ">
+            <ul className="flex flex-col gap-3 sm:gap-3 md:gap-4    ">
               {comments.map((comment) => (
                 <UserComment
                   key={comment?.comment_id}
@@ -180,8 +180,8 @@ export default function UserPostPage() {
             </ul>
           )}
         </div>
-        <div className="flex flex-col">
-          <div className="flex flex-row w-full h-fit ">
+        <div className="flex flex-col ">
+          <div className="flex flex-row w-full  ">
             {!liked ? (
               <Button
                 type="iconButton"

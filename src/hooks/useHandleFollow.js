@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 export default function useHandleFollow() {
   const queryClient = useQueryClient();
   const {
-    mutateAsync: createFollowerAsync,
+    mutate: createFollowerAsync,
     error,
     isPending,
   } = useMutation({

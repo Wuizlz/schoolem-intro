@@ -1,12 +1,19 @@
 import { useParams } from "react-router-dom";
-import useUserFollowers from "../../hooks/useUserFollowers";
-import FollowersRow from "../FollowersRow";
-import Spinner from "./Spinner";
+import useUserFollowers from "../hooks/useUserFollowers";
+import FollowersRow from "./FollowersRow";
+import Spinner from "./ui components/Spinner";
+import { useAuth } from "../hooks/useAuth";
 
 export default function FollowersOverlayPage() {
+  const {user, profile} = useAuth();
   const { username } = useParams()
-  const { data: followers = [], isLoading } = useUserFollowers(username);
-  console.log(followers)
+  const sessionUser = user?.id
+  const sessionUserDisplayName = profile?.display_name
+
+  const isSessionUser = sessionUserDisplayName === username
+  
+  const { data: followers = [], isLoading } = useUserFollowers(username, sessionUser);
+
 
   if(isLoading) return <Spinner/>
 
@@ -31,6 +38,8 @@ export default function FollowersOverlayPage() {
               <ul className="flex flex-col gap-4 ">
                 {followers.map((f) => (
                   <FollowersRow
+                  isSessionUser = {isSessionUser}
+                  sessionUser = {sessionUser}
                     key={f?.relationship_id}
                     user={f}
                   />

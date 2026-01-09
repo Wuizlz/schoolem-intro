@@ -344,12 +344,13 @@ export async function getProfileByUsername(username) {
   };
 }
 
-export async function getUserFollowings(username) {
+export async function getUserFollowings(username, sessionUser) {
   if (!username) throw new Error("Need necessary data to perform action ");
 
   const { data, error } = await supabase.rpc("get_followings_by_username", {
     in_display_name: username,
     in_limit: 10,
+    in_session_user_id: sessionUser
   });
 
   if (error) throw error;
@@ -358,13 +359,14 @@ export async function getUserFollowings(username) {
   return data;
 }
 
-export async function getUserFollowers(username) {
-  console.log("hi");
+export async function getUserFollowers(username, sessionUser) {
   if (!username) throw new Error("Need necessary data to perform action");
 
   const { data, error } = await supabase.rpc("get_followers_by_username", {
     in_display_name: username,
     in_limit: 10,
+    in_session_user_id: sessionUser
+
   });
   if (error) throw error;
   if (!data) throw new Error("User doesnt exist");

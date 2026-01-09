@@ -25,7 +25,7 @@ import AuthCallback from "../src/pages/AuthCallback";
 import Spinner from "./ui/ui components/Spinner";
 import NotFound from "./ui/ui components/NotFound";
 import FollowingOverlayPage from "./ui/FollowingOverlayPage";
-import FollowersOverlayPage from "./ui/ui components/FollowersOverlayPage";
+import FollowersOverlayPage from "./ui/FollowersOverlayPage";
 const SignIn = lazy(() => import("./pages/SignIn"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
@@ -98,7 +98,7 @@ function AppRoutes() {
           <Route
             path="p/:postId"
             element={
-              <div className="flex h-lvh items-center justify-center">
+              <div className="flex  items-center justify-center h-lvh">
                 <UserPostPage />
               </div>
             }

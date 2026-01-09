@@ -22,8 +22,6 @@ export async function removeFollow(follower_id, followee_id) {
     .eq("follower_id", follower_id)
     .eq("followee_id", followee_id);
   if (error) throw error;
-
-
 }
 
 export async function amIfollowing(followerId, followeeId) {
@@ -38,4 +36,17 @@ export async function amIfollowing(followerId, followeeId) {
 
   if (error && error.code !== "PGRST116") throw error;
   return !!data;
+}
+
+export async function deleteFollowerApi(sessionUser, follower) {
+  if (!(sessionUser && follower))
+    throw new Error("Need necessary data to perform action ");
+
+  const { error } = await supabase
+    .from("followings")
+    .delete()
+    .eq("follower_id", follower)
+    .eq("followee_id", sessionUser);
+
+  if (error) throw error;
 }

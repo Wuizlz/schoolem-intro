@@ -6,7 +6,7 @@ import { removeFollow } from "../services/apiActions";
 export default function useHandleUnfollow()
 {
     const queryClient = useQueryClient();
-    const {mutateAsync: removeFollowAsync, error, isPending} = useMutation({
+    const {mutate: removeFollowAsync, error, isPending} = useMutation({
         mutationFn: ({followerId, followeeId}) => removeFollow(followerId,followeeId),
         onError: () => {
             toast.error("Couldn't unfollow, try again later ")
