@@ -49,7 +49,7 @@ export default function FollowingsRow({ user, viewedUser }) {
 
         <div className="flex flex-col">
           <p className="text-amber-50 text-sm">
-            <p>{user?.followee_display_name}</p>
+            {user?.followee_display_name}
           </p>
           <p className="text-amber-50 text-xs">{user?.followee_full_name}</p>
         </div>

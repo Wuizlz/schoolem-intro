@@ -6,10 +6,12 @@ import useHandleFollow from "../hooks/useHandleFollow";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";
 import Spinner from "./ui components/Spinner";
 import useDeleteFollower from "../hooks/useDeleteFollower";
+import { useState } from "react";
 
 export default function FollowersRow({ user, isSessionUser, sessionUser }) {
   const username = user?.follower_display_name;
   const followerId = user?.follower_id;
+
   const { data: isFollowing, isLoading } = useAmIfollowing(
     sessionUser,
     followerId
@@ -19,6 +21,7 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
     followerId,
     sessionUser
   );
+
   const isFollowerUser = sessionUser === followerId;
   const { deleteFollow, isPending: deleting } = useDeleteFollower();
   const { createFollowerAsync, isPending: following } = useHandleFollow();
@@ -47,6 +50,7 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
       username,
     });
   };
+
   return (
     <li className="flex gap-2 ">
       <Link to={`/${username}`} className="flex gap-2">
@@ -57,16 +61,18 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
           ></img>
         </div>
         <div className="flex flex-col">
-          <p className="text-amber-50 text-sm">
-            <p>{user?.follower_display_name}</p>
-          </p>
+          <p className="text-amber-50 text-sm">{user?.follower_display_name}</p>
           <p className="text-amber-50 text-xs">{user?.follower_full_name}</p>
         </div>
       </Link>
 
       <div className="ml-auto">
         {isSessionUser ? (
-          isFollower ? (
+          isFollower === false ? (
+            <Button className="h-5 w-18 bg-gray-500" disabled={true}>
+              Deleted
+            </Button>
+          ) : (
             <Button
               className="h-5 w-18"
               onClick={() =>
@@ -74,10 +80,6 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
               }
             >
               {deleting ? <Spinner type="buttonSpinner" /> : <p>Delete</p>}
-            </Button>
-          ) : (
-            <Button className="h-5 w-18 bg-gray-500" disabled={true}>
-              Deleted
             </Button>
           )
         ) : !isFollowerUser ? (

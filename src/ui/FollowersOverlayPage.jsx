@@ -5,17 +5,25 @@ import Spinner from "./ui components/Spinner";
 import { useAuth } from "../hooks/useAuth";
 
 export default function FollowersOverlayPage() {
-  const {user, profile} = useAuth();
-  const { username } = useParams()
-  const sessionUser = user?.id
-  const sessionUserDisplayName = profile?.display_name
+  const { user, profile } = useAuth();
+  const { username } = useParams();
+  const sessionUser = user?.id;
+  const sessionUserDisplayName = profile?.display_name;
 
-  const isSessionUser = sessionUserDisplayName === username
-  
-  const { data: followers = [], isLoading } = useUserFollowers(username, sessionUser);
+  const isSessionUser = sessionUserDisplayName === username;
 
+  const { data: followers = [], isLoading } = useUserFollowers(
+    username,
+    sessionUser
+  );
 
-  if(isLoading) return <Spinner/>
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-lvh">
+        {" "}
+        <Spinner />
+      </div>
+    );
 
   if (followers.length === 0)
     return (
@@ -26,25 +34,25 @@ export default function FollowersOverlayPage() {
       </div>
     );
 
-    return (
-        <div
-              className="flex flex-col"
-              style={{
-                overflowY: "auto",
-                scrollbarWidth: "none", // Firefox
-                msOverflowStyle: "none", // IE/Edge
-              }}
-            >
-              <ul className="flex flex-col gap-4 ">
-                {followers.map((f) => (
-                  <FollowersRow
-                  isSessionUser = {isSessionUser}
-                  sessionUser = {sessionUser}
-                    key={f?.relationship_id}
-                    user={f}
-                  />
-                ))}
-              </ul>
-            </div>
-    )
+  return (
+    <div
+      className="flex flex-col"
+      style={{
+        overflowY: "auto",
+        scrollbarWidth: "none", // Firefox
+        msOverflowStyle: "none", // IE/Edge
+      }}
+    >
+      <ul className="flex flex-col gap-4 ">
+        {followers.map((f) => (
+          <FollowersRow
+            isSessionUser={isSessionUser}
+            sessionUser={sessionUser}
+            key={f?.relationship_id}
+            user={f}
+          />
+        ))}
+      </ul>
+    </div>
+  );
 }

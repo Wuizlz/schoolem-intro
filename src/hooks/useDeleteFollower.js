@@ -5,7 +5,7 @@ import { deleteFollowerApi } from "../services/apiActions";
 export default function useDeleteFollower() {
   const queryClient = useQueryClient();
   const { mutate: deleteFollow, isPending } = useMutation({
-    mutationFn: ({ sessionUser, follower, sessionUserName }) =>
+    mutationFn: ({ sessionUser, follower, username }) =>
       deleteFollowerApi(sessionUser, follower),
     onSuccess: (_data, vars) => {
       queryClient.setQueryData(["profile", vars.sessionUserName], (prev) => {
@@ -15,9 +15,10 @@ export default function useDeleteFollower() {
           followersCount: (prev.followersCount ?? 0) - 1,
         };
       });
-      queryClient.invalidateQueries({
-        queryKey: ["IsFollowing", vars.follower, vars.sessionUser],
-      });
+      queryClient.setQueryData(
+        ["IsFollowing", vars.follower, vars.sessionUser],
+        false
+      );
     },
   });
 

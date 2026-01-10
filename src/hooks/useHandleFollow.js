@@ -18,20 +18,18 @@ export default function useHandleFollow() {
     },
     //mutationFn passes arguments into onSuccess too
     onSuccess: (_data, vars) => {
-      queryClient.setQueryData(["profile", vars.username], (prev) =>
-            {
-                if(!prev) return prev;
-                return{
-                    ...prev, followersCount: (prev.followersCount ?? 0) + 1,
-                }
-             
-            }
-            )
-
-      queryClient.invalidateQueries({
-        queryKey: ["IsFollowing", vars.followerId, vars.followeeId],
+      queryClient.setQueryData(["profile", vars.username], (prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          followersCount: (prev.followersCount ?? 0) + 1,
+        };
       });
-      
+
+      queryClient.setQueryData(
+        ["IsFollowing", vars.followerId, vars.followeeId],
+        true
+      );
     },
   });
   return {
