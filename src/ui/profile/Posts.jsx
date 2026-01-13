@@ -23,7 +23,7 @@ export default function Posts() {
   if (isFetching) return <Spinner />;
 
   return (
-    <ul className=" grid grid-cols-2 sm:grid-cols-3 md:grid md:grid-cols-4   ">
+    <ul className=" grid grid-cols-3 md:grid md:grid-cols-4   ">
       {userPub.map((userPost) => (
         <Link key={userPost?.publication_id} to={`/p/${userPost?.publication_id}`} state={{backgroundLocation : location}} className="flex">
           <ProfilePostCard

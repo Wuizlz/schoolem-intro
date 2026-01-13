@@ -9,7 +9,7 @@ export default function ProfilePostCard({ profileuserPost, id }) {
     <li className="relative">
       <img
         src={userPostUrl}
-        className="object-cover h-50 w-55 sm:h-60 sm:w-55 md:h-60 md:w-80 border rounded-lg "
+        className="object-cover \ border rounded-lg "
         alt="User post"
       ></img>
       <div className="absolute top-2 left-2 flex flex-col gap-1 bg-black/30 py-1 rounded text-white text-sm">
