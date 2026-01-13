@@ -3,6 +3,7 @@ import useUserFollowers from "../hooks/useUserFollowers";
 import FollowersRow from "./FollowersRow";
 import Spinner from "./ui components/Spinner";
 import { useAuth } from "../hooks/useAuth";
+import { SkeletonFollowerFollowingRow } from "./SkeletonLine";
 
 export default function FollowersOverlayPage() {
   const { user, profile } = useAuth();
@@ -17,11 +18,12 @@ export default function FollowersOverlayPage() {
     sessionUser
   );
 
+
+
   if (isLoading)
     return (
-      <div className="flex justify-center items-center h-lvh">
-        {" "}
-        <Spinner />
+      <div className="h-full w-full flex items-center justify-center">
+        <Spinner/>
       </div>
     );
 

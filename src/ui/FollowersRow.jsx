@@ -7,6 +7,7 @@ import useHandleUnfollow from "../hooks/useHandleUnfollow";
 import Spinner from "./ui components/Spinner";
 import useDeleteFollower from "../hooks/useDeleteFollower";
 import { useState } from "react";
+import { SkeletonFollowerFollowingRow } from "./SkeletonLine";
 
 export default function FollowersRow({ user, isSessionUser, sessionUser }) {
   const username = user?.follower_display_name;
@@ -50,6 +51,10 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
       username,
     });
   };
+
+
+  if(isFollowerLoading) return <SkeletonFollowerFollowingRow/>
+  
 
   return (
     <li className="flex gap-2 ">

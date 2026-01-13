@@ -46,3 +46,24 @@ export function SkeletonLine({ className = "" }) {
     </div>
   );
 }
+
+export function SkeletonFollowerFollowingRow() {
+  return (
+    <li className="flex gap-2 w-full  ">
+      <div className="flex items-center gap-3 w-full">
+        <div className="relative h-10 w-10 overflow-hidden rounded-full border bg-zinc-900">
+          <div className="absolute inset-0 shimmer" />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <SkeletonLine className="h-4 w-16" />
+          <SkeletonLine className="h-3 w-32" />
+        </div>
+
+        <div className="ml-auto rounded-full h-5 w-18 bg-zinc-900 relative overflow-hidden">
+          <div className="inset-0 absolute shimmer"></div>
+        </div>
+      </div>
+    </li>
+  );
+}

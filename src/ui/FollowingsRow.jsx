@@ -6,13 +6,17 @@ import useHandleUnfollow from "../hooks/useHandleUnfollow";
 import useHandleFollow from "../hooks/useHandleFollow";
 import Button from "./ui components/Button";
 import Spinner from "./ui components/Spinner";
+import { SkeletonFollowerFollowingRow, SkeletonLine } from "./SkeletonLine";
 
 export default function FollowingsRow({ user, viewedUser }) {
   const { user: sessionUser } = useAuth();
   const currentUser = sessionUser?.id ?? null;
   const username = user?.followee_display_name;
   const actedOnUser = user?.followee_id;
-  const { data: isFollowing, } = useAmIfollowing(currentUser, actedOnUser);
+  const { data: isFollowing, isLoading: isFollowingLoading } = useAmIfollowing(
+    currentUser,
+    actedOnUser
+  );
 
   const displayButtonIfNotSessionUser = currentUser === actedOnUser;
 
@@ -21,7 +25,6 @@ export default function FollowingsRow({ user, viewedUser }) {
     useHandleUnfollow();
 
   function handleFollow(currentUserId, viewedUserId, username) {
-    console.log(username);
     createFollowerAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
@@ -37,6 +40,10 @@ export default function FollowingsRow({ user, viewedUser }) {
     });
   }
 
+  const yep = true;
+
+  if (isFollowingLoading) return <SkeletonFollowerFollowingRow />;
+
   return (
     <li className="flex gap-2 ">
       <Link to={`/${username}`} className="flex gap-2">
@@ -48,9 +55,7 @@ export default function FollowingsRow({ user, viewedUser }) {
         </div>
 
         <div className="flex flex-col">
-          <p className="text-amber-50 text-sm">
-            {user?.followee_display_name}
-          </p>
+          <p className="text-amber-50 text-sm">{user?.followee_display_name}</p>
           <p className="text-amber-50 text-xs">{user?.followee_full_name}</p>
         </div>
       </Link>
