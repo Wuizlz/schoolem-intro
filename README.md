@@ -37,7 +37,7 @@ In short: `schoolem-intro` is the **front door**—a lightweight build that comm
 - Deployed with **Vercel**, including SPA routing support via `vercel.json`.
 
 ### Preview 
-  Sign-Up
+  ### Sign-Up
 https://github.com/user-attachments/assets/589dbf33-8b43-4f70-b1e8-a92c171ec1f6
 
 
