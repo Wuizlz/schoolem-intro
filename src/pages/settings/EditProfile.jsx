@@ -14,16 +14,22 @@ export function EditProfileContent({ user }) {
   const [imagePreview, setImagePreview] = useState(user.profileImage);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     fullName: user.fullName || "",
     username: user.username || "",
     bio: user.bio || "",
     birthdate: user.birthdate || "",
-    gender: user.gender 
-      ? (["Male", "Female", "Non-binary", "Prefer not to disclose", "Other"]
-          .find(opt => opt.toLowerCase() === user.gender.toLowerCase()) || user.gender)
+    gender: user.gender
+      ? [
+          "Male",
+          "Female",
+          "Non-binary",
+          "Prefer not to disclose",
+          "Other",
+        ].find((opt) => opt.toLowerCase() === user.gender.toLowerCase()) ||
+        user.gender
       : "Prefer not to disclose",
   });
 
@@ -32,24 +38,24 @@ export function EditProfileContent({ user }) {
 
   // Handle form field changes
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setHasChanges(true);
   };
 
   // Handle file selection for profile picture
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    
+
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
         return;
       }
 
       // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB');
+        alert("Image size should be less than 5MB");
         return;
       }
 
@@ -73,7 +79,7 @@ export function EditProfileContent({ user }) {
   // Save changes to Supabase
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    
+
     try {
       await updateProfile({
         fullName: formData.fullName,
@@ -85,9 +91,9 @@ export function EditProfileContent({ user }) {
       });
 
       // Invalidate and refetch profile data
-      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["profile", user.username] });
       await refreshProfile();
-      
+
       toast.success("Changes saved successfully!");
       setHasChanges(false);
       setSelectedImage(null);
@@ -106,9 +112,15 @@ export function EditProfileContent({ user }) {
       username: user.username || "",
       bio: user.bio || "",
       birthdate: user.birthdate || "",
-      gender: user.gender 
-        ? (["Male", "Female", "Non-binary", "Prefer not to disclose", "Other"]
-            .find(opt => opt.toLowerCase() === user.gender.toLowerCase()) || user.gender)
+      gender: user.gender
+        ? [
+            "Male",
+            "Female",
+            "Non-binary",
+            "Prefer not to disclose",
+            "Other",
+          ].find((opt) => opt.toLowerCase() === user.gender.toLowerCase()) ||
+          user.gender
         : "Prefer not to disclose",
       profileImage: user.profileImage || null,
     });
@@ -123,10 +135,7 @@ export function EditProfileContent({ user }) {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-4xl font-bold">Edit Profile</h2>
-          <Button 
-            onClick={handleChangePhotoClick}
-            buttonType="button"
-          >
+          <Button onClick={handleChangePhotoClick} buttonType="button">
             Change Your Look
           </Button>
           {/* Hidden file input */}
@@ -141,14 +150,12 @@ export function EditProfileContent({ user }) {
 
         {/* Profile Picture and Username */}
         <div className="flex items-center gap-4 mb-8">
-          <OwnUserCircle type = "editStyle"/>
+          <OwnUserCircle type="editStyle" />
           <div>
             <h3 className="text-2xl font-bold">{formData.fullName}</h3>
             <p className="text-zinc-400">{formData.username}</p>
             {selectedImage && (
-              <p className="text-sm text-yellow-400 mt-1">
-                New photo selected
-              </p>
+              <p className="text-sm text-yellow-400 mt-1">New photo selected</p>
             )}
           </div>
         </div>
@@ -161,7 +168,7 @@ export function EditProfileContent({ user }) {
             <input
               type="text"
               value={formData.fullName}
-              onChange={(e) => handleInputChange('fullName', e.target.value)}
+              onChange={(e) => handleInputChange("fullName", e.target.value)}
               className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
             />
           </div>
@@ -172,7 +179,7 @@ export function EditProfileContent({ user }) {
             <input
               type="text"
               value={formData.username}
-              onChange={(e) => handleInputChange('username', e.target.value)}
+              onChange={(e) => handleInputChange("username", e.target.value)}
               className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
             />
           </div>
@@ -182,7 +189,7 @@ export function EditProfileContent({ user }) {
             <label className="block text-lg font-medium mb-2">Bio</label>
             <textarea
               value={formData.bio}
-              onChange={(e) => handleInputChange('bio', e.target.value)}
+              onChange={(e) => handleInputChange("bio", e.target.value)}
               rows={3}
               className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-3xl text-lg focus:outline-none focus:ring-2 focus:ring-white/30 resize-none"
             />
@@ -206,7 +213,7 @@ export function EditProfileContent({ user }) {
               <input
                 type="text"
                 value={formData.birthdate}
-                onChange={(e) => handleInputChange('birthdate', e.target.value)}
+                onChange={(e) => handleInputChange("birthdate", e.target.value)}
                 className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30"
               />
             </div>
@@ -218,7 +225,7 @@ export function EditProfileContent({ user }) {
             <div className="relative">
               <select
                 value={formData.gender}
-                onChange={(e) => handleInputChange('gender', e.target.value)}
+                onChange={(e) => handleInputChange("gender", e.target.value)}
                 className="w-full px-6 py-4 bg-transparent border border-zinc-700 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-white/30 appearance-none cursor-pointer"
               >
                 <option value="Male" className="bg-zinc-900">
