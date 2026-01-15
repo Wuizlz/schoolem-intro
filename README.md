@@ -39,8 +39,17 @@ In short: `schoolem-intro` is the **front door**—a lightweight build that comm
 ### Preview 
   ### Sign-Up
 https://github.com/user-attachments/assets/589dbf33-8b43-4f70-b1e8-a92c171ec1f6
-  ### Uni && Settings
+  ### Uni
 https://github.com/user-attachments/assets/effe9106-c467-47ca-86e4-01be2d678377
+  ### Profile
+https://github.com/user-attachments/assets/8a130a1e-4718-4a40-ba77-21a535d0482b
+  ### Settings && 404
+https://github.com/user-attachments/assets/bd29ccb0-4d26-4dca-95de-260a99c2b330
+
+
+
+
+
 
 
 
