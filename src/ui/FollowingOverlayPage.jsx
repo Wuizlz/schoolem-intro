@@ -39,7 +39,7 @@ export default function FollowingOverlayPage() {
     >
       <ul className="flex flex-col gap-4  ">
         {followings.map((f) => (
-          <FollowingsRow key={f?.relationship_id} user={f} />
+          <FollowingsRow key={f?.relationship_id} user={f} sessionUser = {user} />
         ))}
       </ul>
     </div>

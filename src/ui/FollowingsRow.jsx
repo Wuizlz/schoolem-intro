@@ -8,8 +8,10 @@ import Button from "./ui components/Button";
 import Spinner from "./ui components/Spinner";
 import { SkeletonFollowerFollowingRow, SkeletonLine } from "./SkeletonLine";
 
-export default function FollowingsRow({ user, viewedUser }) {
-  const { user: sessionUser } = useAuth();
+export default function FollowingsRow({ user, sessionUser }) {
+  const sessionUserUserName = sessionUser.user_metadata.display_name;
+
+
   const currentUser = sessionUser?.id ?? null;
   const username = user?.followee_display_name;
   const actedOnUser = user?.followee_id;
@@ -29,6 +31,7 @@ export default function FollowingsRow({ user, viewedUser }) {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
+      sessionUserUserName
     });
   }
 
@@ -36,7 +39,7 @@ export default function FollowingsRow({ user, viewedUser }) {
     removeFollowAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
-      username,
+      sessionUserUserName,
     });
   }
 

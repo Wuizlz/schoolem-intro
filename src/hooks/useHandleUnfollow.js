@@ -9,8 +9,8 @@ export default function useHandleUnfollow() {
     error,
     isPending,
   } = useMutation({
-    mutationFn: ({ followerId, followeeId }) =>
-      removeFollow(followerId, followeeId),
+    mutationFn: ({ followerId, followeeId, username, sessionUserUserName }) =>
+      removeFollow(followerId, followeeId, username, sessionUserUserName),
     onError: () => {
       toast.error("Couldn't unfollow, try again later ");
     },
@@ -22,9 +22,21 @@ export default function useHandleUnfollow() {
           followersCount: (prev.followersCount ?? 0) - 1,
         };
       });
+
+      queryClient.setQueryData(
+        ["profile", vars.sessionUserUserName],
+        (prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            followingCount: (prev.followingCount ?? 0) - 1,
+          };
+        },
+      );
+
       queryClient.setQueryData(
         ["IsFollowing", vars.followerId, vars.followeeId],
-        false
+        false,
       );
     },
   });

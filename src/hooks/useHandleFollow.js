@@ -9,15 +9,17 @@ export default function useHandleFollow() {
     error,
     isPending,
   } = useMutation({
-    mutationFn: ({ followerId, followeeId, username }) =>
-      createFollower(followerId, followeeId, username),
+    mutationFn: ({ followerId, followeeId, username, sessionUserUserName }) =>
+      createFollower(followerId, followeeId, username, sessionUserUserName),
     //invalidate alerts tab
     onError: (error) => {
+      
       console.error(error);
       toast.error("Couldn't follow, try again later");
     },
     //mutationFn passes arguments into onSuccess too
     onSuccess: (_data, vars) => {
+ 
       queryClient.setQueryData(["profile", vars.username], (prev) => {
         if (!prev) return prev;
         return {
@@ -27,8 +29,19 @@ export default function useHandleFollow() {
       });
 
       queryClient.setQueryData(
+        ["profile", vars.sessionUserUserName],
+        (prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            followingCount: (prev.followingCount ?? 0) + 1,
+          };
+        },
+      );
+
+      queryClient.setQueryData(
         ["IsFollowing", vars.followerId, vars.followeeId],
-        true
+        true,
       );
     },
   });

@@ -18,6 +18,8 @@ import useHandleUnfollow from "../hooks/useHandleUnfollow";
 export default function Profile() {
   const { profile: sessionUser } = useAuth();
   const currentUserId = sessionUser?.id ?? null;
+  const sessionUserUserName = sessionUser?.display_name;
+  
 
   const { username } = useParams();
   const {
@@ -34,14 +36,14 @@ export default function Profile() {
     currentUserId && viewedUserId ? currentUserId === viewedUserId : false;
 
   const profile = data ?? {};
-  const avatar = profile?.avatar_url ?? "";
+  const avatar = profile?.avatar_url ?? "favicon.ico";
 
   function handleFollow(currentUserId, viewedUserId, username) {
-    console.log(username);
     createFollowerAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
+      sessionUserUserName
     });
   }
 
@@ -50,6 +52,7 @@ export default function Profile() {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
+      sessionUserUserName
     });
   }
 
