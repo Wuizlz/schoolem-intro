@@ -73,7 +73,6 @@ Think of `schoolem-intro` as the **front door**—a lightweight build that commu
 
 ## Preview
 
-> Tip: GitHub renders links cleanly, but you can also turn these into clickable text links if you want.
 
 ### Sign-Up
 https://github.com/user-attachments/assets/589dbf33-8b43-4f70-b1e8-a92c171ec1f6
