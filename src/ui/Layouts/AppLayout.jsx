@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import SideBar from "../SideBar";
 import { lazy, useState } from "react";
 import Alerts from "../../pages/Alerts";
+import MobileNav from "../MobileNav";
 
 export default function AppLayout() {
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
@@ -27,9 +28,11 @@ export default function AppLayout() {
         </div>
       )}
 
-      <main className="h-full overflow-y-auto">
+      <main className="h-full overflow-y-auto pb-20 sm:pb-0">
         <Outlet />
       </main>
+
+      <MobileNav />
     </div>
   );
 }
