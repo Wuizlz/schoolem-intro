@@ -2,10 +2,20 @@ import { useNotifications } from "../hooks/useNotifications";
 import AlertItem from "../ui/AlertItem";
 import Spinner from "../ui/ui components/Spinner";
 
-export default function Alerts() {
+export default function Alerts({ variant = "sidebar" }) {
+  
   const { notifications, isLoading } = useNotifications();
 
-  if (isLoading) return <div className="absolute h-full w-[22rem] border-r border-gray-800 bg-black p-6 flex justify-center items-center"><Spinner /></div>;
+  const isSheet = variant === "sheet";
+  const containerClassName = isSheet
+    ? "relative h-full w-full overflow-y-auto bg-black px-5 pt-2 pb-6 text-amber-50"
+    : "absolute h-full w-[22rem] overflow-y-auto border-r border-gray-800 bg-black p-6 text-amber-50";
+
+  const loadingClassName = isSheet
+    ? "relative h-full w-full bg-black p-6 flex justify-center items-center"
+    : "absolute h-full w-[22rem] border-r border-gray-800 bg-black p-6 flex justify-center items-center";
+
+  if (isLoading) return <div className={loadingClassName}><Spinner /></div>;
 
   // Categorize notifications
   const now = Date.now();
@@ -27,7 +37,7 @@ export default function Alerts() {
   });
 
   return (
-    <div className="absolute h-full w-[22rem] overflow-y-auto border-r border-gray-800 bg-black p-6 text-amber-50">
+    <div className={containerClassName}>
       <h2 className="mb-8 text-2xl font-bold">Alerts</h2>
 
       {recent.length > 0 && (

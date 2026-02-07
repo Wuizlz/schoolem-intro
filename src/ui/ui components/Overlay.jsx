@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { useEffect } from "react";
 import { HiXMark } from "react-icons/hi2";
 
 export default function Overlay({
@@ -12,6 +13,50 @@ export default function Overlay({
   mdH = "79",
   lgH = "88",
 }) {
+  useEffect(() => {
+    const main = document.querySelector("main");
+    const scrollY = window.scrollY;
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyPosition = document.body.style.position;
+    const originalBodyWidth = document.body.style.width;
+    const originalBodyTop = document.body.style.top;
+    const originalBodyPaddingRight = document.body.style.paddingRight;
+    const originalBodyTouchAction = document.body.style.touchAction;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    const originalMainOverflow = main?.style.overflow;
+    const originalMainTouchAction = main?.style.touchAction;
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.touchAction = "none";
+    if (scrollBarWidth > 0) {
+      document.body.style.paddingRight = `${scrollBarWidth}px`;
+    }
+    if (main) {
+      main.style.overflow = "hidden";
+      main.style.touchAction = "none";
+    }
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.position = originalBodyPosition;
+      document.body.style.width = originalBodyWidth;
+      document.body.style.top = originalBodyTop;
+      document.body.style.paddingRight = originalBodyPaddingRight;
+      document.body.style.touchAction = originalBodyTouchAction;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      if (main) {
+        main.style.overflow = originalMainOverflow ?? "";
+        main.style.touchAction = originalMainTouchAction ?? "";
+      }
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
+
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose(); // only when clicking outside content
   };

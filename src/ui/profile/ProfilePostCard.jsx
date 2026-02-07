@@ -6,7 +6,7 @@ export default function ProfilePostCard({ profileuserPost, id }) {
   const userPostUrl = profileuserPost?.post?.pic_url[0];
 
   return (
-    <li className="relative w-full">
+    <li className="relative  w-full">
       <div className="aspect-square w-full  overflow-hidden rounded-lg border">
         <img
           src={userPostUrl}
