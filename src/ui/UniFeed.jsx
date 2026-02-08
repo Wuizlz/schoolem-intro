@@ -58,7 +58,7 @@ export default function UniFeed() {
       </ul>
     );
   return (
-    <ul className="flex flex-col gap-20 w-full ">
+    <ul className="flex flex-col gap-5 w-full ">
       {publications.map((publications) => (
         <UserPost
           uniId={uniId}

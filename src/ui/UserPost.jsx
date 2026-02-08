@@ -217,8 +217,8 @@ function UserPost({
     const username = publicationData?.display_name;
 
     return (
-      <li className="border-t border-gray-800/60 ">
-        <div className="flex gap-3  ">
+      <li className="border-t border-gray-800/60  ">
+        <div className="flex gap-3 pt-4  ">
           <div className="flex flex-col flex-1  gap-3 rounded-2xl border border-amber-500/30 bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 p-4 shadow-[0_15px_40px_-25px_rgb(245_158_11)]  ">
             <header className="flex flex-row gap-2 ">
               <div className="h-14 w-14 rounded-full border p-[3px]">
