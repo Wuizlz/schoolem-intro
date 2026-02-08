@@ -69,14 +69,14 @@ export default function Overlay({
       <div
         className="flex flex-col relative w-(--max-w-sm) rounded-2xl bg-zinc-900 border border-zinc-700 p-2
                    h-(--max-h) sm:h-(--max-h-sm)
-                   md:h-(--max-h-md) lg:h-(--max-h-lg)"
+                   md:h-(--max-h-md) lg:h-(--max-h-lg)
+                   [--mobile-nav:calc(4.25rem+env(safe-area-inset-bottom))] sm:[--mobile-nav:0px]"
         style={{
-          "--max-h": `${bH}vh`,
-          "--max-h-sm": `${smH}vh`,
-          "--max-h-md": `${mdH}vh`,
-          "--max-h-lg": `${lgH}vh`,
+          "--max-h": `min(${bH}dvh, calc(100dvh - var(--mobile-nav)))`,
+          "--max-h-sm": `min(${smH}dvh, calc(100dvh - var(--mobile-nav)))`,
+          "--max-h-md": `min(${mdH}dvh, calc(100dvh - var(--mobile-nav)))`,
+          "--max-h-lg": `min(${lgH}dvh, calc(100dvh - var(--mobile-nav)))`,
           "--max-w-sm": `${smW}${side}`,
-          
         }}
       >
         {element}
