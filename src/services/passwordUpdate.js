@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import supabase from "./supabase";
+import supabase from "../../lib/supabase";
 
 function paramsFrom(raw = "") {
   if (!raw) return new URLSearchParams();

@@ -9,7 +9,7 @@ import Modal from "./ui components/Modal";
 import Menus from "./ui components/Menus";
 import CreatePostModal from "./pop-ups/CreatePostModal";
 import CreateThreadForm from "./pop-ups/CreateThreadModal";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import { ProfileIcon } from "./MainNav";
 
 const navItemBase =

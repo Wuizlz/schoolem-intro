@@ -16,7 +16,7 @@ import { Toaster } from "react-hot-toast";
 import GlobalStyles from "./styles/GlobalStyles";
 import AppLayout from "./ui/Layouts/AppLayout";
 import ProtectedRoute from "./ui/ProtectedRoute";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider } from "./providers/useAuth";
 
 // 🔹 Lazy-loaded pages & components (code-splitting)
 import Alerts from "./pages/Alerts";

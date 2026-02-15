@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import { SkeletonLine } from "./SkeletonLine";
 
 export default function UniHolder() {

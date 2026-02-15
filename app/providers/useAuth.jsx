@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import supabase from "../services/supabase";
+import supabase from "../../lib/supabase";
 
 class ProfileMissingError extends Error {
   constructor() {

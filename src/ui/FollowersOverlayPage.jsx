@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import useUserFollowers from "../hooks/useUserFollowers";
 import FollowersRow from "./FollowersRow";
 import Spinner from "./ui components/Spinner";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import { SkeletonFollowerFollowingRow } from "./SkeletonLine";
 
 export default function FollowersOverlayPage() {

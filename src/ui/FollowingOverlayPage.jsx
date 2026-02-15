@@ -4,7 +4,7 @@ import FollowingsRow from "./FollowingsRow";
 
 import Spinner from "../ui/ui components/Spinner";
 import { useProfileByUsername } from "../hooks/useProfileByUsername";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth"
 
 export default function FollowingOverlayPage() {
   const { user } = useAuth();

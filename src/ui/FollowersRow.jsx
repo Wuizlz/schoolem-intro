@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import Button from "./ui components/Button";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleFollow from "../hooks/useHandleFollow";

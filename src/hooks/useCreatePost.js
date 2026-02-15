@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { createPost } from "../services/apiPublications";
-import { useAuth } from "./useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 
 export function useCreatePost() {
   const queryClient = useQueryClient();

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import supabase from "../services/supabase";
+import supabase from "../../lib/supabase";
 
 export default function AuthCallback() {
   const navigate = useNavigate();

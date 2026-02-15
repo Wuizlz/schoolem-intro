@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { updateProfile } from "../../services/apiProfile";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../app/providers/useAuth";
 import OwnUserCircle from "../../ui/ui components/OwnUserCircle";
 import Button from "../../ui/ui components/Button";
 

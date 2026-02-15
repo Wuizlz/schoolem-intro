@@ -1,5 +1,5 @@
 import { downscaleFile } from "../utils/helpers";
-import supabase from "./supabase";
+import supabase from "../../lib/supabase";
 
 const POSTS_BUCKET = "post-media";
 const POST_TYPE = "post";

@@ -15,7 +15,7 @@ import { BiSolidDoorOpen } from "react-icons/bi";
 import useLogout from "../hooks/useLogout";
 import CreateThreadForm from "./pop-ups/CreateThreadModal";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 
 export const ProfileIcon = styled.span`
   width: 2.4rem;

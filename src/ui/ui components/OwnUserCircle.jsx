@@ -1,4 +1,4 @@
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../app/providers/useAuth";
 
 export default function OwnUserCircle({ type }) {
   const { profile } = useAuth();

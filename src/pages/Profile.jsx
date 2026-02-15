@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import { useProfileByUsername } from "../hooks/useProfileByUsername";
 import { Outlet, useParams } from "react-router-dom";
 
@@ -11,7 +11,7 @@ import ProfileStats from "../ui/ui components/ProfileStats";
 import ProfileBio from "../ui/profile/ProfileBio";
 
 import useHandleFollow from "../hooks/useHandleFollow";
-import supabase from "../services/supabase";
+import supabase from "../../lib/supabase";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";
 

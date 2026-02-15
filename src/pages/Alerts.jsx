@@ -9,7 +9,7 @@ export default function Alerts({ variant = "sidebar" }) {
   const isSheet = variant === "sheet";
   const containerClassName = isSheet
     ? "relative h-full w-full overflow-y-auto bg-black px-5 pt-2 pb-6 text-amber-50"
-    : "absolute h-full w-[22rem] overflow-y-auto border-r border-gray-800 bg-black p-6 text-amber-50";
+    : "absolute h-full w-[22rem] overflow-y-auto border-r border-gray-800 bg-black p-6 text-amber-50 z-999 ";
 
   const loadingClassName = isSheet
     ? "relative h-full w-full bg-black p-6 flex justify-center items-center"

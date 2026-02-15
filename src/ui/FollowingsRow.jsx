@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import { useProfileByUsername } from "../hooks/useProfileByUsername";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";

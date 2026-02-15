@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../app/providers/useAuth";
 import { EditProfileContent } from "./EditProfile";
 import { updateProfile } from "../../services/apiProfile";
 import { useQueryClient } from "@tanstack/react-query";

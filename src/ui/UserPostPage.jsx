@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../app/providers/useAuth";
 import useReceivePubData from "../hooks/useReceivePubData";
 import Spinner from "./ui components/Spinner";
 import UserComment from "./UserComment";
@@ -127,7 +127,7 @@ export default function UserPostPage() {
           </p>
         </Link>
       </div>
-      <div className=" flex flex-1 sm:h-[62vh] md:h-[73vh] lg:h-[82vh] bg-black  ">
+      <div className=" flex flex-1 sm:h-[62vh] md:h-[73vh] lg:h-[82vh] bg-black rounded-lg  ">
         {firstPic && (
           <img
             src={firstPic}

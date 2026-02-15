@@ -1,4 +1,4 @@
-import supabase from "./supabase";
+import supabase from "../../lib/supabase";
 
 /**
  * Sign up with email/password.
