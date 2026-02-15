@@ -13,7 +13,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
 
-import GlobalStyles from "./styles/GlobalStyles";
+import GlobalStyles from "../src/styles/GlobalStyles";
 import AppLayout from "./ui/Layouts/AppLayout";
 import ProtectedRoute from "./ui/ProtectedRoute";
 import { AuthProvider } from "./providers/useAuth";
