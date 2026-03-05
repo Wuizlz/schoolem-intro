@@ -1,8 +1,8 @@
-import OwnUserCircle from "../ui/ui components/OwnUserCircle";
-import Logo from "../ui/Logo";
-import SchoolEm from "../ui/SchoolEm";
-import UniHolder from "../ui/UniHolder";
-import UniFeed from "../ui/UniFeed";
+import OwnUserCircle from "../components/profile/OwnUserCircle";
+import Logo from "../components/navigation/Logo";
+import SchoolEm from "../components/navigation/SchoolEm";
+import UniHolder from "../components/navigation/UniHolder";
+import UniFeed from "../components/feed/UniFeed";
 
 export default function Uni() {
   return (

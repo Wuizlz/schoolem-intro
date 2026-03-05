@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import Button from "../ui/ui components/Button";
-import Input from "../ui/ui components/Input";
+import Button from "../components/common/Button";
+import Input from "../components/common/Input";
 import usePasswordUpdate from "../services/passwordUpdate";
 
 

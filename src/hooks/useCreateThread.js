@@ -1,4 +1,4 @@
-import { useAuth } from "./useAuth";
+import { useAuth } from "../providers/useAuth";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createThread } from "../services/apiPublications";

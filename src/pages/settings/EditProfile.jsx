@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { updateProfile } from "../../services/apiProfile";
-import { useAuth } from "../../../app/providers/useAuth";
-import OwnUserCircle from "../../ui/ui components/OwnUserCircle";
-import Button from "../../ui/ui components/Button";
+import { useAuth } from "../../providers/useAuth";
+import OwnUserCircle from "../../components/profile/OwnUserCircle";
+import Button from "../../components/common/Button";
 
 // Edit Profile Content
 export function EditProfileContent({ user }) {

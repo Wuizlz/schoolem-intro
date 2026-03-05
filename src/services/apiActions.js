@@ -1,4 +1,4 @@
-import supabase from "../../lib/supabase";
+import supabase from "../lib/supabase";
 
 export async function createFollower(followerId, followeeId) {
   if (!(followerId && followeeId))

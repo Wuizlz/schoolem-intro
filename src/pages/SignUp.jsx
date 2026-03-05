@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 
-import Input from "./../ui/ui components/Input";
-import Button from "../ui/ui components/Button";
+import Input from "../components/common/Input";
+import Button from "../components/common/Button";
 
-import DateAndGenderForm from "../ui/pop-ups/DateAndGenderForm";
+import DateAndGenderForm from "../components/forms/DateAndGenderForm";
 import toast from "react-hot-toast";
 import { useState } from "react";
 

@@ -1,17 +1,17 @@
-import { useAuth } from "../../app/providers/useAuth";
+import { useAuth } from "../providers/useAuth";
 import { useProfileByUsername } from "../hooks/useProfileByUsername";
 import { Outlet, useParams } from "react-router-dom";
 
-import Button from "../ui/ui components/Button";
-import OwnUserCircle from "../ui/ui components/OwnUserCircle";
-import Spinner from "../ui/ui components/Spinner";
+import Button from "../components/common/Button";
+import OwnUserCircle from "../components/profile/OwnUserCircle";
+import Spinner from "../components/common/Spinner";
 
-import CirclePlusIcon from "../ui/icons/CirclePlusIcon";
-import ProfileStats from "../ui/ui components/ProfileStats";
-import ProfileBio from "../ui/profile/ProfileBio";
+import CirclePlusIcon from "../components/icons/CirclePlusIcon";
+import ProfileStats from "../components/profile/ProfileStats";
+import ProfileBio from "../components/profile/ProfileBio";
 
 import useHandleFollow from "../hooks/useHandleFollow";
-import supabase from "../../lib/supabase";
+import supabase from "../lib/supabase";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";
 

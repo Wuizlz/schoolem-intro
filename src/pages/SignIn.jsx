@@ -6,9 +6,9 @@ import useSignIn from "../hooks/useSignIn";
 
 import { ensureProfile } from "../services/apiProfile";
 
-import Input from "../ui/ui components/Input";
-import Button from "../ui/ui components/Button";
-import Spinner from "../ui/ui components/Spinner";
+import Input from "../components/common/Input";
+import Button from "../components/common/Button";
+import Spinner from "../components/common/Spinner";
 
 export default function SignIn() {
   const { signIn, isLoading: isSigningIn } = useSignIn({

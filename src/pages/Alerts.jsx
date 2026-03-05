@@ -1,6 +1,6 @@
 import { useNotifications } from "../hooks/useNotifications";
-import AlertItem from "../ui/AlertItem";
-import Spinner from "../ui/ui components/Spinner";
+import AlertItem from "../components/alerts/AlertItem";
+import Spinner from "../components/common/Spinner";
 
 export default function Alerts({ variant = "sidebar" }) {
   

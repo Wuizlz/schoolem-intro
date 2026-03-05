@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../app/providers/useAuth";
+import { useAuth } from "../../providers/useAuth";
 import { EditProfileContent } from "./EditProfile";
 import { updateProfile } from "../../services/apiProfile";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import Spinner from "../../ui/ui components/Spinner"
-import Button from "../../ui/ui components/Button";
+import Spinner from "../../components/common/Spinner";
+import Button from "../../components/common/Button";
 
 export default function Settings() {
   const navigate = useNavigate();
