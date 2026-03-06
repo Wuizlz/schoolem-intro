@@ -165,7 +165,6 @@ export async function ensureProfile(opts = {}) {
     const { error: upsertErr } = await supabase
       .from("profiles")
       .upsert(row, { onConflict: "id" });
-    console.log("[ensureProfile] upsert result", upsertErr);
     if (upsertErr) throw upsertErr;
   }
 
