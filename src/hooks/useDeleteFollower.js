@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { deleteFollowerApi } from "../services/apiActions";
 
 export default function useDeleteFollower() {
   const queryClient = useQueryClient();
   const { mutate: deleteFollow, isPending } = useMutation({
-    mutationFn: ({ sessionUser, follower, username }) =>
+    mutationFn: ({ sessionUser, follower, username: _username }) =>
       deleteFollowerApi(sessionUser, follower),
     onSuccess: (_data, vars) => {
       queryClient.setQueryData(["profile", vars.sessionUserName], (prev) => {

@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function ProfileStats({ isLoading, data, username }) {
   const location = useLocation();

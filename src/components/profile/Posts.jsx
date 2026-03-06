@@ -2,23 +2,17 @@ import useUserPublications from "../../hooks/useUserPublications";
 import ProfilePostCard from "./ProfilePostCard";
 import Spinner from "../common/Spinner";
 
-import {
-  Link,
-  useLocation,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function Posts() {
   const location = useLocation();
   const { username } = useParams();
 
   const pubType = "post";
-  const {
-    data: userPub = [],
-    isFetching,
-    error,
-  } = useUserPublications(username, pubType);
+  const { data: userPub = [], isFetching } = useUserPublications(
+    username,
+    pubType,
+  );
 
   if (isFetching) return <Spinner />;
 
@@ -34,7 +28,6 @@ export default function Posts() {
           <ProfilePostCard
             profileuserPost={userPost}
             key={userPost?.publication_id}
-            id={userPost?.publication_id}
           />
         </Link>
       ))}

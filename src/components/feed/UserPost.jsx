@@ -1,19 +1,15 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { GoDot } from "react-icons/go";
-import { FaRegFileLines } from "react-icons/fa6";
 import HeartIcon from "../icons/HeartIcon";
 import ThoughtIcon from "../icons/ThoughtIcon";
 
-import Input from "../common/Input";
 import Button from "../common/Button";
 
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { memo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { memo } from "react";
 
 import useHandleLike from "../../hooks/useHandleLike";
 import useHandleUnLike from "../../hooks/useHandleUnLike";
-import { formatRelative } from "../../utils/helpers";
-import useHandleComment from "../../hooks/useHandleComment";
 import { useQueryClient } from "@tanstack/react-query";
 import { CommentForm } from "./CommentForm";
 import { ThreadContent } from "./ThreadContent";

@@ -53,7 +53,7 @@ export default function DateAndGenderForm({ initialData, onSuccess, onBack }) {
   function handleFormSubmit(values) {
     if (!initialData) return;
 
-    const { confirmPassword, ...accountData } = initialData;
+    const { confirmPassword: _confirmPassword, ...accountData } = initialData;
     const normalizedGender =
       values.gender === "other" ? values.genderOther.trim() : values.gender;
 

@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 
-const imageCompression = jest.fn(async (file, options) => file);
+const imageCompression = jest.fn(async (file, _options) => file);
 
 jest.unstable_mockModule("browser-image-compression", () => ({
   default: imageCompression,

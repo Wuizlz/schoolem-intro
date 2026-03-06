@@ -122,7 +122,7 @@ export default function CreatePostModal({ onCloseModal }) {
       reset({ caption: "" });
       setStep("select");
       onCloseModal?.();
-    } catch (err) {
+    } catch {
       // toast handled in mutation hook
     }
   }

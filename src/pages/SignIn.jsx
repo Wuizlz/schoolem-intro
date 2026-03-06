@@ -8,7 +8,6 @@ import { ensureProfile } from "../services/apiProfile";
 
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import Spinner from "../components/common/Spinner";
 
 export default function SignIn() {
   const { signIn, isLoading: isSigningIn } = useSignIn({

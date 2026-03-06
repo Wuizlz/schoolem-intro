@@ -11,10 +11,7 @@ export default function FollowersRow({ user, isSessionUser, sessionUser }) {
   const username = user?.follower_display_name;
   const followerId = user?.follower_id;
 
-  const { data: isFollowing, isLoading } = useAmIfollowing(
-    sessionUser,
-    followerId,
-  );
+  const { data: isFollowing } = useAmIfollowing(sessionUser, followerId);
 
   const { data: isFollower, isLoading: isFollowerLoading } = useAmIfollowing(
     followerId,

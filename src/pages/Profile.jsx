@@ -3,7 +3,6 @@ import { useProfileByUsername } from "../hooks/useProfileByUsername";
 import { Outlet, useParams } from "react-router-dom";
 
 import Button from "../components/common/Button";
-import OwnUserCircle from "../components/profile/OwnUserCircle";
 import Spinner from "../components/common/Spinner";
 
 import CirclePlusIcon from "../components/icons/CirclePlusIcon";
@@ -11,7 +10,6 @@ import ProfileStats from "../components/profile/ProfileStats";
 import ProfileBio from "../components/profile/ProfileBio";
 
 import useHandleFollow from "../hooks/useHandleFollow";
-import supabase from "../lib/supabase";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";
 

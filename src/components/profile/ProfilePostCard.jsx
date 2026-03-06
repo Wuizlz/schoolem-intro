@@ -1,8 +1,7 @@
-import { CiHeart } from "react-icons/ci";
 import ThoughtIcon from "../icons/ThoughtIcon";
 import HeartIcon from "../icons/HeartIcon";
 
-export default function ProfilePostCard({ profileuserPost, id }) {
+export default function ProfilePostCard({ profileuserPost }) {
   const userPostUrl = profileuserPost?.post?.pic_url[0];
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { IoIosAddCircleOutline, IoIosNotifications } from "react-icons/io";
 import { LiaUniversitySolid } from "react-icons/lia";
 import { MdAddToPhotos } from "react-icons/md";

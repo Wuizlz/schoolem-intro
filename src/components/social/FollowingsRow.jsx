@@ -23,24 +23,21 @@ export default function FollowingsRow({ user, sessionUser }) {
   const { removeFollowAsync, isPending: removingFollower } =
     useHandleUnfollow();
 
-  function handleFollow(currentUserId, viewedUserId, username) {
+  function handleFollow(currentUserId, viewedUserId) {
     createFollowerAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
-      username,
       sessionUserUserName,
     });
   }
 
-  function handleUnfollow(currentUserId, viewedUserId, username) {
+  function handleUnfollow(currentUserId, viewedUserId) {
     removeFollowAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
       sessionUserUserName,
     });
   }
-
-  const yep = true;
 
   if (isFollowingLoading) return <SkeletonFollowerFollowingRow />;
 
@@ -64,7 +61,7 @@ export default function FollowingsRow({ user, sessionUser }) {
           isFollowing === false ? (
             <Button
               type="primary"
-              onClick={() => handleFollow(currentUser, actedOnUser, username)}
+              onClick={() => handleFollow(currentUser, actedOnUser)}
               className="h-5 w-18 "
             >
               {isPending ? <Spinner type="buttonSpinner" /> : "Follow"}
@@ -72,7 +69,7 @@ export default function FollowingsRow({ user, sessionUser }) {
           ) : (
             <Button
               type="primary"
-              onClick={() => handleUnfollow(currentUser, actedOnUser, username)}
+              onClick={() => handleUnfollow(currentUser, actedOnUser)}
               className="h-5 w-18 bg-gray-500"
             >
               {removingFollower ? (

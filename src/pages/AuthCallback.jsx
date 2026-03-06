@@ -36,7 +36,7 @@ export default function AuthCallback() {
         if (accessToken && refreshToken) {
           setStatus("Restoring your session…");
 
-          const result = await supabase.auth.setSession({
+          await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
           });

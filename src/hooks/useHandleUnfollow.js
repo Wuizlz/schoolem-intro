@@ -4,11 +4,7 @@ import { removeFollow } from "../services/apiActions";
 
 export default function useHandleUnfollow() {
   const queryClient = useQueryClient();
-  const {
-    mutate: removeFollowAsync,
-    error,
-    isPending,
-  } = useMutation({
+  const { mutate: removeFollowAsync, isPending } = useMutation({
     mutationFn: ({ followerId, followeeId, username, sessionUserUserName }) =>
       removeFollow(followerId, followeeId, username, sessionUserUserName),
     onError: () => {

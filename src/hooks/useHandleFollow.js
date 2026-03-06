@@ -4,11 +4,7 @@ import toast from "react-hot-toast";
 
 export default function useHandleFollow() {
   const queryClient = useQueryClient();
-  const {
-    mutate: createFollowerAsync,
-    error,
-    isPending,
-  } = useMutation({
+  const { mutate: createFollowerAsync, isPending } = useMutation({
     mutationFn: ({ followerId, followeeId, username, sessionUserUserName }) =>
       createFollower(followerId, followeeId, username, sessionUserUserName),
     //invalidate alerts tab

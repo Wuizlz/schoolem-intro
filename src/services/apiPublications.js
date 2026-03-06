@@ -2,7 +2,6 @@ import { downscaleFile } from "../utils/helpers";
 import supabase from "../lib/supabase";
 
 const POSTS_BUCKET = "post-media";
-const POST_TYPE = "post";
 
 function ensureFile(candidate) {
   if (!candidate) throw new Error("Invalid media item.");
@@ -151,7 +150,6 @@ export async function createThread({ thread_text, authorId }) {
   if (pubError) throw pubError;
 
   const publication_id = publication.publication_id;
-  const created_at = publication.created_at;
   try {
     const { data: thread, error: threadError } = await supabase
       .from("threads")
@@ -284,9 +282,10 @@ export async function deleteCommentLike(commentId, actorId) {
   if (!(commentId && actorId))
     return new Error("Missing an argument to perform action");
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("publication_comment_likes")
     .delete("id")
     .eq("actor_id", actorId)
     .eq("comment_id", commentId);
+  if (error) throw error;
 }

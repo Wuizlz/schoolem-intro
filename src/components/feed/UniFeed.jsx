@@ -1,5 +1,3 @@
-import { GoDot } from "react-icons/go";
-
 import { useAuth } from "../../providers/useAuth";
 // import { useGetPublicationsFeed } from "../hooks/useGetPublicationsFeed";
 import UserPost from "./UserPost";
@@ -27,7 +25,6 @@ export default function UniFeed() {
     hasNextPage,
     isFetchingNextPage,
     isLoading: isPending,
-    isError: isIniniteQueryError,
   } = useTanStackInfiniteQuery(uniId);
   const publications = items?.pages.flat() ?? [];
   const sentinelRef = useRef(null);
