@@ -5,7 +5,7 @@ import { createThread } from "../services/apiPublications";
 
 export function useCreateThread() {
   const queryClient = useQueryClient();
-  const { user,profile } = useAuth();
+  const { user, profile } = useAuth();
   const uniId = profile.uni_id;
 
   const mutation = useMutation({
@@ -13,11 +13,9 @@ export function useCreateThread() {
       createThread({ thread_text, authorId: user?.id }),
     onSuccess: () => {
       toast.success("Thread shared!");
-      queryClient.invalidateQueries(
-        {
-          queryKey: ["publications", uniId]
-        }
-      );
+      queryClient.invalidateQueries({
+        queryKey: ["publications", uniId],
+      });
     },
     onError: (error) => {
       console.error("Failed to create thread", error);

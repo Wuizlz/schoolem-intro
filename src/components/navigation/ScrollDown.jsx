@@ -31,7 +31,12 @@ export default function ScrollDown({
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
               {/* chevron */}
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" />
               </svg>
             </span>
@@ -59,11 +64,18 @@ export default function ScrollDown({
                 >
                   {({ selected }) => (
                     <div className="flex items-center justify-between">
-                      <span className={selected ? "font-medium" : "font-normal"}>
+                      <span
+                        className={selected ? "font-medium" : "font-normal"}
+                      >
                         {opt.label}
                       </span>
                       {selected && (
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
                           <path d="M16.7 5.3a1 1 0 010 1.4l-7.2 7.2a1 1 0 01-1.4 0L3.3 9.1a1 1 0 111.4-1.4l3 3 6.5-6.5a1 1 0 011.5.1z" />
                         </svg>
                       )}

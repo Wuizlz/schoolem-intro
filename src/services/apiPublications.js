@@ -78,7 +78,7 @@ export async function createPost({ caption, mediaItems, authorId }) {
         });
       }
       return original;
-    })
+    }),
   );
 
   const { data: publication, error: publicationError } = await supabase
@@ -98,8 +98,8 @@ export async function createPost({ caption, mediaItems, authorId }) {
   try {
     uploads = await Promise.all(
       optimizedMedia.map((file, index) =>
-        uploadMediaFile(publicationId, file, index)
-      )
+        uploadMediaFile(publicationId, file, index),
+      ),
     );
 
     const mediaUrls = uploads.map((upload) => upload.publicUrl);
@@ -239,7 +239,7 @@ export async function createComment(publicationId, actorId, userComment) {
     comment_id,
     created_at,
     parent_comment_id,
-    comment_likes`
+    comment_likes`,
     )
     .single();
   if (error) throw error;
@@ -290,5 +290,3 @@ export async function deleteCommentLike(commentId, actorId) {
     .eq("actor_id", actorId)
     .eq("comment_id", commentId);
 }
-
-

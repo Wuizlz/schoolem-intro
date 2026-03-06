@@ -79,13 +79,11 @@ function Toggle({
     const computedStyles = window.getComputedStyle(button);
     const paddingLeft = parseFloat(computedStyles.paddingLeft) || 0;
     const anchorX =
-      align === "left"
-        ? rect.left + paddingLeft
-        : rect.left + rect.width / 2;
+      align === "left" ? rect.left + paddingLeft : rect.left + rect.width / 2;
 
     const clampedX = Math.min(
       window.innerWidth - viewportPadding,
-      Math.max(viewportPadding, anchorX)
+      Math.max(viewportPadding, anchorX),
     );
     const spaceBelow = window.innerHeight - rect.bottom;
     const placement = spaceBelow < estimatedMenuHeight ? "top" : "bottom";
@@ -144,7 +142,7 @@ function List({ id, children }) {
     >
       {children}
     </StyledList>,
-    document.body
+    document.body,
   );
 }
 

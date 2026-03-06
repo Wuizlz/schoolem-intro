@@ -5,11 +5,7 @@ import Button from "../common/Button";
 import ScrollDown from "../navigation/ScrollDown";
 import { useCreateProfile } from "../../hooks/useCreateProfile";
 
-export default function DateAndGenderForm({
-  initialData,
-  onSuccess,
-  onBack,
-}) {
+export default function DateAndGenderForm({ initialData, onSuccess, onBack }) {
   const { createProfile, isCreating } = useCreateProfile();
 
   const {
@@ -40,18 +36,18 @@ export default function DateAndGenderForm({
   const maxAgeYears = 31; // reasonable upper bound
   const toYmd = (d) =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-      d.getDate()
+      d.getDate(),
     ).padStart(2, "0")}`;
 
   const maxDOB = new Date(
     today.getFullYear() - minAgeYears,
     today.getMonth(),
-    today.getDate()
+    today.getDate(),
   );
   const minDOB = new Date(
     today.getFullYear() - maxAgeYears,
     today.getMonth(),
-    today.getDate()
+    today.getDate(),
   );
 
   function handleFormSubmit(values) {
@@ -65,7 +61,9 @@ export default function DateAndGenderForm({
       ...accountData,
       birthdate: values.birthdate,
       gender: normalizedGender,
-      ...(values.gender === "other" && { genderLabel: values.genderOther.trim() }),
+      ...(values.gender === "other" && {
+        genderLabel: values.genderOther.trim(),
+      }),
     };
 
     createProfile(payload, {
@@ -77,14 +75,19 @@ export default function DateAndGenderForm({
     <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
       <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
         <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16" />
-        <h3 className="text-2xl font-semibold sm:text-4xl">Additional Information required</h3>
+        <h3 className="text-2xl font-semibold sm:text-4xl">
+          Additional Information required
+        </h3>
       </div>
 
       <form className="w-full" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Birthdate */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="birthdate" className="text-base sm:text-lg font-medium">
+            <label
+              htmlFor="birthdate"
+              className="text-base sm:text-lg font-medium"
+            >
               Birthdate:
             </label>
             <Input
@@ -94,7 +97,9 @@ export default function DateAndGenderForm({
               min={toYmd(minDOB)}
               max={toYmd(maxDOB)}
               aria-invalid={!!errors.birthdate}
-              aria-describedby={errors.birthdate ? "birthdate-error" : undefined}
+              aria-describedby={
+                errors.birthdate ? "birthdate-error" : undefined
+              }
               error={errors.birthdate}
               {...register("birthdate", {
                 validate: (value) => {
@@ -111,12 +116,17 @@ export default function DateAndGenderForm({
                 {errors.birthdate.message}
               </p>
             )}
-            <p className="text-xs text-zinc-400">We don't show your exact birthday publicly</p>
+            <p className="text-xs text-zinc-400">
+              We don't show your exact birthday publicly
+            </p>
           </div>
 
           {/* Gender */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="gender" className="text-base sm:text-lg font-medium">
+            <label
+              htmlFor="gender"
+              className="text-base sm:text-lg font-medium"
+            >
               Gender:
             </label>
             <Controller
@@ -142,7 +152,10 @@ export default function DateAndGenderForm({
             />
             {gender === "other" && (
               <div className="mt-2">
-                <label htmlFor="genderOther" className="text-sm font-medium text-zinc-200">
+                <label
+                  htmlFor="genderOther"
+                  className="text-sm font-medium text-zinc-200"
+                >
                   Please specify
                 </label>
                 <Input
@@ -150,11 +163,14 @@ export default function DateAndGenderForm({
                   type="text"
                   placeholder="Type your identity"
                   aria-invalid={!!errors.genderOther}
-                  aria-describedby={errors.genderOther ? "genderOther-error" : undefined}
+                  aria-describedby={
+                    errors.genderOther ? "genderOther-error" : undefined
+                  }
                   {...register("genderOther", {
                     required: "Please specify your gender.",
                     validate: (v) =>
-                      v.trim().length > 1 || "Please enter at least 2 characters",
+                      v.trim().length > 1 ||
+                      "Please enter at least 2 characters",
                   })}
                 />
                 {errors.genderOther && (
@@ -174,7 +190,11 @@ export default function DateAndGenderForm({
               Back
             </Button>
           )}
-          <Button type="primary" buttonType="submit" disabled={isSubmitting || isCreating}>
+          <Button
+            type="primary"
+            buttonType="submit"
+            disabled={isSubmitting || isCreating}
+          >
             {isSubmitting || isCreating ? "Submitting..." : "Submit"}
           </Button>
         </div>

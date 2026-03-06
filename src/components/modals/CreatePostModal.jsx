@@ -56,7 +56,7 @@ export default function CreatePostModal({ onCloseModal }) {
   useEffect(() => {
     return () => {
       mediaItemsRef.current.forEach((entry) =>
-        URL.revokeObjectURL(entry.previewUrl)
+        URL.revokeObjectURL(entry.previewUrl),
       );
     };
   }, []);
@@ -66,7 +66,9 @@ export default function CreatePostModal({ onCloseModal }) {
   }
 
   function addSelectedFiles(fileList) {
-    const accepted = fileList.filter((file) => /^image|video\//.test(file.type));
+    const accepted = fileList.filter((file) =>
+      /^image|video\//.test(file.type),
+    );
     if (!accepted.length) return;
 
     const entries = accepted.map(createMediaEntry);
@@ -163,7 +165,9 @@ export default function CreatePostModal({ onCloseModal }) {
             {hasSelection ? (
               <div className="relative z-10 flex h-ful flex-col justify-end gap-4 p-6 text-left">
                 <div>
-                  <p className="text-lg font-semibold text-zinc-50">Looks great!</p>
+                  <p className="text-lg font-semibold text-zinc-50">
+                    Looks great!
+                  </p>
                   <p className="text-sm text-zinc-300">
                     Drag more media to add them, or upload from your device.
                   </p>
@@ -182,7 +186,7 @@ export default function CreatePostModal({ onCloseModal }) {
                     buttonType="button"
                     onClick={() => {
                       mediaItems.forEach((entry) =>
-                        URL.revokeObjectURL(entry.previewUrl)
+                        URL.revokeObjectURL(entry.previewUrl),
                       );
                       setMediaItems([]);
                       reset({ caption: "" });
@@ -229,7 +233,9 @@ export default function CreatePostModal({ onCloseModal }) {
 
             {hasSelection && (
               <div className="mt-6 text-left">
-                <p className="mb-3 text-sm font-medium text-zinc-300">Selected media</p>
+                <p className="mb-3 text-sm font-medium text-zinc-300">
+                  Selected media
+                </p>
                 <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {mediaItems.map(({ id, previewUrl, kind, file }) => (
                     <li
@@ -264,10 +270,6 @@ export default function CreatePostModal({ onCloseModal }) {
               </Button>
             </div>
           )}
-
-         
-
-          
         </>
       )}
 
@@ -291,7 +293,6 @@ export default function CreatePostModal({ onCloseModal }) {
           </div>
 
           <div className="flex w-full flex-col gap-4">
-            
             <textarea
               {...register("caption", {
                 required: "Please add a caption before sharing.",

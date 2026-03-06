@@ -25,7 +25,12 @@ export default function Posts() {
   return (
     <ul className=" grid grid-cols-3 md:grid md:grid-cols-4   ">
       {userPub.map((userPost) => (
-        <Link key={userPost?.publication_id} to={`/p/${userPost?.publication_id}`} state={{backgroundLocation : location}} className="block w-full">
+        <Link
+          key={userPost?.publication_id}
+          to={`/p/${userPost?.publication_id}`}
+          state={{ backgroundLocation: location }}
+          className="block w-full"
+        >
           <ProfilePostCard
             profileuserPost={userPost}
             key={userPost?.publication_id}

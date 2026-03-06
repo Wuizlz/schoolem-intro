@@ -4,10 +4,8 @@ import { toast } from "react-hot-toast";
 import supabase from "../lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 
-
-
 export default function useLogout() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const logout = useCallback(async () => {
@@ -16,7 +14,7 @@ export default function useLogout() {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       toast.success("Signed out");
-      queryClient.clear()
+      queryClient.clear();
       navigate("/signin", { replace: true });
     } catch (err) {
       console.error("Failed to sign out", err);

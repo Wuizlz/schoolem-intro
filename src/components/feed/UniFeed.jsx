@@ -1,6 +1,5 @@
 import { GoDot } from "react-icons/go";
 
-
 import { useAuth } from "../../providers/useAuth";
 // import { useGetPublicationsFeed } from "../hooks/useGetPublicationsFeed";
 import UserPost from "./UserPost";
@@ -43,7 +42,7 @@ export default function UniFeed() {
           fetchNextPage();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "200px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -52,7 +51,7 @@ export default function UniFeed() {
   if (isInitialLoading)
     return (
       <ul className="flex flex-col gap-15 w-full  ">
-        {[...Array(3)].map((_,idx) => (
+        {[...Array(3)].map((_, idx) => (
           <PostSkeleton key={idx} />
         ))}
       </ul>
@@ -69,7 +68,7 @@ export default function UniFeed() {
         />
       ))}{" "}
       <li ref={sentinelRef} />
-      {isFetchingNextPage ? <Spinner/> : null}
+      {isFetchingNextPage ? <Spinner /> : null}
     </ul>
   );
 }

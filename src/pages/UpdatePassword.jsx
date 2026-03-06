@@ -5,16 +5,14 @@ import Button from "../components/common/Button";
 import Input from "../components/common/Input";
 import usePasswordUpdate from "../services/passwordUpdate";
 
-
-
 export default function UpdatePassword() {
-    const location = useLocation();
-    const { verifyRecoverySession, updatePassword } = usePasswordUpdate();
-    const [ status, setStatus ] = useState("verifying");
-    const [ statusMessage, setStatusMessage ] = useState("");
-    const [ formError, setFormError ] = useState("");
+  const location = useLocation();
+  const { verifyRecoverySession, updatePassword } = usePasswordUpdate();
+  const [status, setStatus] = useState("verifying");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [formError, setFormError] = useState("");
 
-    const {
+  const {
     register,
     handleSubmit,
     watch,
@@ -27,11 +25,16 @@ export default function UpdatePassword() {
   useEffect(() => {
     let active = true;
 
-     async function verify() {
+    async function verify() {
       setStatus("verifying");
       setStatusMessage("");
       setFormError("");
-      console.log("Verifying recovery session with hash:", location.hash, "and search:", location.search);
+      console.log(
+        "Verifying recovery session with hash:",
+        location.hash,
+        "and search:",
+        location.search,
+      );
 
       try {
         const result = await verifyRecoverySession({
@@ -41,14 +44,16 @@ export default function UpdatePassword() {
 
         if (!active) return;
         if (!result?.ok) {
-            console.log("Verification failed:", result?.error);
+          console.log("Verification failed:", result?.error);
           throw new Error(result?.error || "Couldn't verify this reset link.");
         }
 
         setStatus("ready");
 
         if (typeof window !== "undefined" && window.history?.replaceState) {
-            console.log("Clearing URL parameters to prevent reuse of the reset link.");
+          console.log(
+            "Clearing URL parameters to prevent reuse of the reset link.",
+          );
           window.history.replaceState({}, document.title, "/UpdatePassword");
         }
       } catch (err) {
@@ -109,66 +114,65 @@ export default function UpdatePassword() {
     }
 
     return (
-        
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <p className="text-sm text-center text-zinc-300">
-                        Enter your new password below to update your account password. You can then use this new password to sign in!
-                    </p>
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <p className="text-sm text-center text-zinc-300">
+          Enter your new password below to update your account password. You can
+          then use this new password to sign in!
+        </p>
 
+        <Input
+          id="password"
+          type="password"
+          placeholder="New Password"
+          autoComplete="new-password"
+          {...register("password", {
+            required: "Password is required",
+            minLength: { value: 8, message: "Min 8 characters" },
+          })}
+          error={errors.password}
+        />
 
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="New Password"
-                        autoComplete="new-password"
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: { value: 8, message: "Min 8 characters" },
-                        })}
-                        error={errors.password}
-                    />
+        <Input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          autoComplete="new-password"
+          {...register("confirmPassword", {
+            required: "Please confirm your password",
+            validate: (val) =>
+              val === passwordValue || "Passwords do not match",
+          })}
+          error={errors.confirmPassword}
+        />
+        {formError && (
+          <p className="text-sm text-center text-red-500">{formError}</p>
+        )}
 
-                    <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="Confirm Password"
-                        autoComplete="new-password"
-                        {...register("confirmPassword", {
-                            required: "Please confirm your password",
-                            validate: (val) =>
-                                val === passwordValue || "Passwords do not match",
-                        })}
-                        error={errors.confirmPassword}
-                    />
-                    {formError && (
-                        <p className="text-sm text-center text-red-500">{formError}</p>
-                    )}
-
-                    <div className="flex flex-col items-center gap-3">
-                        <Button
-                            type="primary"
-                            buttonType="submit"
-                            className="self-center"
-                            disabled={!canSubmit || isSubmitting}
-                        >
-                            {isSubmitting ? "Updating Password..." : "Update Password"}
-                        </Button>
-                    </div>
-                </form>
+        <div className="flex flex-col items-center gap-3">
+          <Button
+            type="primary"
+            buttonType="submit"
+            className="self-center"
+            disabled={!canSubmit || isSubmitting}
+          >
+            {isSubmitting ? "Updating Password..." : "Update Password"}
+          </Button>
+        </div>
+      </form>
     );
-};
+  };
 
-    return (
-        <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
-            <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
-                <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
-                    <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16" />
-                    <h1 className="text-2xl font-semibold	sm:text-4xl">
-                        Update your password
-                    </h1>
-                </div>
-            {renderContent()}
-            </div>
-        </main>
-    );
+  return (
+    <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
+      <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
+        <div className="flex flex-col items-center gap-3 w-full text-center sm:flex-row sm:items-center sm:gap-4 sm:justify-center sm:text-left">
+          <img src="/favicon.ico" alt="SchoolEm" className="h-16 w-16" />
+          <h1 className="text-2xl font-semibold	sm:text-4xl">
+            Update your password
+          </h1>
+        </div>
+        {renderContent()}
+      </div>
+    </main>
+  );
 }

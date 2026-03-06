@@ -18,12 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CommentForm } from "./CommentForm";
 import { ThreadContent } from "./ThreadContent";
 
-function UserPost({
-  publicationData,
-  publicationId,
-  actorId,
-  uniId,
-}) {
+function UserPost({ publicationData, publicationId, actorId, uniId }) {
   const location = useLocation();
 
   const queryClient = useQueryClient();
@@ -301,4 +296,4 @@ function UserPost({
   }
 }
 
-export default memo(UserPost)
+export default memo(UserPost);

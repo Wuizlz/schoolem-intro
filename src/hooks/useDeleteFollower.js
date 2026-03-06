@@ -17,7 +17,7 @@ export default function useDeleteFollower() {
       });
       queryClient.setQueryData(
         ["IsFollowing", vars.follower, vars.sessionUser],
-        false
+        false,
       );
     },
   });

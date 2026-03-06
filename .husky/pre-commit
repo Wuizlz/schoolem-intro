@@ -1,0 +1,4 @@
+#!/bin/sh
+
+npm run license:check
+npm run precommit:check

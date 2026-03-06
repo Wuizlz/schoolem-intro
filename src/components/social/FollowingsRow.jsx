@@ -9,13 +9,12 @@ import { SkeletonFollowerFollowingRow } from "../common/SkeletonLine";
 export default function FollowingsRow({ user, sessionUser }) {
   const sessionUserUserName = sessionUser.user_metadata.display_name;
 
-
   const currentUser = sessionUser?.id ?? null;
   const username = user?.followee_display_name;
   const actedOnUser = user?.followee_id;
   const { data: isFollowing, isLoading: isFollowingLoading } = useAmIfollowing(
     currentUser,
-    actedOnUser
+    actedOnUser,
   );
 
   const displayButtonIfNotSessionUser = currentUser === actedOnUser;
@@ -29,7 +28,7 @@ export default function FollowingsRow({ user, sessionUser }) {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
-      sessionUserUserName
+      sessionUserUserName,
     });
   }
 

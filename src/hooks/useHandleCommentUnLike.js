@@ -6,10 +6,9 @@ export default function useHandleCommentUnLike() {
   const { mutate: handleCommentUnLike, error } = useMutation({
     mutationFn: ({ commentId, actorId }) =>
       deleteCommentLike(commentId, actorId),
-    
   });
-  
+
   return {
-    handleCommentUnLike
-  }
+    handleCommentUnLike,
+  };
 }

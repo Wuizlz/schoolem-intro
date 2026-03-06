@@ -22,8 +22,6 @@ export default function SignIn() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { email: "", password: "" } });
 
-
-
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
       <div className="w-full max-w-3xl rounded-[4.5rem] border-4 border-zinc-700/60 bg-zinc-900/80 p-8 sm:p-12 flex flex-col gap-8">
@@ -60,7 +58,6 @@ export default function SignIn() {
               minLength: { value: 8, message: "Min 8 characters" },
             })}
             error={errors.password}
-            
           />
           <div className=" flex items-center gap-1">
             <Button

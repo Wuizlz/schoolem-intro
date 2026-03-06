@@ -55,8 +55,8 @@ export default function () {
                     ...publication,
                     comments_count: (publication?.comments_count ?? 0) + 1,
                   }
-                : publication
-            )
+                : publication,
+            ),
           ),
         };
       });

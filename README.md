@@ -13,6 +13,7 @@ My team and I are building **SchoolEm** to help students actually get value out 
 This repository is an **intro build + prototype** for SchoolEm.
 
 It’s used to:
+
 - Present the **product vision**
 - Demonstrate **early user flows**
 - Prototype **UI/UX improvements** that will ship in future versions
@@ -73,17 +74,20 @@ Think of `schoolem-intro` as the **front door**—a lightweight build that commu
 
 ## Preview
 
-
 ### Sign-Up
+
 https://github.com/user-attachments/assets/589dbf33-8b43-4f70-b1e8-a92c171ec1f6
 
 ### University Feed
+
 https://github.com/user-attachments/assets/effe9106-c467-47ca-86e4-01be2d678377
 
 ### Profile
+
 https://github.com/user-attachments/assets/8a130a1e-4718-4a40-ba77-21a535d0482b
 
 ### Settings & 404
+
 https://github.com/user-attachments/assets/bd29ccb0-4d26-4dca-95de-260a99c2b330
 
 ---
@@ -93,6 +97,7 @@ https://github.com/user-attachments/assets/bd29ccb0-4d26-4dca-95de-260a99c2b330
 SchoolEm fosters a **student-centered ecosystem** aimed at improving campus culture and engagement.
 
 It gives students a place to:
+
 - promote and discover **local gatherings, groups, events, parties**
 - support **student-owned businesses**
 - share experiences through posts/threads (quick laughs or meaningful moments)

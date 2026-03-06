@@ -8,6 +8,6 @@
 //     queryFn: () => getPostsThreadsForUni(uniId)
 
 //   })
-  
+
 //   return {data, isPending, isError}
 // }

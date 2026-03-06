@@ -19,7 +19,6 @@ export default function Profile() {
   const { profile: sessionUser } = useAuth();
   const currentUserId = sessionUser?.id ?? null;
   const sessionUserUserName = sessionUser?.display_name;
-  
 
   const { username } = useParams();
   const {
@@ -43,7 +42,7 @@ export default function Profile() {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
-      sessionUserUserName
+      sessionUserUserName,
     });
   }
 
@@ -52,13 +51,13 @@ export default function Profile() {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
-      sessionUserUserName
+      sessionUserUserName,
     });
   }
 
   const { data: isFollowing, isLoading: isFollowingLoading } = useAmIfollowing(
     currentUserId,
-    viewedUserId
+    viewedUserId,
   );
 
   const showSpinnerLoader = isFollowingLoading || isLoadingUser;
@@ -148,7 +147,7 @@ export default function Profile() {
                 <ProfileStats
                   data={profile ?? null}
                   isLoading={isLoadingUser}
-                  username = {username}
+                  username={username}
                 />
               </div>
             </div>

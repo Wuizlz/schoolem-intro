@@ -14,15 +14,13 @@ export default function FollowersOverlayPage() {
 
   const { data: followers = [], isLoading } = useUserFollowers(
     username,
-    sessionUser
+    sessionUser,
   );
-
-
 
   if (isLoading)
     return (
       <div className="h-full w-full flex items-center justify-center">
-        <Spinner/>
+        <Spinner />
       </div>
     );
 
