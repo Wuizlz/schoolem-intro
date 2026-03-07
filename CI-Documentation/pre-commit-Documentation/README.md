@@ -19,17 +19,38 @@ This keeps the repo in a healthy state and aligns local checks with CI.
 
 ```sh
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
 npm run license:check
+npm run deps:check
 npm run precommit:check
 ```
 
 **What it does**
 
 - Runs the license scan first
+- Runs depcheck to surface unused or missing deps
 - Runs formatting, linting, and tests after
 - Fails the commit if any step fails
+
+---
+
+## Shebang (#!/bin/sh) Explained
+
+**What it is**
+
+- The `#!` line is called a _shebang_. It tells the OS which interpreter should run the file.
+- `#!/bin/sh` means: “run this script using the `sh` shell.”
+
+**What `/bin/sh` is**
+
+- `/bin/sh` is the `sh` executable (often a symlink to `bash`, `dash`, or `zsh`).
+- It is the actual binary the OS invokes to interpret the script.
+
+**How `npm` runs**
+
+- `sh` reads the script line by line.
+- When it sees `npm ...`, it looks for `npm` in the `PATH` and executes it.
+- The hook itself doesn’t know about npm; it just delegates to whatever `npm` binary is available.
 
 ---
 
@@ -39,6 +60,7 @@ npm run precommit:check
 
 ```json
 "license:check": "node scripts/license-check.js",
+"deps:check": "depcheck",
 "precommit:check": "prettier . --check && eslint . --ext .js,.jsx && node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
 ```
 
