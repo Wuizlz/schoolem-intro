@@ -3,7 +3,6 @@ import AlertItem from "../components/alerts/AlertItem";
 import Spinner from "../components/common/Spinner";
 
 export default function Alerts({ variant = "sidebar" }) {
-  
   const { notifications, isLoading } = useNotifications();
 
   const isSheet = variant === "sheet";
@@ -15,7 +14,12 @@ export default function Alerts({ variant = "sidebar" }) {
     ? "relative h-full w-full bg-black p-6 flex justify-center items-center"
     : "absolute h-full w-[22rem] border-r border-gray-800 bg-black p-6 flex justify-center items-center";
 
-  if (isLoading) return <div className={loadingClassName}><Spinner /></div>;
+  if (isLoading)
+    return (
+      <div className={loadingClassName}>
+        <Spinner />
+      </div>
+    );
 
   // Categorize notifications
   const now = Date.now();
@@ -23,7 +27,7 @@ export default function Alerts({ variant = "sidebar" }) {
   const today = [];
   const earlier = [];
 
-  notifications?.forEach(n => {
+  notifications?.forEach((n) => {
     const time = new Date(n.created_at).getTime();
     const diffHours = (now - time) / (1000 * 60 * 60);
 
@@ -72,9 +76,9 @@ export default function Alerts({ variant = "sidebar" }) {
           </ul>
         </div>
       )}
-      
+
       {(!notifications || notifications.length === 0) && (
-          <p className="text-gray-500">No notifications yet.</p>
+        <p className="text-gray-500">No notifications yet.</p>
       )}
     </div>
   );

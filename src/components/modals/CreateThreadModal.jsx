@@ -1,4 +1,3 @@
-import Input from "../common/Input";
 import { useForm } from "react-hook-form";
 import Button from "../common/Button";
 import { useEffect, useState } from "react";
@@ -21,7 +20,7 @@ export default function CreateThreadForm({ onCloseModal }) {
   useEffect(() => {
     setShowButton(text.length >= 3 && text.length <= 1000);
     if (text.length <= 1000) {
-      setTextCount((count) => (count = text.length));
+      setTextCount(text.length);
     }
   }, [text]);
 
@@ -31,7 +30,7 @@ export default function CreateThreadForm({ onCloseModal }) {
       await createThreadAsync(thread_text);
       reset({ thread_text: "" });
       onCloseModal?.();
-    } catch (err) {
+    } catch {
       //handled from toast
     }
   }

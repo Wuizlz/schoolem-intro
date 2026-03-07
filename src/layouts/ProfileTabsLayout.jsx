@@ -1,4 +1,4 @@
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import ProfileTabsNav from "../components/profile/ProfileTabsNav";
 
 export default function ProfileTabsLayout() {

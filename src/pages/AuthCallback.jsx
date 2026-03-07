@@ -14,7 +14,7 @@ export default function AuthCallback() {
 
     async function handleCallback() {
       const hashParams = new URLSearchParams(
-        location.hash.startsWith("#") ? location.hash.slice(1) : location.hash
+        location.hash.startsWith("#") ? location.hash.slice(1) : location.hash,
       );
       const searchParams = new URLSearchParams(location.search);
 
@@ -31,20 +31,15 @@ export default function AuthCallback() {
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
       const code = searchParams.get("code");
-      
 
       try {
         if (accessToken && refreshToken) {
           setStatus("Restoring your session…");
-         
-          const result = await supabase.auth
-            .setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            })
-           
 
-          
+          await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
         } else if (code) {
           setStatus("Exchanging verification code…");
           const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -52,7 +47,6 @@ export default function AuthCallback() {
         }
 
         setStatus("Preparing your account…");
-      
 
         toast.success("Signed in successfully!");
 

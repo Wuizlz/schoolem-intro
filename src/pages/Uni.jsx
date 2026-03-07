@@ -24,14 +24,13 @@ export default function Uni() {
         </div>
 
         <div className="flex gap-4 overflow-x-auto pl-2 py-2">
-          <OwnUserCircle type="uniStyle"/>
-          
+          <OwnUserCircle type="uniStyle" />
+
           {/* map over other stories here */}
         </div>
 
         <div className="flex flex-col ">
-         <UniFeed/>
-       
+          <UniFeed />
         </div>
       </section>
 

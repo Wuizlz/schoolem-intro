@@ -18,12 +18,11 @@ export default function AppLayout() {
       mainScrollTop: main?.scrollTop ?? 0,
       windowScrollY: window.scrollY,
     };
-  
+
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;
     const originalMainOverflow = main?.style.overflow;
 
-   
     document.documentElement.style.overflow = "hidden";
     if (main) main.style.overflow = "hidden";
 
@@ -97,7 +96,10 @@ export default function AppLayout() {
         </div>
       </div>
 
-      <MobileNav isAlertsOpen={isAlertsOpen} setIsAlertsOpen={setIsAlertsOpen} />
+      <MobileNav
+        isAlertsOpen={isAlertsOpen}
+        setIsAlertsOpen={setIsAlertsOpen}
+      />
     </div>
   );
 }

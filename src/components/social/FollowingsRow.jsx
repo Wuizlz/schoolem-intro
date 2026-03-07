@@ -9,13 +9,12 @@ import { SkeletonFollowerFollowingRow } from "../common/SkeletonLine";
 export default function FollowingsRow({ user, sessionUser }) {
   const sessionUserUserName = sessionUser.user_metadata.display_name;
 
-
   const currentUser = sessionUser?.id ?? null;
   const username = user?.followee_display_name;
   const actedOnUser = user?.followee_id;
   const { data: isFollowing, isLoading: isFollowingLoading } = useAmIfollowing(
     currentUser,
-    actedOnUser
+    actedOnUser,
   );
 
   const displayButtonIfNotSessionUser = currentUser === actedOnUser;
@@ -24,24 +23,21 @@ export default function FollowingsRow({ user, sessionUser }) {
   const { removeFollowAsync, isPending: removingFollower } =
     useHandleUnfollow();
 
-  function handleFollow(currentUserId, viewedUserId, username) {
+  function handleFollow(currentUserId, viewedUserId) {
     createFollowerAsync({
-      followerId: currentUserId,
-      followeeId: viewedUserId,
-      username,
-      sessionUserUserName
-    });
-  }
-
-  function handleUnfollow(currentUserId, viewedUserId, username) {
-    removeFollowAsync({
       followerId: currentUserId,
       followeeId: viewedUserId,
       sessionUserUserName,
     });
   }
 
-  const yep = true;
+  function handleUnfollow(currentUserId, viewedUserId) {
+    removeFollowAsync({
+      followerId: currentUserId,
+      followeeId: viewedUserId,
+      sessionUserUserName,
+    });
+  }
 
   if (isFollowingLoading) return <SkeletonFollowerFollowingRow />;
 
@@ -65,7 +61,7 @@ export default function FollowingsRow({ user, sessionUser }) {
           isFollowing === false ? (
             <Button
               type="primary"
-              onClick={() => handleFollow(currentUser, actedOnUser, username)}
+              onClick={() => handleFollow(currentUser, actedOnUser)}
               className="h-5 w-18 "
             >
               {isPending ? <Spinner type="buttonSpinner" /> : "Follow"}
@@ -73,7 +69,7 @@ export default function FollowingsRow({ user, sessionUser }) {
           ) : (
             <Button
               type="primary"
-              onClick={() => handleUnfollow(currentUser, actedOnUser, username)}
+              onClick={() => handleUnfollow(currentUser, actedOnUser)}
               className="h-5 w-18 bg-gray-500"
             >
               {removingFollower ? (

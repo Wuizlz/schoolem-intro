@@ -62,7 +62,7 @@ function Window({ children, name, widthClass = "max-w-xl" }) {
         <div>{cloneElement(children, { onCloseModal: close })}</div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
 

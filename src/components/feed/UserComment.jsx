@@ -8,8 +8,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { memo } from "react";
 
 function UserComment({ data, user, pubId }) {
-
-  
   const commentLiked = data?.comment_liked;
   const queryClient = useQueryClient();
 
@@ -31,7 +29,7 @@ function UserComment({ data, user, pubId }) {
                 comment_liked: true,
                 comment_likes: (comment?.comment_likes ?? 0) + 1,
               }
-            : comment
+            : comment,
         ),
       };
     });
@@ -51,7 +49,7 @@ function UserComment({ data, user, pubId }) {
                 comment_liked: false,
                 comment_likes: (comment?.comment_likes ?? 0) - 1,
               }
-            : comment
+            : comment,
         ),
       };
     });

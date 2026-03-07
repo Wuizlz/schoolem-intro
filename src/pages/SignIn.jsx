@@ -8,7 +8,6 @@ import { ensureProfile } from "../services/apiProfile";
 
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import Spinner from "../components/common/Spinner";
 
 export default function SignIn() {
   const { signIn, isLoading: isSigningIn } = useSignIn({
@@ -21,8 +20,6 @@ export default function SignIn() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { email: "", password: "" } });
-
-
 
   return (
     <main className="min-h-dvh flex items-center justify-center bg-black text-zinc-100">
@@ -60,7 +57,6 @@ export default function SignIn() {
               minLength: { value: 8, message: "Min 8 characters" },
             })}
             error={errors.password}
-            
           />
           <div className=" flex items-center gap-1">
             <Button

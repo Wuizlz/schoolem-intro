@@ -4,8 +4,12 @@ import { useAuth } from "../providers/useAuth";
 
 export function useNotifications() {
   const { user } = useAuth();
-  
-  const { data: notifications, isLoading, error } = useQuery({
+
+  const {
+    data: notifications,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["notifications", user?.id],
     queryFn: () => getNotifications(user.id),
     enabled: !!user?.id,

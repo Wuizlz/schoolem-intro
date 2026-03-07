@@ -16,15 +16,13 @@ export const formatRelative = (dateString) => {
   return `${days}d`;
 };
 
-
 export async function downscaleFile(file) {
   const opts = {
     maxWidthOrHeight: 1400, // pick your target
-    maxSizeMB: 0.8,        // try to stay under ~800 KB
+    maxSizeMB: 0.8, // try to stay under ~800 KB
     initialQuality: 0.75,
     fileType: "image/webp", // or "image/jpeg"
     useWebWorker: true,
   };
   return imageCompression(file, opts);
 }
-

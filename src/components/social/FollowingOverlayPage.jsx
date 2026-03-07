@@ -3,20 +3,19 @@ import useUserFollowings from "../../hooks/useUserFollowings";
 import FollowingsRow from "./FollowingsRow";
 
 import Spinner from "../common/Spinner";
-import { useAuth } from "../../providers/useAuth"
+import { useAuth } from "../../providers/useAuth";
 
 export default function FollowingOverlayPage() {
   const { user } = useAuth();
-  const sessionUser = user?.id
+  const sessionUser = user?.id;
   const { username } = useParams();
-  
 
   const { data: followings = [], isLoading } = useUserFollowings(
     username,
-    sessionUser
+    sessionUser,
   );
 
-  if (isLoading ) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   if (followings.length === 0)
     return (
@@ -38,7 +37,7 @@ export default function FollowingOverlayPage() {
     >
       <ul className="flex flex-col gap-4  ">
         {followings.map((f) => (
-          <FollowingsRow key={f?.relationship_id} user={f} sessionUser = {user} />
+          <FollowingsRow key={f?.relationship_id} user={f} sessionUser={user} />
         ))}
       </ul>
     </div>

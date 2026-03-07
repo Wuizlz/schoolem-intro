@@ -1,26 +1,35 @@
-import React, { forwardRef, useId } from "react";
+import { forwardRef, useId } from "react";
 
 const Input = forwardRef(
   (
-    { id, type = "text", styleType="signForm", placeholder, className = "", error, ...props },
-    ref
+    {
+      id,
+      type = "text",
+      styleType = "signForm",
+      placeholder,
+      className = "",
+      error,
+      ...props
+    },
+    ref,
   ) => {
     const generatedId = useId(); // ✅ always called
     const inputId = id ?? generatedId; // choose after
 
-    const border = error 
+    const border = error
       ? "border-red-500 focus:ring-red-500"
       : " border-zinc-600/70  focus:ring-white/30";
 
     const style = {
-      signForm: "w-full rounded-full border px-4 py-4 text-lg  placeholder:text-zinc-400 focus:outline-none focus:ring-2",
-      comment: "w-full  focus:outline-none focuc:ring-0 focus:border-transparent "
-    }
+      signForm:
+        "w-full rounded-full border px-4 py-4 text-lg  placeholder:text-zinc-400 focus:outline-none focus:ring-2",
+      comment:
+        "w-full  focus:outline-none focuc:ring-0 focus:border-transparent ",
+    };
 
     return (
       <div className="space-y-2">
         <input
- 
           id={inputId}
           ref={ref}
           type={type}
@@ -32,7 +41,7 @@ const Input = forwardRef(
         {error && <p className="text-sm text-red-400">{error.message}</p>}
       </div>
     );
-  }
+  },
 );
 
 export default Input;

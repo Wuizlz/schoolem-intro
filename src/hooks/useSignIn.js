@@ -26,8 +26,6 @@ export default function useSignIn({
       setLastError(null);
 
       try {
-        
-
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -55,12 +53,12 @@ export default function useSignIn({
               },
             });
             toast.success(
-              "Your email isn't verified yet. I sent a new confirmation link."
+              "Your email isn't verified yet. I sent a new confirmation link.",
             );
             return;
           } catch (resendErr) {
             toast.error(
-              resendErr?.message || "Couldn't resend the confirmation email."
+              resendErr?.message || "Couldn't resend the confirmation email.",
             );
             return;
           }
@@ -69,11 +67,10 @@ export default function useSignIn({
         toast.error(msg);
         console.error(e);
       } finally {
-        
         setIsLoading(false);
       }
     },
-    [ensureProfileFn, navigate, redirectTo]
+    [ensureProfileFn, navigate, redirectTo],
   );
 
   return { signIn, isLoading, lastError };

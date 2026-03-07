@@ -170,7 +170,7 @@ function AppRoutes() {
                 }
                 onClose={() => navigate(-1)}
               >
-                <FollowersOverlayPage/>
+                <FollowersOverlayPage />
               </Overlay>
             }
           />

@@ -873,11 +873,13 @@ This is the important database connection for pgAdmin.
 Use these in pgAdmin:
 
 ### General
+
 ```text
 Name: Supabase Local
 ```
 
 ### Connection
+
 ```text
 Host: localhost
 Port: 54322
@@ -992,6 +994,7 @@ It was an architecture compatibility decision.
 ## Plain PostgreSQL Docker container approach
 
 ### Run the original Postgres test container
+
 ```bash
 docker run --name test-postgres \
   -e POSTGRES_USER=postgres \
@@ -1013,6 +1016,7 @@ docker run --name test-postgres `
 ```
 
 ### Export Supabase schema with `pg_dump`
+
 ```bash
 PGPASSWORD='<DB_PASSWORD>' pg_dump \
   -h db.<PROJECT_REF>.supabase.co \
@@ -1034,6 +1038,7 @@ pg_dump -h db.<PROJECT_REF>.supabase.co -p 5432 -U postgres -d postgres --schema
 ```
 
 ### Remove incompatible `transaction_timeout` line
+
 ```bash
 sed -i '' '/transaction_timeout/d' ~/schema.sql
 ```
@@ -1045,6 +1050,7 @@ Windows Command (PowerShell):
 ```
 
 ### Restore schema into local plain PostgreSQL Docker DB
+
 ```bash
 PGPASSWORD='<LOCAL_DB_PASSWORD>' psql \
   -h localhost \
@@ -1066,6 +1072,7 @@ psql -h localhost -p 5433 -U postgres -d testdb -f schema.sql
 ## Local Supabase workflow
 
 ### Install Supabase CLI
+
 ```bash
 brew install supabase/tap/supabase
 ```
@@ -1077,6 +1084,7 @@ scoop install supabase
 ```
 
 ### Create local project folder
+
 ```bash
 mkdir -p ~/Desktop/SchoolEm-local
 cd ~/Desktop/SchoolEm-local
@@ -1090,6 +1098,7 @@ Set-Location "$env:USERPROFILE\\Desktop\\SchoolEm-local"
 ```
 
 ### Initialize local Supabase project
+
 ```bash
 supabase init
 ```
@@ -1101,6 +1110,7 @@ supabase init
 ```
 
 ### Log in
+
 ```bash
 supabase login
 ```
@@ -1112,6 +1122,7 @@ supabase login
 ```
 
 ### Link local project to hosted Supabase project
+
 ```bash
 supabase link --project-ref <PROJECT_REF>
 ```
@@ -1123,6 +1134,7 @@ supabase link --project-ref <PROJECT_REF>
 ```
 
 ### Pull remote cloud database schema into local migration files
+
 ```bash
 supabase db pull
 ```
@@ -1134,6 +1146,7 @@ supabase db pull
 ```
 
 ### Start local Supabase stack
+
 ```bash
 supabase start
 ```
@@ -1149,6 +1162,7 @@ supabase start
 ## PostgreSQL tooling setup
 
 ### Install PostgreSQL tools
+
 ```bash
 brew install postgresql@18
 ```
@@ -1160,6 +1174,7 @@ winget install --id PostgreSQL.PostgreSQL
 ```
 
 ### Temporarily expose PostgreSQL binaries in PATH
+
 ```bash
 export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 ```
@@ -1171,6 +1186,7 @@ $env:Path = "C:\\Program Files\\PostgreSQL\\18\\bin;$env:Path"
 ```
 
 ### Check pg_dump
+
 ```bash
 which pg_dump
 pg_dump --version

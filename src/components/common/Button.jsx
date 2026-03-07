@@ -10,10 +10,12 @@ export default function Button({
   className = "",
   ...rest
 }) {
-  const base = type !== "iconButton" && "commentButton" ?
-    "inline-flex  items-center justify-center text-sm rounded-full font-semibold " +
-    "focus:outline-none  " +
-    "disabled:opacity-50 disabled:cursor-not-allowed text-black" : ""
+  const base =
+    type !== "iconButton" && "commentButton"
+      ? "inline-flex  items-center justify-center text-sm rounded-full font-semibold " +
+        "focus:outline-none  " +
+        "disabled:opacity-50 disabled:cursor-not-allowed text-black"
+      : "";
 
   const styles = {
     primary: `${base} bg-amber-300 hover:bg-amber-500 px-4 py-3 md:px-6 md:py-4 `,
@@ -33,9 +35,9 @@ export default function Button({
     settingsButton:
       "w-full text-left px-4 py-2.5 rounded-full transition-colors duration-200",
     iconButton: "transition-transform hover:scale-105 hover:cursor-pointer",
-    commentButton: "transition-transform hover:scale-105 hover:cursor-pointer hover:text-amber-50 hover:font-bold"
-
-  }
+    commentButton:
+      "transition-transform hover:scale-105 hover:cursor-pointer hover:text-amber-50 hover:font-bold",
+  };
 
   const selectedStyle = styles[type] ?? styles.primary;
   const cls = `${selectedStyle} ${className}`.trim();

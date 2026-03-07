@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -47,7 +48,7 @@ export function AuthProvider({ children }) {
 
     try {
       const { data, error: getUserError } = await supabase.auth.getUser(
-        candidateSession.access_token
+        candidateSession.access_token,
       );
       if (getUserError) {
         if (isUnauthorizedError(getUserError)) {
@@ -78,7 +79,9 @@ export function AuthProvider({ children }) {
 
     const { data, error: profileError } = await supabase
       .from("profiles")
-      .select("id, email, display_name, full_name, uni_id, bio, avatar_url, b_date, gender, universities:profiles_uni_id_fkey(name) ")
+      .select(
+        "id, email, display_name, full_name, uni_id, bio, avatar_url, b_date, gender, universities:profiles_uni_id_fkey(name) ",
+      )
       .eq("id", nextUser.id)
       .maybeSingle();
 
@@ -182,7 +185,7 @@ export function AuthProvider({ children }) {
         if (isMountedRef.current && showSpinner) setIsLoading(false);
       }
     },
-    [loadProfile, verifySession]
+    [loadProfile, verifySession],
   );
 
   useEffect(() => {
@@ -233,7 +236,7 @@ export function AuthProvider({ children }) {
       error,
       refreshProfile,
     }),
-    [session, user, profile, isLoading, error, refreshProfile]
+    [session, user, profile, isLoading, error, refreshProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

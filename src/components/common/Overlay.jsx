@@ -28,7 +28,6 @@ export default function Overlay({
     const scrollBarWidth =
       window.innerWidth - document.documentElement.clientWidth;
 
-    
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
     document.body.style.top = `-${scrollY}px`;
@@ -89,6 +88,6 @@ export default function Overlay({
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

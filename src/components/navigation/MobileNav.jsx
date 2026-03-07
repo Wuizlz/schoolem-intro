@@ -48,7 +48,9 @@ export default function MobileNav({ isAlertsOpen, setIsAlertsOpen }) {
             >
               {({ isActive }) => (
                 <>
-                  <LiaUniversitySolid className={`h-7 w-7 ${iconClass(isActive)}`} />
+                  <LiaUniversitySolid
+                    className={`h-7 w-7 ${iconClass(isActive)}`}
+                  />
                   <span className={labelClass(isActive)}>Uni</span>
                 </>
               )}
@@ -62,7 +64,9 @@ export default function MobileNav({ isAlertsOpen, setIsAlertsOpen }) {
               aria-label="Alerts"
               onClick={() => setIsAlertsOpen?.((open) => !open)}
             >
-              <IoIosNotifications className={`h-7 w-7 ${iconClass(isAlertsOpen)}`} />
+              <IoIosNotifications
+                className={`h-7 w-7 ${iconClass(isAlertsOpen)}`}
+              />
               <span className={labelClass(isAlertsOpen)}>Alerts</span>
             </button>
           </li>
@@ -139,7 +143,10 @@ export default function MobileNav({ isAlertsOpen, setIsAlertsOpen }) {
             >
               {({ isActive }) => (
                 <>
-                  <ProfileIcon aria-hidden="true" style={profileStyle(isActive)} />
+                  <ProfileIcon
+                    aria-hidden="true"
+                    style={profileStyle(isActive)}
+                  />
                   <span className={labelClass(isActive)}>Profile</span>
                 </>
               )}

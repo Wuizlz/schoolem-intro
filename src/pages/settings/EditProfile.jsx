@@ -11,7 +11,6 @@ export function EditProfileContent({ user }) {
   const queryClient = useQueryClient();
   const { refreshProfile } = useAuth();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(user.profileImage);
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -61,13 +60,6 @@ export function EditProfileContent({ user }) {
 
       setSelectedImage(file);
       setHasChanges(true);
-
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -124,7 +116,6 @@ export function EditProfileContent({ user }) {
         : "Prefer not to disclose",
       profileImage: user.profileImage || null,
     });
-    setImagePreview(user.profileImage);
     setSelectedImage(null);
     setHasChanges(false);
   };

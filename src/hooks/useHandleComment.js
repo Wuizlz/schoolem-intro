@@ -6,7 +6,7 @@ import { formatRelative } from "../utils/helpers";
 export default function () {
   const queryClient = useQueryClient();
   const { mutate: handleCommentApi } = useMutation({
-    mutationFn: ({ publicationId, actorId, userComment, uniId }) =>
+    mutationFn: ({ publicationId, actorId, userComment, uniId: _uniId }) =>
       createComment(publicationId, actorId, userComment),
     /*data is received from createCommment which returns data of inital body, author, comment id, created at, 
     and parent comment of the individual comment  then left join on author using author id to 
@@ -55,8 +55,8 @@ export default function () {
                     ...publication,
                     comments_count: (publication?.comments_count ?? 0) + 1,
                   }
-                : publication
-            )
+                : publication,
+            ),
           ),
         };
       });

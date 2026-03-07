@@ -119,7 +119,7 @@ export async function ensureProfile(opts = {}) {
   try {
     const { data: uniLookup, error: uniErr } = await supabase.rpc(
       "university_id_for_email",
-      { p_email: user.email }
+      { p_email: user.email },
     );
 
     if (uniErr) {
@@ -165,7 +165,6 @@ export async function ensureProfile(opts = {}) {
     const { error: upsertErr } = await supabase
       .from("profiles")
       .upsert(row, { onConflict: "id" });
-    console.log("[ensureProfile] upsert result", upsertErr);
     if (upsertErr) throw upsertErr;
   }
 
@@ -257,7 +256,7 @@ export async function updateProfile({
   if (birthdate && birthdate.includes("/")) {
     const [month, day, year] = birthdate.split("/");
     dbBirthdate = `${year}-${String(month).padStart(2, "0")}-${String(
-      day
+      day,
     ).padStart(2, "0")}`;
   }
 
@@ -296,7 +295,7 @@ export async function getUserPublications(username, pubType) {
   const query = supabase
     .from("publications")
     .select(
-      "publication_id, created_at, type, likes_count, comments_count, post:posts(caption,pic_url),thread:threads(thread_text)"
+      "publication_id, created_at, type, likes_count, comments_count, post:posts(caption,pic_url),thread:threads(thread_text)",
     )
     .eq("author_id", userRow.id)
     .order("created_at", { ascending: false });
@@ -350,7 +349,7 @@ export async function getUserFollowings(username, sessionUser) {
   const { data, error } = await supabase.rpc("get_followings_by_username", {
     in_display_name: username,
     in_limit: 10,
-    in_session_user_id: sessionUser
+    in_session_user_id: sessionUser,
   });
 
   if (error) throw error;
@@ -365,8 +364,7 @@ export async function getUserFollowers(username, sessionUser) {
   const { data, error } = await supabase.rpc("get_followers_by_username", {
     in_display_name: username,
     in_limit: 10,
-    in_session_user_id: sessionUser
-
+    in_session_user_id: sessionUser,
   });
   if (error) throw error;
   if (!data) throw new Error("User doesnt exist");

@@ -17,7 +17,7 @@ export default function OwnUserCircle({ type }) {
     return (
       <div className="flex flex-col">
         <div className={containerStyles[type]}>
-          <img src="favicon.ico" ></img>
+          <img src="favicon.ico"></img>
         </div>
         {type === "uniStyle" && (
           <span className="text-xs text-zinc-300 flex justify-center py-2">

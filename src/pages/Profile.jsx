@@ -3,7 +3,6 @@ import { useProfileByUsername } from "../hooks/useProfileByUsername";
 import { Outlet, useParams } from "react-router-dom";
 
 import Button from "../components/common/Button";
-import OwnUserCircle from "../components/profile/OwnUserCircle";
 import Spinner from "../components/common/Spinner";
 
 import CirclePlusIcon from "../components/icons/CirclePlusIcon";
@@ -11,7 +10,6 @@ import ProfileStats from "../components/profile/ProfileStats";
 import ProfileBio from "../components/profile/ProfileBio";
 
 import useHandleFollow from "../hooks/useHandleFollow";
-import supabase from "../lib/supabase";
 import useAmIfollowing from "../hooks/useAmIFollowing";
 import useHandleUnfollow from "../hooks/useHandleUnfollow";
 
@@ -19,7 +17,6 @@ export default function Profile() {
   const { profile: sessionUser } = useAuth();
   const currentUserId = sessionUser?.id ?? null;
   const sessionUserUserName = sessionUser?.display_name;
-  
 
   const { username } = useParams();
   const {
@@ -43,7 +40,7 @@ export default function Profile() {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
-      sessionUserUserName
+      sessionUserUserName,
     });
   }
 
@@ -52,13 +49,13 @@ export default function Profile() {
       followerId: currentUserId,
       followeeId: viewedUserId,
       username,
-      sessionUserUserName
+      sessionUserUserName,
     });
   }
 
   const { data: isFollowing, isLoading: isFollowingLoading } = useAmIfollowing(
     currentUserId,
-    viewedUserId
+    viewedUserId,
   );
 
   const showSpinnerLoader = isFollowingLoading || isLoadingUser;
@@ -148,7 +145,7 @@ export default function Profile() {
                 <ProfileStats
                   data={profile ?? null}
                   isLoading={isLoadingUser}
-                  username = {username}
+                  username={username}
                 />
               </div>
             </div>

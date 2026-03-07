@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { IoIosAddCircleOutline, IoIosNotifications } from "react-icons/io";
 import { LiaUniversitySolid } from "react-icons/lia";
 import { MdAddToPhotos } from "react-icons/md";
@@ -32,7 +33,9 @@ export const ProfileIcon = styled.span`
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 `;
 
 export const navItemStyles = css`
@@ -46,7 +49,9 @@ export const navItemStyles = css`
   background: transparent;
   color: inherit;
   text-decoration: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease,
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
     color 0.3s ease;
 
   &:hover,
@@ -110,24 +115,24 @@ export const navItemStyles = css`
   ${({ $forceCompact }) =>
     $forceCompact &&
     css`
-        width: 3.6rem;
-        height: 3.6rem;
-        padding: 0.6rem;
-        gap: 0;
-        justify-content: center;
-        border-radius: 999px;
-        margin: 0 auto;
+      width: 3.6rem;
+      height: 3.6rem;
+      padding: 0.6rem;
+      gap: 0;
+      justify-content: center;
+      border-radius: 999px;
+      margin: 0 auto;
 
-        &:hover,
-        &:focus-visible {
-          border-color: transparent;
-          background-color: transparent;
-        }
+      &:hover,
+      &:focus-visible {
+        border-color: transparent;
+        background-color: transparent;
+      }
 
-        &.active {
-          border-color: transparent;
-          background-color: transparent;
-        }
+      &.active {
+        border-color: transparent;
+        background-color: transparent;
+      }
     `}
 `;
 
@@ -155,10 +160,10 @@ const AddNavButton = styled(Menus.Toggle).attrs({ align: "left" })`
 
 export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
   const { profile } = useAuth();
-  const username = profile?.display_name 
+  const username = profile?.display_name;
   const { logout, isLoggingOut } = useLogout();
 
-  const textClass = `hidden font-extralight text-amber-50 ${isAlertsOpen ? 'hidden' : 'hidden lg:inline'}`;
+  const textClass = `hidden font-extralight text-amber-50 ${isAlertsOpen ? "hidden" : "hidden lg:inline"}`;
 
   return (
     <nav className="flex h-full w-full flex-1 flex-col">
@@ -166,29 +171,36 @@ export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
       <Menus>
         <ul className="flex flex-col gap-12">
           <li>
-            <StyledNavLink to="/uni" onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
+            <StyledNavLink
+              to="/uni"
+              onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)}
+              $forceCompact={isAlertsOpen}
+            >
               <LiaUniversitySolid />
-              <span className={textClass}>
-                Uni
-              </span>
+              <span className={textClass}>Uni</span>
             </StyledNavLink>
           </li>
 
           <li>
-            <NavButton onClick={() => setIsAlertsOpen && setIsAlertsOpen(!isAlertsOpen)} className={isAlertsOpen ? 'active' : ''} $forceCompact={isAlertsOpen}>
+            <NavButton
+              onClick={() => setIsAlertsOpen && setIsAlertsOpen(!isAlertsOpen)}
+              className={isAlertsOpen ? "active" : ""}
+              $forceCompact={isAlertsOpen}
+            >
               <IoIosNotifications />
-              <span className={textClass}>
-                Alerts
-              </span>
+              <span className={textClass}>Alerts</span>
             </NavButton>
           </li>
 
           <li>
-            <StyledNavLink end to={username ? `/${username}` : "/"} onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)} $forceCompact={isAlertsOpen}>
+            <StyledNavLink
+              end
+              to={username ? `/${username}` : "/"}
+              onClick={() => setIsAlertsOpen && setIsAlertsOpen(false)}
+              $forceCompact={isAlertsOpen}
+            >
               <ProfileIcon aria-hidden="true" />
-              <span className={textClass}>
-                Profile
-              </span>
+              <span className={textClass}>Profile</span>
             </StyledNavLink>
           </li>
 
@@ -260,9 +272,7 @@ export default function MainNav({ isAlertsOpen, setIsAlertsOpen }) {
           <li>
             <AddNavButton id="more" $forceCompact={isAlertsOpen}>
               <RxHamburgerMenu />
-              <span className={textClass}>
-                More
-              </span>
+              <span className={textClass}>More</span>
             </AddNavButton>
 
             <Menus.List id="more">

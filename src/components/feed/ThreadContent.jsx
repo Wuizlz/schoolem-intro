@@ -8,7 +8,6 @@ export const ThreadContent = React.memo(function ThreadContent({
   const MAX = 180; // pick your min chars/preview
   const showToggle = text.length > MAX;
   const displayText = expanded || !showToggle ? text : text.slice(0, MAX);
-  const username = publicationData?.display_name;
   return (
     <div className="text-amber-50 font-extralight leading-relaxed">
       <span className="font-extrabold">{publicationData?.full_name}</span>
